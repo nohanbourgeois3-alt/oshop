@@ -2,37 +2,41 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O'shop - Premium Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>O'shop - V2 PRO</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: #030712; /* Fond sombre pro */
-            color: white;
+            background: #030712;
+            color: #ffffff;
             min-height: 100vh;
-            padding-bottom: 30px;
+            padding-bottom: 80px; /* Espace pour la barre de navigation basse */
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* EFFET DE LUMIÈRE EN ARRIÈRE-PLAN (GLOW) */
-        body::before {
-            content: '';
-            position: absolute;
-            top: -10%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
-            z-index: 0;
-            pointer-events: none;
+        /* ANIMATIONS OPTIMISÉES IOS (PAS DE LAG) */
+        .page {
+            display: none;
+            animation: fadeIn 0.2s ease-out;
+            padding: 16px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* HEADER */
@@ -40,417 +44,221 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
+            padding: 16px;
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             position: sticky;
             top: 0;
-            background: rgba(3, 7, 18, 0.8);
-            backdrop-filter: blur(12px);
             z-index: 100;
             border-bottom: 1px solid rgba(59, 130, 246, 0.1);
         }
 
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-icon {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, #1d4ed8, #3b82f6);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             font-size: 18px;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-        }
-
-        .logo-text {
-            font-size: 20px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffffff, #9ca3af);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .support-btn {
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            color: #60a5fa;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.05);
-        }
-
-        .support-btn:hover {
-            background: rgba(59, 130, 246, 0.2);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-        }
-
-        /* USER CARD */
-        .user-card {
-            margin: 16px;
-            background: linear-gradient(135deg, rgba(17, 24, 39, 0.7), rgba(31, 41, 55, 0.7));
-            border: 1px solid rgba(59, 130, 246, 0.15);
-            border-radius: 16px;
-            padding: 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: 700;
-            box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
-        }
-
-        .user-info p {
-            color: #9ca3af;
-            font-size: 11px;
-        }
-
-        .user-info h4 {
-            font-size: 14px;
-            font-weight: 700;
-            color: #f3f4f6;
-        }
-
-        /* HERO BANNER - CAROUSEL STYLE LIKE PULSE */
-        .hero {
-            margin: 10px 16px;
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 24px;
-            padding: 24px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(59, 130, 246, 0.1);
-            z-index: 1;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            bottom: -50%;
-            right: -10%;
-            width: 180px;
-            height: 180px;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.25), transparent 70%);
-            border-radius: 50%;
-        }
-
-        .hero-tag {
-            background: rgba(37, 99, 235, 0.15);
-            border: 1px solid rgba(37, 99, 235, 0.4);
-            color: #60a5fa;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            display: inline-block;
-            margin-bottom: 12px;
-        }
-
-        .hero h1 {
-            font-size: 26px;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 8px;
-            color: #ffffff;
-        }
-
-        .hero p {
-            color: #9ca3af;
-            font-size: 13px;
-        }
-
-        .hero-icon {
-            position: absolute;
-            right: 24px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 75px;
-            height: 75px;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.3);
-        }
-
-        /* SECTION TITRE */
-        .section-title {
-            padding: 24px 16px 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            color: #64748b;
-        }
-
-        .section-dot {
-            width: 6px;
-            height: 6px;
-            background: #3b82f6;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #3b82f6;
-        }
-
-        /* LISTE DES PRODUITS (GLOW BLEU AVEC ANIMATIONS) */
-        .produits {
-            padding: 0 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .card {
-            background: linear-gradient(135deg, #0b1329, #111c44);
-            border: 1px solid rgba(59, 130, 246, 0.1);
-            border-radius: 20px;
-            padding: 20px;
-            cursor: pointer;
-            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Animation Glow au survol / clic */
-        .card:hover, .card:active {
-            border-color: rgba(59, 130, 246, 0.5);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.25);
-        }
-
-        .card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 14px;
-        }
-
-        .card-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            transition: transform 0.3s ease;
-        }
-        
-        .card:hover .card-icon {
-            transform: scale(1.08);
-        }
-
-        .card-prix {
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.25);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            color: #60a5fa;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.1);
-        }
-
-        .prix-dot {
-            width: 6px;
-            height: 6px;
-            background: #3b82f6;
-            border-radius: 50%;
-            box-shadow: 0 0 6px #3b82f6;
-        }
-
-        .card-tag {
-            color: #60a5fa;
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-        }
-
-        .card h3 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: #ffffff;
-        }
-
-        .card p {
-            color: #9ca3af;
-            font-size: 13px;
-            margin-bottom: 14px;
-            line-height: 1.4;
-        }
-
-        .card-btn {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: #3b82f6;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        /* MODAL COULISSANTE (STYLE PULSE PREMIUM) */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(3, 7, 18, 0.85);
-            z-index: 1000;
-            backdrop-filter: blur(8px);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-            align-items: flex-end;
-            opacity: 1;
-        }
-
-        .modal {
-            background: linear-gradient(135deg, #0b1329, #0f172a);
-            border-top: 1px solid rgba(59, 130, 246, 0.25);
-            border-left: 1px solid rgba(59, 130, 246, 0.15);
-            border-right: 1px solid rgba(59, 130, 246, 0.15);
-            border-radius: 24px 24px 0 0;
-            padding: 24px 20px 34px;
-            width: 100%;
-            transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 -10px 40px rgba(37, 99, 235, 0.15);
-        }
-
-        .modal-overlay.active .modal {
-            transform: translateY(0);
-        }
-
-        .modal-handle {
-            width: 36px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-            margin: 0 auto 20px;
-        }
-
-        .modal h2 {
-            font-size: 20px;
-            font-weight: 800;
-            margin-bottom: 6px;
-        }
-
-        .modal-prix-big {
-            font-size: 32px;
             font-weight: 800;
             background: linear-gradient(135deg, #60a5fa, #2563eb);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin: 8px 0;
+            cursor: pointer;
         }
 
-        .modal-info {
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px solid rgba(59, 130, 246, 0.1);
-            border-radius: 14px;
-            padding: 14px;
-            margin: 14px 0;
+        /* PORTEFEUILLE / SOLDE DU CLIENT */
+        .wallet-card {
+            background: linear-gradient(135deg, #0b1329, #111c44);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.15);
         }
 
-        .modal-info p {
+        .wallet-title {
+            font-size: 12px;
             color: #9ca3af;
-            font-size: 13px;
-            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .modal-info .paypal {
-            color: #60a5fa;
-            font-weight: 700;
-            font-size: 14px;
-            background: rgba(59, 130, 246, 0.1);
-            padding: 6px 12px;
-            border-radius: 8px;
-            display: inline-block;
-            border: 1px solid rgba(59, 130, 246, 0.15);
-        }
-
-        .modal-warning {
-            color: #f59e0b;
-            font-size: 11px;
-            margin-top: 6px;
+        .wallet-flex {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 4px;
+            margin-top: 5px;
         }
 
-        .btn-commander {
-            width: 100%;
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            border: none;
+        .solde-montant {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .btn-recharger {
+            background: #2563eb;
             color: white;
-            padding: 16px;
-            border-radius: 14px;
-            font-size: 15px;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 13px;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 14px;
+        }
+
+        /* PRODUITS GRID & LISTS */
+        .grid-produits {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: border-color 0.2s;
+        }
+
+        .card:active {
+            border-color: #3b82f6;
+        }
+
+        .card-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-icon {
+            font-size: 24px;
+            background: rgba(59, 130, 246, 0.1);
+            width: 45px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-            transition: background 0.2s;
+            border-radius: 12px;
         }
 
-        .btn-commander:active {
-            background: #1d4ed8;
-        }
-
-        .btn-fermer {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: #9ca3af;
-            padding: 12px;
-            border-radius: 14px;
-            font-size: 14px;
+        .card-info h3 {
+            font-size: 15px;
             font-weight: 600;
+        }
+
+        .card-info p {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .card-prix {
+            font-weight: 700;
+            color: #60a5fa;
+            font-size: 14px;
+            background: rgba(59, 130, 246, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        /* LISTE DES COMMANDES EXÉCUTÉES */
+        .order-item {
+            background: rgba(31, 41, 55, 0.4);
+            border-left: 4px solid #2563eb;
+            padding: 12px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        /* MENU DE NAVIGATION BAS (STYLE IOS APP) */
+        .nav-bar {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            background: rgba(3, 7, 18, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 calc(12px + env(safe-area-inset-bottom)); /* Support encoche iPhone */
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 600;
+            text-decoration: none;
             cursor: pointer;
-            margin-top: 10px;
+            background: none;
+            border: none;
+        }
+
+        .nav-item.active {
+            color: #3b82f6;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        /* PANNEAU ADMIN ET MODALS */
+        .admin-box {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px dashed rgba(239, 68, 68, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 15px;
+        }
+
+        .input-pro {
+            width: 100%;
+            background: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .btn-action {
+            width: 100%;
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            margin-top: 12px;
+            cursor: pointer;
+        }
+
+        /* MODAL INTERNE */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #0f172a;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
         }
     </style>
 </head>
@@ -458,67 +266,96 @@
 
     <!-- HEADER -->
     <div class="header">
-        <div class="logo">
-            <div class="logo-icon">🔮</div>
-            <span class="logo-text">O'shop</span>
+        <div class="logo" onclick="verifierCodeAdmin()">🔮 O'shop V2</div>
+        <div id="userTag" style="font-size: 13px; color: #9ca3af; font-weight: 600;">@Client</div>
+    </div>
+
+    <!-- 1. PAGE ACCUEIL -->
+    <div id="page-accueil" class="page active">
+        <!-- SOLDE COMPTE -->
+        <div class="wallet-card">
+            <div class="wallet-title">Mon Solde Disponible</div>
+            <div class="wallet-flex">
+                <div class="solde-montant" id="soldeAffichage">0.00 €</div>
+                <button class="btn-recharger" onclick="ouvrirRecharge()">⚡ Recharger</button>
+            </div>
         </div>
-        <!-- Utilisation de la fonction tg.openLink pour ouvrir correctement dans le navigateur externe -->
-        <button onclick="ouvrirLienExterne('https://t.me/zeromeufuhq')" class="support-btn">
-            💬 Support
+
+        <h2 style="font-size: 16px; margin-bottom: 12px; color: #64748b;">SERVICES DISPONIBLES</h2>
+        <div class="grid-produits" id="listeProduits"></div>
+    </div>
+
+    <!-- 2. PAGE MON COMPTE & COMMANDES -->
+    <div id="page-compte" class="page">
+        <h2 style="font-size: 20px; margin-bottom: 6px;">Mon Espace</h2>
+        <p style="color: #9ca3af; font-size: 13px; margin-bottom: 20px;">Retrouve l'historique complet de tes achats.</p>
+
+        <h3 style="font-size: 14px; color: #64748b; margin-bottom: 10px; text-transform: uppercase;">Historique des commandes</h3>
+        <div id="historiqueCommandes">
+            <p style="color:#64748b; font-size:13px; font-style:italic;">Aucune commande effectuée pour le moment.</p>
+        </div>
+    </div>
+
+    <!-- 3. PAGE DEVENIR REVENDEUR -->
+    <div id="page-revendeur" class="page">
+        <div style="text-align: center; padding: 20px 10px;">
+            <span style="font-size: 50px;">💼</span>
+            <h2 style="font-size: 22px; margin-top: 10px;">Programme Revendeur</h2>
+            <p style="color: #9ca3af; font-size: 14px; margin-top: 8px; line-height: 1.5;">
+                Tu souhaites vendre nos services (Packs KFC, Basic-Fit, Discord Nitro) à tes propres clients et générer des bénéfices ? Profite de tarifs réduits grossistes ultra compétitifs.
+            </p>
+            <button class="btn-action" style="background: linear-gradient(135deg, #10b981, #059669);" onclick="ouvrirLienSupport()">
+                🚀 Contacter le Support Revendeur
+            </button>
+        </div>
+    </div>
+
+    <!-- 4. PAGE ADMIN CACHÉE (ACCESSIBLE EN CLIQUANT SUR LE LOGO + CODE SECRET) -->
+    <div id="page-admin" class="page">
+        <h2 style="color: #ef4444; font-size: 20px;">🛡️ Panneau Admin Secret</h2>
+        <p style="font-size: 12px; color: #9ca3af;">Contrôle global de la boutique O'shop en temps réel.</p>
+
+        <div class="admin-box">
+            <h4 style="font-size: 14px;">Chiffre d'Affaires & Commandes</h4>
+            <p style="font-size: 24px; font-weight: 800; color: #10b981; margin-top: 5px;" id="adminArgent">0.00 €</p>
+            <p style="font-size: 12px; color: #9ca3af; margin-top: 4px;" id="adminNbCommandes">Total commandes : 0</p>
+        </div>
+
+        <div class="admin-box" style="border-color: rgba(59,130,246,0.3)">
+            <h4 style="font-size: 14px; color: #60a5fa;">Gérer le solde d'un client (Simulé)</h4>
+            <input type="number" id="adminAjoutSolde" class="input-pro" placeholder="Montant à ajouter (ex: 20)">
+            <button class="btn-action" onclick="adminAjouterMonnaie()">Injecter les fonds</button>
+        </div>
+    </div>
+
+    <!-- MODAL DE RECHARGE -->
+    <div class="modal" id="modalRecharge">
+        <div class="modal-content">
+            <h3 style="font-size: 18px; margin-bottom: 8px;">Recharger mon compte</h3>
+            <p style="font-size: 13px; color: #9ca3af; margin-bottom: 12px;">Envoie ton paiement via PayPal (Ami/Famille) :</p>
+            <div style="background: rgba(59,130,246,0.1); padding: 10px; border-radius: 8px; color: #60a5fa; font-weight: 700; font-size: 14px; text-align: center; border: 1px solid rgba(59,130,246,0.2);">
+                nohanbourgeois9@gmail.com
+            </div>
+            <p style="font-size: 11px; color: #f59e0b; margin-top: 6px;">⚠️ Précise bien ton @Pseudo Telegram dans la note du paiement !</p>
+            <button class="btn-action" onclick="ouvrirLienSupport()">Ouvrir Telegram pour envoyer le screen</button>
+            <button class="btn-action" style="background: #374151; margin-top: 8px;" onclick="fermerRecharge()">Fermer</button>
+        </div>
+    </div>
+
+    <!-- NAVIGATION BAR -->
+    <div class="nav-bar">
+        <button class="nav-item active" onclick="changerOnglet('accueil', this)">
+            <span class="nav-icon">🏠</span><span>Accueil</span>
         </button>
-    </div>
-
-    <!-- USER CARD -->
-    <div class="user-card" id="userCard">
-        <div class="user-avatar" id="userAvatar">👤</div>
-        <div class="user-info">
-            <p>Connecté en tant que</p>
-            <h4 id="userName">Chargement...</h4>
-        </div>
-    </div>
-
-    <!-- HERO -->
-    <div class="hero">
-        <div class="hero-tag">🌟 OFFRES EXCLUSIVES</div>
-        <h1>Premium<br>Services</h1>
-        <p>Abonnements & Points au meilleur prix.<br>Livraison garantie sous 15 minutes ✅</p>
-        <div class="hero-icon">⚡</div>
-    </div>
-
-    <!-- SERVICES SÉLECTIONNÉS -->
-    <div class="section-title">
-        <div class="section-dot"></div>
-        NOS SERVICES
-    </div>
-
-    <div class="produits" id="produits"></div>
-
-    <!-- MODAL -->
-    <div class="modal-overlay" id="modalOverlay" onclick="fermerModal(event)">
-        <div class="modal">
-            <div class="modal-handle"></div>
-            <div class="card-tag" id="modalTag">PRODUIT</div>
-            <h2 id="modalNom"></h2>
-            <div class="modal-prix-big" id="modalPrix"></div>
-
-            <div class="modal-info">
-                <p>📧 Paiement sécurisé via PayPal :</p>
-                <div class="paypal">nohanbourgeois9@gmail.com</div>
-                <div class="modal-warning">⚠️ En Ami/Famille uniquement !</div>
-            </div>
-
-            <div class="modal-info">
-                <p>📸 Après validation du paiement :</p>
-                <p style="color:white; font-size:13px;">Envoie le <strong>screenshot</strong> directement dans la discussion du bot.</p>
-            </div>
-
-            <button class="btn-commander" onclick="ouvrirBot()">
-                📲 Envoyer le screenshot →
-            </button>
-            <button class="btn-fermer" onclick="fermerModal()">
-                Retour à la boutique
-            </button>
-        </div>
+        <button class="nav-item" onclick="changerOnglet('compte', this)">
+            <span class="nav-icon">👤</span><span>Mon Compte</span>
+        </button>
+        <button class="nav-item" onclick="changerOnglet('revendeur', this)">
+            <span class="nav-icon">💼</span><span>Revendeur</span>
+        </button>
+        <button class="nav-item" onclick="ouvrirLienSupport()">
+            <span class="nav-icon">💬</span><span>Support</span>
+        </button>
     </div>
 
     <script>
@@ -526,72 +363,159 @@
         tg.expand();
         tg.setHeaderColor('#030712');
 
-        // Récupération sécurisée du profil utilisateur Telegram
-        const user = tg.initDataUnsafe?.user;
-        if (user) {
-            document.getElementById('userName').textContent = '@' + (user.username || user.first_name);
-            document.getElementById('userAvatar').textContent = (user.first_name || 'U')[0].toUpperCase();
-        }
+        // Initialisation des données persistantes (Solde, Commandes)
+        let solde = parseFloat(localStorage.getItem('oshop_solde')) || 0.00;
+        let commandes = JSON.parse(localStorage.getItem('oshop_commandes')) || [];
+        let totalVentes = parseFloat(localStorage.getItem('oshop_total_ventes')) || 0.00;
 
-        // Base de données unifiée comprenant TOUS tes services (KFC, Basic Fit, Discord, Streaming)
+        // Configuration des produits
         const produits = [
-            { id: "kfc", nom: "Points KFC (Tous Packs)", prix: 1.50, desc: "Accède au catalogue de points KFC complet à partir de 1.50€ seulement.", tag: "Points KFC", icon: "🍗", type: "modal" },
-            { id: "basic_fit", nom: "Basic-Fit Ultimate", prix: 10.00, desc: "Abonnement Ultimate garanti 1 mois complet au lieu de 35€.", tag: "Comptes Ultimate", icon: "💪", type: "modal" },
-            { id: "discord_nitro", nom: "Discord Nitro Mobile/PC", prix: 5.50, desc: "Profite de tous les avantages Nitro (Boost, Emojis) pendant 1 mois.", tag: "Abonnement", icon: "💎", type: "modal" },
-            { id: "streaming", nom: "Streaming Film Gratuit", prix: 0.00, desc: "Regarde tes films et séries préférés en HD/VF gratuitement sur NakaStream.", tag: "Cinéma", icon: "🎬", type: "lien", url: "https://nakastream.tv/" }
+            { id: "kfc_pack1", nom: "KFC Menu Gratuit (Packs Restreints)", prix: 1.50, desc: "Acheter des points valables pour les menus classiques.", icon: "🍗" },
+            { id: "kfc_pack_full", nom: "KFC FULL Points (Catalogue Complet)", prix: 4.00, desc: "Tous les points dispos sans aucune restriction.", icon: "🔥" },
+            { id: "basic_fit", nom: "Basic-Fit Ultimate (1 Mois)", prix: 10.00, desc: "Accès illimité à toutes les salles de sport.", icon: "💪" },
+            { id: "discord_nitro", nom: "Discord Nitro Premium", prix: 5.50, desc: "Abonnement complet 1 mois fonctionnel PC/Mobile.", icon: "💎" },
+            { id: "streaming", nom: "Streaming Film Gratuit", prix: 0.00, desc: "Regarder des films en HD gratuitement sur NakaStream.", icon: "🎬", url: "https://nakastream.tv/" }
         ];
 
-        const container = document.getElementById('produits');
-        produits.forEach((p) => {
-            // Si c'est un produit classique -> Ouvre la modal. Si c'est le streaming -> Redirige vers le navigateur externe
-            const actionClick = p.type === "lien" ? `ouvrirLienExterne('${p.url}')` : `ouvrirModal('${p.nom}', ${p.prix}, '${p.tag}')`;
-            const labelBtn = p.type === "lien" ? "Parcourir →" : "Commander →";
-            const labelPrix = p.prix === 0 ? "GRATUIT" : `${p.prix.toFixed(2)} €`;
-
-            container.innerHTML += `
-                <div class="card" onclick="${actionClick}">
-                    <div class="card-top">
-                        <div class="card-icon">${p.icon}</div>
-                        <div class="card-prix">
-                            <div class="prix-dot"></div>
-                            ${labelPrix}
-                        </div>
-                    </div>
-                    <div class="card-tag">${p.tag}</div>
-                    <h3>${p.nom}</h3>
-                    <p>${p.desc}</p>
-                    <div class="card-btn" style="${p.prix === 0 ? 'color: #3b82f6;' : ''}">🛒 ${labelBtn}</div>
-                </div>
-            `;
-        });
-
-        // Gestion de l'affichage de la Modal
-        function ouvrirModal(nom, prix, tag) {
-            document.getElementById('modalNom').textContent = nom;
-            document.getElementById('modalTag').textContent = tag;
-            document.getElementById('modalPrix').textContent = prix.toFixed(2) + ' €';
-            
-            const overlay = document.getElementById('modalOverlay');
-            overlay.style.display = 'flex';
-            setTimeout(() => overlay.classList.add('active'), 10);
+        // Mettre à jour les infos utilisateur
+        const user = tg.initDataUnsafe?.user;
+        if (user) {
+            document.getElementById('userTag').textContent = '@' + (user.username || user.first_name);
         }
 
-        function fermerModal(event) {
-            if (!event || event.target === document.getElementById('modalOverlay') || event.target.classList.contains('btn-fermer')) {
-                const overlay = document.getElementById('modalOverlay');
-                overlay.classList.remove('active');
-                setTimeout(() => overlay.style.display = 'none', 300);
+        // Système d'onglets ultra-fluide
+        function changerOnglet(pageId, element) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            
+            document.getElementById('page-' + pageId).classList.add('active');
+            if(element) element.classList.add('active');
+        }
+
+        // Afficher la liste des produits
+        function chargerBoutique() {
+            const container = document.getElementById('listeProduits');
+            container.innerHTML = "";
+            
+            produits.forEach(p => {
+                const clickAction = p.prix === 0 ? `ouvrirLien('${p.url}')` : `acheterProduit('${p.id}', '${p.nom}', ${p.prix})`;
+                const textePrix = p.prix === 0 ? "GRATUIT" : `${p.prix.toFixed(2)} €`;
+                
+                container.innerHTML += `
+                    <div class="card" onclick="${clickAction}">
+                        <div class="card-left">
+                            <div class="card-icon">${p.icon}</div>
+                            <div class="card-info">
+                                <h3>${p.nom}</h3>
+                                <p>${p.desc}</p>
+                            </div>
+                        </div>
+                        <div class="card-prix">${textePrix}</div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('soldeAffichage').textContent = solde.toFixed(2) + " €";
+            remplirHistorique();
+            remplirAdmin();
+        }
+
+        // Système d'achat par déduction de solde
+        function acheterProduit(id, nom, prix) {
+            if (solde >= prix) {
+                solde -= prix;
+                totalVentes += prix;
+                
+                const dateAchat = new Date().toLocaleDateString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+                commandes.unshift({ nom: nom, prix: prix, date: dateAchat });
+
+                localStorage.setItem('oshop_solde', solde);
+                localStorage.setItem('oshop_commandes', JSON.stringify(commandes));
+                localStorage.setItem('oshop_total_ventes', totalVentes);
+
+                tg.showAlert(`🎉 Achat réussi !\nVotre produit "${nom}" a bien été validé.\nLe solde a été déduit.`);
+                chargerBoutique();
+            } else {
+                tg.showPopup({
+                    title: "Solde insuffisant ❌",
+                    message: `Il vous manque ${(prix - solde).toFixed(2)} € pour acheter ce produit. Veuillez recharger votre portefeuille.`,
+                    buttons: [{id: "recharge", type: "default", text: "Recharger maintenant"}]
+                }, (buttonId) => {
+                    if(buttonId === "recharge") ouvrirRecharge();
+                });
             }
         }
 
-        // Fonction maîtresse pour sortir de Telegram et ouvrir dans Google Chrome/Safari
-        function ouvrirLienExterne(url) {
-            tg.openLink(url);
+        // Remplir l'historique des commandes client
+        function remplirHistorique() {
+            const container = document.getElementById('historiqueCommandes');
+            if (commandes.length === 0) {
+                container.innerHTML = `<p style="color:#64748b; font-size:13px; font-style:italic;">Aucune commande effectuée pour le moment.</p>`;
+                return;
+            }
+            container.innerHTML = "";
+            commandes.forEach(c => {
+                container.innerHTML += `
+                    <div class="order-item">
+                        <div style="display:flex; justify-content:space-between; font-weight:600;">
+                            <span>${c.nom}</span>
+                            <span style="color:#60a5fa;">-${c.prix.toFixed(2)}€</span>
+                        </div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:4px;">Acheté le ${c.date} - Statut : Livré ✅</div>
+                    </div>
+                `;
+            });
         }
 
-        function ouvrirBot() {
-            tg.close(); // Ferme proprement la Mini App pour que le client retombe sur ton bot et mette son screen
+        // ZONE ADMIN CACHÉE
+        function verifierCodeAdmin() {
+            // Demande le code secret via l'interface native et sécurisée de Telegram
+            tg.showPopup({
+                title: "Accès Restreint",
+                message: "Veuillez contacter le propriétaire si vous n'êtes pas l'administrateur.",
+                buttons: [
+                    {id: "code", type: "default", text: "Entrer le code secret"},
+                    {id: "annuler", type: "cancel", text: "Annuler"}
+                ]
+            }, (btn) => {
+                if(btn === "code") {
+                    // Pour garder ça simple et rapide sur la V2 sans base de données, on utilise un prompt standard
+                    const code = prompt("Code secret Admin :");
+                    if (code === "777") { // TON CODE SECRET ICI (Modifiable)
+                        changerOnglet('admin', null);
+                        tg.showAlert("Bonjour Patron ! Bienvenue sur vos statistiques.");
+                    } else if (code !== null) {
+                        tg.showAlert("Code erroné. Tentative refusée. ❌");
+                    }
+                }
+            });
         }
+
+        function remplirAdmin() {
+            document.getElementById('adminArgent').textContent = totalVentes.toFixed(2) + " €";
+            document.getElementById('adminNbCommandes').textContent = "Total commandes : " + commandes.length;
+        }
+
+        function adminAjouterMonnaie() {
+            const montant = parseFloat(document.getElementById('adminAjoutSolde').value);
+            if (!isNaN(montant) && montant > 0) {
+                solde += montant;
+                localStorage.setItem('oshop_solde', solde);
+                document.getElementById('adminAjoutSolde').value = "";
+                tg.showAlert(`💰 ${montant} € injectés avec succès sur le compte.`);
+                chargerBoutique();
+                changerOnglet('accueil', null);
+            }
+        }
+
+        // Modals et redirections de liens externes
+        function ouvrirRecharge() { document.getElementById('modalRecharge').style.display = 'flex'; }
+        function fermerRecharge() { document.getElementById('modalRecharge').style.display = 'none'; }
+        function ouvrirLien(url) { tg.openLink(url); }
+        function ouvrirLienSupport() { tg.openLink('https://t.me/zeromeufuhq'); }
+
+        // Lancement initial
+        chargerBoutique();
     </script>
 </body>
 </html>
