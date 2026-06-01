@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,121 +8,137 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         /* ============================================
-           RESET & VARIABLES GLOBALES
+           VARIABLES & RESET
         ============================================ */
         :root {
-            --bg-primary: #020617;
-            --bg-secondary: #0a1628;
-            --bg-card: #0d1f3c;
-            --bg-card-hover: #112244;
-            --blue-primary: #2563eb;
-            --blue-light: #3b82f6;
-            --blue-glow: rgba(37, 99, 235, 0.4);
-            --blue-ultra: #60a5fa;
-            --text-primary: #f1f5f9;
-            --text-secondary: #64748b;
-            --text-muted: #334155;
-            --border: rgba(255, 255, 255, 0.04);
-            --border-blue: rgba(59, 130, 246, 0.2);
-            --success: #22c55e;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --radius-xl: 24px;
-            --radius-lg: 20px;
-            --radius-md: 16px;
-            --radius-sm: 12px;
-            --nav-height: 72px;
-            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --bg: #020617;
+            --bg2: #0a1628;
+            --bg3: #0d1f3c;
+            --blue: #2563eb;
+            --blue2: #3b82f6;
+            --blue3: #60a5fa;
+            --glow: rgba(37,99,235,0.35);
+            --t1: #f1f5f9;
+            --t2: #64748b;
+            --t3: #334155;
+            --border: rgba(255,255,255,0.045);
+            --border-b: rgba(59,130,246,0.18);
+            --green: #22c55e;
+            --red: #ef4444;
+            --amber: #f59e0b;
+            --r-xl: 26px;
+            --r-lg: 20px;
+            --r-md: 16px;
+            --r-sm: 12px;
+            --nav: 72px;
+            --sat: env(safe-area-inset-top, 0px);
+            --sab: env(safe-area-inset-bottom, 0px);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
+        *, *::before, *::after {
+            margin: 0; padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
         }
 
-        html, body {
+        html {
             height: 100%;
-            overflow: hidden;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overscroll-behavior: none;
+        }
+
+        body {
+            height: 100%;
+            background: var(--bg);
+            color: var(--t1);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
             -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            overscroll-behavior: none;
         }
 
         /* ============================================
-           LUEURS D'ARRIÈRE-PLAN (GLOW NÉON)
+           GLOW AMBIANCE
         ============================================ */
-        body::before {
-            content: '';
+        .glow-top {
             position: fixed;
-            top: -200px;
-            left: 50%;
+            top: -180px; left: 50%;
             transform: translateX(-50%);
-            width: 600px;
-            height: 400px;
-            background: radial-gradient(ellipse, rgba(37, 99, 235, 0.12) 0%, transparent 70%);
+            width: 500px; height: 400px;
+            background: radial-gradient(ellipse, rgba(37,99,235,0.13) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+
+        .glow-br {
+            position: fixed;
+            bottom: 80px; right: -80px;
+            width: 280px; height: 280px;
+            background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
             pointer-events: none;
             z-index: 0;
         }
 
-        body::after {
-            content: '';
-            position: fixed;
-            bottom: 100px;
-            right: -100px;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(ellipse, rgba(37, 99, 235, 0.06) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.8; transform: translateX(-50%) scale(1); }
+            50% { opacity: 1; transform: translateX(-50%) scale(1.05); }
         }
 
         /* ============================================
-           LAYOUT PRINCIPAL
+           LAYOUT
         ============================================ */
         #app {
             position: relative;
             z-index: 1;
-            height: 100vh;
+            height: 100dvh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* HEADER */
+        /* ============================================
+           HEADER
+        ============================================ */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 20px 12px;
-            background: rgba(2, 6, 23, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            padding: 14px 18px 12px;
+            padding-top: calc(14px + var(--sat));
+            background: rgba(2,6,23,0.92);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border-bottom: 1px solid var(--border);
             flex-shrink: 0;
+            z-index: 50;
             position: relative;
-            z-index: 10;
         }
 
-        .header-logo {
-            font-size: 18px;
+        .logo {
+            font-size: 17px;
             font-weight: 800;
-            background: linear-gradient(135deg, #60a5fa, #3b82f6, #818cf8);
+            background: linear-gradient(135deg, #60a5fa 0%, #818cf8 50%, #a78bfa 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: -0.4px;
             cursor: pointer;
             user-select: none;
-            letter-spacing: -0.3px;
+            position: relative;
         }
 
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, #60a5fa, transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
+
+        .logo:active::after { opacity: 1; }
 
         .header-user {
             display: flex;
@@ -129,1380 +146,1389 @@
             gap: 8px;
             background: rgba(255,255,255,0.04);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 6px 12px 6px 6px;
+            border-radius: 22px;
+            padding: 5px 12px 5px 5px;
         }
 
-        .header-avatar {
-            width: 28px;
-            height: 28px;
+        .avatar {
+            width: 28px; height: 28px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--blue-primary), #818cf8);
+            background: linear-gradient(135deg, #2563eb, #818cf8);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 800;
             color: white;
+            flex-shrink: 0;
         }
 
-        .header-username {
-            font-size: 13px;
+        .username {
+            font-size: 12px;
             font-weight: 600;
-            color: var(--text-secondary);
-            max-width: 90px;
+            color: var(--t2);
+            max-width: 80px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
 
-        /* CONTENU SCROLLABLE */
-        .page-content {
+        /* ============================================
+           PAGES
+        ============================================ */
+        .page {
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
-            padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + 16px);
+            overscroll-behavior-y: contain;
+            padding-bottom: calc(var(--nav) + var(--sab) + 20px);
             display: none;
+            opacity: 0;
+            transform: translateY(8px);
             scrollbar-width: none;
         }
 
-        .page-content::-webkit-scrollbar { display: none; }
-        .page-content.active { display: block; }
+        .page::-webkit-scrollbar { display: none; }
+
+        .page.active {
+            display: block;
+            animation: pageIn 0.32s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+        }
+
+        @keyframes pageIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         /* ============================================
-           NAVIGATION BASSE
+           BOTTOM NAV
         ============================================ */
-        .bottom-nav {
+        .nav {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: calc(var(--nav-height) + var(--safe-bottom));
-            background: rgba(10, 22, 40, 0.97);
+            bottom: 0; left: 0; right: 0;
+            height: calc(var(--nav) + var(--sab));
+            background: rgba(8,18,38,0.96);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
             border-top: 1px solid var(--border);
             display: flex;
             align-items: flex-start;
             padding-top: 8px;
-            z-index: 100;
+            z-index: 50;
         }
 
-        .nav-item {
+        .nav-btn {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             cursor: pointer;
-            padding: 8px 4px;
-            transition: opacity 0.2s;
+            padding: 7px 4px;
             border: none;
             background: none;
             outline: none;
+            position: relative;
         }
 
-        .nav-icon {
-            font-size: 22px;
-            transition: transform 0.2s ease;
+        .nav-ico {
+            font-size: 23px;
             line-height: 1;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .nav-label {
-            font-size: 10px;
+        .nav-lbl {
+            font-size: 9.5px;
             font-weight: 600;
-            color: var(--text-muted);
-            letter-spacing: 0.3px;
+            color: var(--t3);
+            letter-spacing: 0.2px;
             transition: color 0.2s;
         }
 
-        .nav-item.active .nav-label {
-            color: var(--blue-light);
-        }
-
-        .nav-item.active .nav-icon {
-            transform: scale(1.1);
-        }
-
-        .nav-indicator {
-            width: 4px;
-            height: 4px;
+        .nav-pip {
+            position: absolute;
+            bottom: 2px;
+            width: 4px; height: 4px;
             border-radius: 50%;
-            background: var(--blue-light);
+            background: var(--blue2);
             opacity: 0;
             transition: opacity 0.2s;
-            margin-top: -2px;
+            box-shadow: 0 0 6px var(--blue2);
         }
 
-        .nav-item.active .nav-indicator { opacity: 1; }
+        .nav-btn.on .nav-ico { transform: scale(1.15) translateY(-1px); }
+        .nav-btn.on .nav-lbl { color: var(--blue3); }
+        .nav-btn.on .nav-pip { opacity: 1; }
 
         /* ============================================
-           COMPOSANTS RÉUTILISABLES
+           COMPOSANTS PARTAGÉS
         ============================================ */
-
-        /* Section titre */
-        .section-header {
+        .sec-hd {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 20px 20px 12px;
+            padding: 18px 18px 10px;
         }
 
-        .section-dot {
-            width: 6px;
-            height: 6px;
+        .sec-dot {
+            width: 5px; height: 5px;
             border-radius: 50%;
-            background: var(--blue-light);
-            box-shadow: 0 0 8px var(--blue-glow);
+            background: var(--blue2);
+            box-shadow: 0 0 8px var(--glow);
+            flex-shrink: 0;
         }
 
-        .section-title {
-            font-size: 11px;
+        .sec-lbl {
+            font-size: 10.5px;
             font-weight: 700;
-            letter-spacing: 1.5px;
-            color: var(--text-secondary);
+            letter-spacing: 1.8px;
+            color: var(--t2);
             text-transform: uppercase;
         }
 
-        /* Badge tag */
         .badge {
             display: inline-flex;
             align-items: center;
             padding: 3px 10px;
             border-radius: 20px;
-            font-size: 10px;
+            font-size: 9.5px;
             font-weight: 700;
             letter-spacing: 0.8px;
             text-transform: uppercase;
         }
 
-        .badge-blue {
-            background: rgba(59, 130, 246, 0.15);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            color: var(--blue-ultra);
+        .badge-b {
+            background: rgba(59,130,246,0.12);
+            border: 1px solid rgba(59,130,246,0.28);
+            color: var(--blue3);
         }
 
-        .badge-green {
-            background: rgba(34, 197, 94, 0.15);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            color: var(--success);
-        }
-
-        .badge-free {
-            background: rgba(34, 197, 94, 0.2);
-            border: 1px solid rgba(34, 197, 94, 0.4);
-            color: #4ade80;
-        }
-
-        /* Bouton principal */
-        .btn-primary {
+        /* Boutons */
+        .btn {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             width: 100%;
             padding: 15px;
-            border-radius: var(--radius-md);
-            background: linear-gradient(135deg, #1d4ed8, #2563eb, #3b82f6);
+            border-radius: var(--r-md);
             border: none;
-            color: white;
             font-size: 15px;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35), inset 0 1px 0 rgba(255,255,255,0.1);
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
             outline: none;
-            letter-spacing: 0.2px;
+            transition: transform 0.14s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.14s;
+            letter-spacing: 0.1px;
         }
 
-        .btn-primary:active {
-            transform: scale(0.97);
-            box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+        .btn:active { transform: scale(0.96); }
+
+        .btn-p {
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #3b82f6 100%);
+            color: white;
+            box-shadow: 0 4px 24px rgba(37,99,235,0.38),
+                        inset 0 1px 0 rgba(255,255,255,0.12);
         }
 
-        .btn-secondary {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            padding: 14px;
-            border-radius: var(--radius-md);
+        .btn-p:active {
+            box-shadow: 0 2px 10px rgba(37,99,235,0.25),
+                        inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+
+        .btn-s {
             background: rgba(255,255,255,0.05);
             border: 1px solid var(--border);
-            color: var(--text-secondary);
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.15s ease;
-            outline: none;
+            color: var(--t2);
             margin-top: 10px;
         }
 
-        .btn-secondary:active { transform: scale(0.97); }
+        .btn-g {
+            background: linear-gradient(135deg, #15803d, #22c55e);
+            color: white;
+            box-shadow: 0 4px 20px rgba(34,197,94,0.3);
+        }
 
         /* ============================================
-           PAGE BOUTIQUE (ACCUEIL)
+           WALLET CARD
         ============================================ */
-
-        /* Carte Wallet */
-        .wallet-card {
-            margin: 16px;
-            background: linear-gradient(135deg, #0d1f3c 0%, #1a2f5e 50%, #0d1f3c 100%);
-            border: 1px solid var(--border-blue);
-            border-radius: var(--radius-xl);
-            padding: 22px;
+        .wallet {
+            margin: 14px 16px;
+            background: linear-gradient(135deg, #0c1d3a 0%, #152850 40%, #0c1d3a 100%);
+            border: 1px solid var(--border-b);
+            border-radius: var(--r-xl);
+            padding: 22px 20px;
             position: relative;
             overflow: hidden;
         }
 
-        .wallet-card::before {
+        .wallet::before {
             content: '';
             position: absolute;
-            top: -60px;
-            right: -40px;
-            width: 180px;
-            height: 180px;
-            background: radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%);
+            top: -80px; right: -50px;
+            width: 220px; height: 220px;
+            background: radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 65%);
             pointer-events: none;
         }
 
-        .wallet-card::after {
+        .wallet::after {
             content: '';
             position: absolute;
-            bottom: -40px;
-            left: -20px;
-            width: 120px;
-            height: 120px;
-            background: radial-gradient(circle, rgba(129,140,248,0.1) 0%, transparent 70%);
+            bottom: -60px; left: -30px;
+            width: 160px; height: 160px;
+            background: radial-gradient(circle, rgba(129,140,248,0.1) 0%, transparent 65%);
             pointer-events: none;
         }
 
-        .wallet-label {
-            font-size: 11px;
+        .wallet-lbl {
+            font-size: 10px;
             font-weight: 700;
-            letter-spacing: 1.5px;
-            color: var(--blue-ultra);
+            letter-spacing: 2px;
+            color: var(--blue3);
             text-transform: uppercase;
-            margin-bottom: 6px;
-            opacity: 0.8;
+            opacity: 0.7;
+            margin-bottom: 5px;
         }
 
-        .wallet-balance {
-            font-size: 42px;
+        .wallet-amt {
+            font-size: 44px;
             font-weight: 900;
-            color: white;
-            letter-spacing: -1.5px;
+            letter-spacing: -2px;
             line-height: 1;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
+            color: white;
         }
 
-        .wallet-balance span {
-            font-size: 22px;
+        .wallet-amt sup {
+            font-size: 20px;
             font-weight: 700;
-            opacity: 0.6;
+            opacity: 0.55;
             vertical-align: super;
-            margin-right: 4px;
+            margin-right: 3px;
+            letter-spacing: 0;
         }
 
         .wallet-sub {
             font-size: 12px;
-            color: var(--text-muted);
+            color: var(--t3);
             margin-bottom: 18px;
         }
 
-        .wallet-btn {
+        .wallet-rechbtn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(59, 130, 246, 0.2);
-            border: 1px solid rgba(59, 130, 246, 0.4);
+            background: rgba(59,130,246,0.18);
+            border: 1px solid rgba(59,130,246,0.35);
             border-radius: 20px;
             padding: 8px 16px;
             font-size: 13px;
             font-weight: 700;
-            color: var(--blue-ultra);
+            color: var(--blue3);
             cursor: pointer;
-            transition: transform 0.15s;
             outline: none;
+            transition: transform 0.14s cubic-bezier(0.34,1.56,0.64,1);
         }
 
-        .wallet-btn:active { transform: scale(0.95); }
+        .wallet-rechbtn:active { transform: scale(0.94); }
 
-        /* Carte service principale */
-        .service-card {
-            margin: 0 16px 12px;
-            background: var(--bg-card);
+        /* ============================================
+           CARTES SERVICES
+        ============================================ */
+        .scard {
+            margin: 0 16px 11px;
+            background: var(--bg3);
             border: 1px solid var(--border);
-            border-radius: var(--radius-xl);
-            padding: 20px;
+            border-radius: var(--r-xl);
+            padding: 19px;
             cursor: pointer;
-            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
             position: relative;
             overflow: hidden;
+            transition: transform 0.18s cubic-bezier(0.34,1.3,0.64,1),
+                        border-color 0.2s,
+                        box-shadow 0.2s;
         }
 
-        .service-card:active {
-            transform: scale(0.98);
-            border-color: var(--border-blue);
-            box-shadow: 0 0 20px rgba(37, 99, 235, 0.12);
+        .scard::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--r-xl);
+            background: linear-gradient(135deg, rgba(59,130,246,0.04), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
         }
 
-        .service-card-top {
+        .scard:active {
+            transform: scale(0.975);
+            border-color: rgba(59,130,246,0.25);
+            box-shadow: 0 0 24px rgba(37,99,235,0.1);
+        }
+
+        .scard:active::before { opacity: 1; }
+
+        .scard-top {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 14px;
+            margin-bottom: 13px;
         }
 
-        .service-icon-wrap {
-            width: 52px;
-            height: 52px;
-            border-radius: var(--radius-sm);
-            background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(129,140,248,0.15));
-            border: 1px solid rgba(59,130,246,0.2);
+        .scard-ico {
+            width: 50px; height: 50px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(129,140,248,0.14));
+            border: 1px solid rgba(59,130,246,0.18);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 23px;
         }
 
-        .service-price-badge {
+        .price-chip {
             display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.055);
+            border: 1px solid rgba(255,255,255,0.07);
             border-radius: 20px;
             padding: 6px 12px;
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 800;
             color: white;
         }
 
-        .price-dot {
-            width: 7px;
-            height: 7px;
+        .pdot {
+            width: 7px; height: 7px;
             border-radius: 50%;
-            background: var(--success);
-            box-shadow: 0 0 6px rgba(34,197,94,0.5);
         }
 
-        .price-dot-free {
-            background: #4ade80;
-            box-shadow: 0 0 6px rgba(74,222,128,0.6);
+        .pdot-green {
+            background: var(--green);
+            box-shadow: 0 0 7px rgba(34,197,94,0.6);
         }
 
-        .service-category {
+        .pdot-blue {
+            background: var(--blue3);
+            box-shadow: 0 0 7px rgba(96,165,250,0.6);
+        }
+
+        .scard-cat {
             font-size: 10px;
             font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--blue-light);
+            letter-spacing: 1.2px;
+            color: var(--blue2);
             text-transform: uppercase;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
-        .service-name {
-            font-size: 20px;
+        .scard-name {
+            font-size: 19px;
             font-weight: 800;
-            color: var(--text-primary);
-            margin-bottom: 6px;
             letter-spacing: -0.3px;
             line-height: 1.2;
+            margin-bottom: 6px;
         }
 
-        .service-desc {
+        .scard-desc {
             font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.5;
-            margin-bottom: 14px;
+            color: var(--t2);
+            line-height: 1.55;
+            margin-bottom: 13px;
         }
 
-        .service-action {
+        .scard-action {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--blue2);
             display: flex;
             align-items: center;
-            gap: 6px;
-            color: var(--blue-light);
-            font-size: 14px;
-            font-weight: 700;
+            gap: 5px;
         }
 
         /* ============================================
-           MODAL UNIVERSEL
+           MODALS
         ============================================ */
-        .modal-overlay {
+        .overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.72);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             z-index: 200;
             align-items: flex-end;
         }
 
-        .modal-overlay.open {
-            display: flex;
-            animation: fadeIn 0.2s ease;
-        }
+        .overlay.open { display: flex; animation: fadeO 0.22s ease; }
 
-        @keyframes fadeIn {
+        @keyframes fadeO {
             from { opacity: 0; }
             to { opacity: 1; }
         }
 
-        .modal-sheet {
+        .sheet {
             width: 100%;
-            background: linear-gradient(180deg, #0d1f3c 0%, #0a1628 100%);
-            border: 1px solid var(--border-blue);
+            background: linear-gradient(180deg, #0e2040 0%, #0a1628 100%);
+            border: 1px solid rgba(59,130,246,0.15);
             border-bottom: none;
-            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-            padding: 12px 20px calc(24px + var(--safe-bottom));
-            animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            max-height: 85vh;
+            border-radius: var(--r-xl) var(--r-xl) 0 0;
+            padding: 10px 20px calc(28px + var(--sab));
+            animation: sheetUp 0.34s cubic-bezier(0.34, 1.4, 0.64, 1);
+            max-height: 88vh;
             overflow-y: auto;
+            scrollbar-width: none;
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(100%); opacity: 0.5; }
+        .sheet::-webkit-scrollbar { display: none; }
+
+        @keyframes sheetUp {
+            from { transform: translateY(100%); opacity: 0.6; }
             to { transform: translateY(0); opacity: 1; }
         }
 
-        .modal-handle {
-            width: 36px;
-            height: 4px;
-            background: rgba(255,255,255,0.15);
+        .drag-bar {
+            width: 34px; height: 4px;
+            background: rgba(255,255,255,0.13);
             border-radius: 2px;
             margin: 0 auto 20px;
         }
 
-        .modal-service-icon {
-            width: 70px;
-            height: 70px;
+        .modal-ico {
+            width: 68px; height: 68px;
             border-radius: 20px;
-            background: linear-gradient(135deg, rgba(37,99,235,0.25), rgba(129,140,248,0.2));
-            border: 1px solid rgba(59,130,246,0.3);
+            background: linear-gradient(135deg, rgba(37,99,235,0.22), rgba(129,140,248,0.16));
+            border: 1px solid rgba(59,130,246,0.25);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 30px;
             margin: 0 auto 14px;
         }
 
-        .modal-category {
+        .modal-cat {
             text-align: center;
             font-size: 10px;
             font-weight: 700;
             letter-spacing: 2px;
-            color: var(--blue-light);
+            color: var(--blue2);
             text-transform: uppercase;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
         }
 
         .modal-title {
             text-align: center;
-            font-size: 24px;
+            font-size: 23px;
             font-weight: 900;
-            color: white;
-            letter-spacing: -0.5px;
-            margin-bottom: 6px;
+            letter-spacing: -0.4px;
+            margin-bottom: 4px;
         }
 
-        .modal-price-display {
+        .modal-price {
             text-align: center;
-            font-size: 38px;
+            font-size: 40px;
             font-weight: 900;
-            background: linear-gradient(135deg, #60a5fa, #818cf8);
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: -1.5px;
             margin: 10px 0 20px;
-            letter-spacing: -1px;
         }
 
-        .modal-info-box {
+        .info-box {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--border);
-            border-radius: var(--radius-md);
+            border-radius: var(--r-md);
             padding: 14px;
-            margin-bottom: 12px;
+            margin-bottom: 11px;
         }
 
-        .modal-info-box p {
+        .info-box p {
             font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
+            color: var(--t2);
             line-height: 1.5;
         }
 
-        .modal-info-box .highlight {
+        .info-box .hl {
             font-size: 15px;
             font-weight: 700;
-            color: var(--blue-ultra);
+            color: var(--blue3);
+            margin-top: 4px;
         }
 
-        .modal-warning {
+        .warn {
             font-size: 12px;
-            color: var(--warning);
+            color: var(--amber);
             margin-top: 6px;
             display: flex;
             align-items: center;
             gap: 4px;
         }
 
-        .balance-check {
+        .bal-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--border);
-            border-radius: var(--radius-md);
+            border-radius: var(--r-md);
             padding: 12px 14px;
             margin-bottom: 16px;
         }
 
-        .balance-check-label {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .balance-check-val {
-            font-size: 15px;
-            font-weight: 800;
-            color: white;
-        }
-
-        .balance-check-val.ok { color: var(--success); }
-        .balance-check-val.nok { color: var(--danger); }
+        .bal-lbl { font-size: 13px; color: var(--t2); }
+        .bal-val { font-size: 15px; font-weight: 800; color: white; }
+        .bal-ok { color: var(--green); }
+        .bal-nok { color: var(--red); }
 
         /* ============================================
-           PAGE HISTORIQUE
+           HISTORIQUE
         ============================================ */
-        .history-empty {
+        .hist-empty {
             text-align: center;
-            padding: 60px 30px;
+            padding: 60px 28px;
         }
 
-        .history-empty-icon {
-            font-size: 52px;
-            margin-bottom: 14px;
-            opacity: 0.4;
-        }
+        .hist-empty-ico { font-size: 50px; opacity: 0.35; margin-bottom: 14px; }
 
-        .history-empty h3 {
-            font-size: 17px;
+        .hist-empty h3 {
+            font-size: 16px;
             font-weight: 700;
-            color: var(--text-secondary);
+            color: var(--t2);
             margin-bottom: 6px;
         }
 
-        .history-empty p {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
+        .hist-empty p { font-size: 13px; color: var(--t3); }
 
-        .history-item {
+        .hist-item {
             margin: 0 16px 10px;
-            background: var(--bg-card);
+            background: var(--bg3);
             border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
+            border-radius: var(--r-lg);
             padding: 14px 16px;
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 13px;
+            animation: itemIn 0.28s ease;
         }
 
-        .history-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: var(--radius-sm);
-            background: rgba(37,99,235,0.15);
-            border: 1px solid rgba(59,130,246,0.2);
+        @keyframes itemIn {
+            from { opacity: 0; transform: translateX(-8px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .hist-ico {
+            width: 42px; height: 42px;
+            border-radius: var(--r-sm);
+            background: rgba(37,99,235,0.14);
+            border: 1px solid rgba(59,130,246,0.18);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 19px;
             flex-shrink: 0;
         }
 
-        .history-info { flex: 1; }
+        .hist-info { flex: 1; min-width: 0; }
 
-        .history-name {
-            font-size: 14px;
+        .hist-name {
+            font-size: 13.5px;
             font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 3px;
-        }
-
-        .history-date {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .history-price {
-            font-size: 15px;
-            font-weight: 800;
-            color: var(--danger);
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .history-price.free { color: var(--success); }
+        .hist-date { font-size: 11.5px; color: var(--t3); margin-top: 2px; }
+
+        .hist-price {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--red);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .hist-price.free { color: var(--green); }
 
         /* ============================================
            PAGE REVENDEUR
         ============================================ */
-        .reseller-hero {
-            margin: 16px;
-            background: linear-gradient(135deg, #0d1f3c, #1a2f5e);
-            border: 1px solid var(--border-blue);
-            border-radius: var(--radius-xl);
-            padding: 28px 22px;
+        .res-hero {
+            margin: 14px 16px;
+            background: linear-gradient(135deg, #0c1d3a, #162a55);
+            border: 1px solid var(--border-b);
+            border-radius: var(--r-xl);
+            padding: 28px 20px;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
 
-        .reseller-hero::before {
+        .res-hero::before {
             content: '';
             position: absolute;
-            top: -80px;
-            left: 50%;
+            top: -100px; left: 50%;
             transform: translateX(-50%);
-            width: 300px;
-            height: 200px;
-            background: radial-gradient(ellipse, rgba(37,99,235,0.2), transparent 70%);
+            width: 320px; height: 220px;
+            background: radial-gradient(ellipse, rgba(37,99,235,0.18), transparent 70%);
+            pointer-events: none;
         }
 
-        .reseller-crown {
-            font-size: 52px;
-            margin-bottom: 14px;
-        }
+        .res-hero .big-ico { font-size: 50px; margin-bottom: 14px; }
+        .res-hero h2 { font-size: 25px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 8px; }
+        .res-hero p { font-size: 13.5px; color: var(--t2); line-height: 1.65; margin-bottom: 22px; }
 
-        .reseller-hero h2 {
-            font-size: 26px;
-            font-weight: 900;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
-
-        .reseller-hero p {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 22px;
-        }
-
-        .reseller-feature {
+        .res-feat {
             margin: 0 16px 10px;
-            background: var(--bg-card);
+            background: var(--bg3);
             border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 16px;
+            border-radius: var(--r-lg);
+            padding: 15px 16px;
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 13px;
         }
 
-        .reseller-feature-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: var(--radius-sm);
-            background: rgba(37,99,235,0.15);
-            border: 1px solid rgba(59,130,246,0.2);
+        .res-feat-ico {
+            width: 43px; height: 43px;
+            border-radius: var(--r-sm);
+            background: rgba(37,99,235,0.14);
+            border: 1px solid rgba(59,130,246,0.18);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 19px;
             flex-shrink: 0;
         }
 
-        .reseller-feature h4 {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
-
-        .reseller-feature p {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
+        .res-feat h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+        .res-feat p { font-size: 12px; color: var(--t2); }
 
         /* ============================================
-           PANNEAU ADMIN
+           PANEL ADMIN — INVISIBLE HORS CONNEXION
         ============================================ */
-        .admin-panel {
+        #adminPanel {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            z-index: 300;
+            background: rgba(0,0,0,0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 999;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
 
-        .admin-panel.open { display: flex; }
+        #adminPanel.open { display: flex; animation: fadeO 0.2s ease; }
 
         .admin-card {
-            background: linear-gradient(135deg, #0d1f3c, #0a1628);
-            border: 1px solid rgba(59,130,246,0.3);
-            border-radius: var(--radius-xl);
-            padding: 28px 22px;
+            background: linear-gradient(160deg, #0d1f3c 0%, #0a1628 100%);
+            border: 1px solid rgba(59,130,246,0.22);
+            border-radius: var(--r-xl);
+            padding: 26px 20px;
             width: 100%;
-            max-width: 360px;
+            max-width: 380px;
+            max-height: 90vh;
+            overflow-y: auto;
+            scrollbar-width: none;
         }
 
-        .admin-card h2 {
-            font-size: 20px;
+        .admin-card::-webkit-scrollbar { display: none; }
+
+        .admin-hd {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .admin-hd h2 {
+            font-size: 19px;
             font-weight: 900;
-            margin-bottom: 4px;
-            background: linear-gradient(135deg, #60a5fa, #818cf8);
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .admin-card p.admin-sub {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 22px;
+        .admin-hd p { font-size: 11px; color: var(--t3); margin-top: 2px; }
+
+        .admin-close {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 30px; height: 30px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+            color: var(--t2);
+            flex-shrink: 0;
         }
 
-        .admin-stat {
+        .astat {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 14px;
-            margin-bottom: 10px;
+            border-radius: var(--r-md);
+            padding: 13px;
+            margin-bottom: 9px;
         }
 
-        .admin-stat-label {
-            font-size: 11px;
-            color: var(--text-muted);
+        .astat-lbl {
+            font-size: 10px;
+            color: var(--t3);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.2px;
             margin-bottom: 4px;
         }
 
-        .admin-stat-val {
+        .astat-val {
             font-size: 26px;
             font-weight: 900;
             color: white;
         }
 
-        .admin-inject {
-            margin-top: 16px;
+        .admin-sec-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--t3);
+            text-transform: uppercase;
+            margin: 18px 0 10px;
         }
 
-        .admin-inject label {
-            font-size: 12px;
-            color: var(--text-secondary);
+        /* Sélecteur d'utilisateur */
+        .user-select-wrap {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-b);
+            border-radius: var(--r-md);
+            padding: 12px 14px;
+            margin-bottom: 10px;
+        }
+
+        .user-select-lbl {
+            font-size: 11px;
+            color: var(--t3);
             margin-bottom: 8px;
-            display: block;
+            letter-spacing: 0.5px;
         }
 
-        .admin-inject-row {
+        .user-select-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-select-avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #818cf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 800;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .user-select-info h4 { font-size: 14px; font-weight: 700; }
+        .user-select-info p { font-size: 11px; color: var(--t2); }
+
+        .current-balance-badge {
+            margin-left: auto;
+            background: rgba(34,197,94,0.15);
+            border: 1px solid rgba(34,197,94,0.3);
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--green);
+        }
+
+        .ainput-row {
             display: flex;
             gap: 8px;
+            margin-top: 10px;
         }
 
-        .admin-input {
+        .ainput {
             flex: 1;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border-blue);
-            border-radius: var(--radius-sm);
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border-b);
+            border-radius: var(--r-sm);
             padding: 12px 14px;
             color: white;
             font-size: 15px;
             font-weight: 700;
             outline: none;
+            -webkit-appearance: none;
         }
 
-        .admin-input::placeholder { color: var(--text-muted); }
+        .ainput::placeholder { color: var(--t3); }
+        .ainput:focus { border-color: rgba(59,130,246,0.5); }
 
-        .admin-inject-btn {
+        .ainput-btn {
             background: linear-gradient(135deg, #1d4ed8, #3b82f6);
             border: none;
-            border-radius: var(--radius-sm);
+            border-radius: var(--r-sm);
             padding: 12px 18px;
             color: white;
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
             outline: none;
+            transition: transform 0.14s;
+            white-space: nowrap;
+        }
+
+        .ainput-btn:active { transform: scale(0.95); }
+
+        /* Select natif stylisé */
+        .atarget-select {
+            width: 100%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border-b);
+            border-radius: var(--r-sm);
+            padding: 12px 14px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .atarget-select option { background: #0d1f3c; color: white; }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: calc(70px + var(--sat));
+            left: 50%; transform: translateX(-50%) translateY(-20px);
+            background: rgba(13,31,60,0.97);
+            border: 1px solid rgba(59,130,246,0.3);
+            border-radius: var(--r-md);
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            z-index: 999;
+            pointer-events: none;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            white-space: nowrap;
+            backdrop-filter: blur(20px);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
     </style>
 </head>
 <body>
 
+<div class="glow-top"></div>
+<div class="glow-br"></div>
+
 <div id="app">
 
-    <!-- ============================
-         HEADER
-    ============================ -->
-    <div class="header">
-        <div class="header-logo" id="logoBtn">🔮 O'shop V2</div>
-        <div class="header-right">
-            <div class="header-user">
-                <div class="header-avatar" id="headerAvatar">?</div>
-                <span class="header-username" id="headerUsername">...</span>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="logo" id="logoBtn">🔮 O'shop V2</div>
+        <div class="header-user">
+            <div class="avatar" id="hAvatar">?</div>
+            <span class="username" id="hUser">...</span>
+        </div>
+    </header>
+
+    <!-- PAGE BOUTIQUE -->
+    <div class="page active" id="p-shop">
+        <div class="wallet">
+            <div class="wallet-lbl">💰 Mon Portefeuille</div>
+            <div class="wallet-amt">
+                <sup>€</sup><span id="balDisp">0.00</span>
             </div>
+            <div class="wallet-sub">Solde disponible · Mis à jour en temps réel</div>
+            <button class="wallet-rechbtn" onclick="openRecharge()">➕ Recharger</button>
         </div>
+
+        <div class="sec-hd"><div class="sec-dot"></div><span class="sec-lbl">Points KFC</span></div>
+        <div id="kfcList"></div>
+
+        <div class="sec-hd"><div class="sec-dot"></div><span class="sec-lbl">Services Premium</span></div>
+        <div id="premList"></div>
     </div>
 
-    <!-- ============================
-         PAGE 1 — BOUTIQUE
-    ============================ -->
-    <div class="page-content active" id="page-boutique">
-
-        <!-- Carte Wallet -->
-        <div class="wallet-card">
-            <div class="wallet-label">💰 Mon Solde</div>
-            <div class="wallet-balance">
-                <span>€</span><span id="balanceDisplay">0.00</span>
-            </div>
-            <div class="wallet-sub">Solde disponible pour vos achats</div>
-            <button class="wallet-btn" onclick="openRechargeModal()">
-                ➕ Recharger le solde
-            </button>
-        </div>
-
-        <!-- Section KFC -->
-        <div class="section-header">
-            <div class="section-dot"></div>
-            <span class="section-title">Points KFC</span>
-        </div>
-        <div id="kfc-list"></div>
-
-        <!-- Section Autres Services -->
-        <div class="section-header">
-            <div class="section-dot"></div>
-            <span class="section-title">Services Premium</span>
-        </div>
-        <div id="premium-list"></div>
-
+    <!-- PAGE HISTORIQUE -->
+    <div class="page" id="p-history">
+        <div class="sec-hd"><div class="sec-dot"></div><span class="sec-lbl">Mes Achats</span></div>
+        <div id="histList"></div>
     </div>
 
-    <!-- ============================
-         PAGE 2 — HISTORIQUE
-    ============================ -->
-    <div class="page-content" id="page-history">
-        <div class="section-header">
-            <div class="section-dot"></div>
-            <span class="section-title">Mes Achats</span>
-        </div>
-        <div id="history-list"></div>
-    </div>
-
-    <!-- ============================
-         PAGE 3 — REVENDEUR
-    ============================ -->
-    <div class="page-content" id="page-reseller">
-
-        <div class="reseller-hero">
-            <div class="reseller-crown">👑</div>
-            <div class="badge badge-blue" style="margin-bottom:12px">PROGRAMME GROSSISTE</div>
+    <!-- PAGE REVENDEUR -->
+    <div class="page" id="p-resell">
+        <div class="res-hero">
+            <div class="big-ico">👑</div>
+            <div class="badge badge-b" style="margin-bottom:12px">Programme Grossiste</div>
             <h2>Deviens Revendeur</h2>
-            <p>Accède à nos tarifs grossistes exclusifs et revends nos services avec une marge confortable. Programme réservé aux partenaires sérieux.</p>
-            <button class="btn-primary" onclick="openSupport()">
-                📲 Contacter le Support →
-            </button>
+            <p>Accède à nos tarifs exclusifs et revends nos services avec une marge confortable. Programme réservé aux partenaires sérieux.</p>
+            <button class="btn btn-p" onclick="callSupport()">📲 Contacter le Support →</button>
         </div>
-
-        <div class="section-header">
-            <div class="section-dot"></div>
-            <span class="section-title">Avantages Revendeur</span>
-        </div>
-
-        <div class="reseller-feature">
-            <div class="reseller-feature-icon">💸</div>
-            <div>
-                <h4>Tarifs Grossistes</h4>
-                <p>Jusqu'à -40% sur tous nos services</p>
-            </div>
-        </div>
-        <div class="reseller-feature">
-            <div class="reseller-feature-icon">⚡</div>
-            <div>
-                <h4>Livraison Prioritaire</h4>
-                <p>Commandes traitées en priorité absolue</p>
-            </div>
-        </div>
-        <div class="reseller-feature">
-            <div class="reseller-feature-icon">🛡️</div>
-            <div>
-                <h4>Support Dédié</h4>
-                <p>Un gestionnaire de compte personnel</p>
-            </div>
-        </div>
-        <div class="reseller-feature">
-            <div class="reseller-feature-icon">📊</div>
-            <div>
-                <h4>Dashboard Revendeur</h4>
-                <p>Suivi en temps réel de vos commandes</p>
-            </div>
-        </div>
-
-        <div style="padding: 16px 16px 0;">
-            <button class="btn-primary" onclick="openSupport()">
-                💬 Rejoindre le Programme →
-            </button>
+        <div class="sec-hd"><div class="sec-dot"></div><span class="sec-lbl">Avantages</span></div>
+        <div class="res-feat"><div class="res-feat-ico">💸</div><div><h4>Tarifs Grossistes</h4><p>Jusqu'à -40% sur tous nos services</p></div></div>
+        <div class="res-feat"><div class="res-feat-ico">⚡</div><div><h4>Livraison Prioritaire</h4><p>Commandes traitées en priorité absolue</p></div></div>
+        <div class="res-feat"><div class="res-feat-ico">🛡️</div><div><h4>Support Dédié</h4><p>Un gestionnaire de compte personnel</p></div></div>
+        <div class="res-feat"><div class="res-feat-ico">📊</div><div><h4>Dashboard Revendeur</h4><p>Suivi en temps réel de vos commandes</p></div></div>
+        <div style="padding:16px 16px 0">
+            <button class="btn btn-p" onclick="callSupport()">💬 Rejoindre le Programme →</button>
         </div>
     </div>
 
-    <!-- ============================
-         PAGE 4 — SUPPORT
-    ============================ -->
-    <div class="page-content" id="page-support">
-        <div style="padding: 40px 20px; text-align: center;">
-            <div style="font-size:60px; margin-bottom:16px;">💬</div>
-            <h2 style="font-size:22px; font-weight:900; margin-bottom:8px;">Support O'shop</h2>
-            <p style="font-size:14px; color:var(--text-secondary); margin-bottom:30px; line-height:1.6;">
-                Notre équipe est disponible 7j/7 pour répondre à toutes vos questions concernant vos commandes et services.
-            </p>
-            <button class="btn-primary" onclick="openSupport()">
-                📲 Contacter @zeromeufuhq →
-            </button>
-            <div style="margin-top:20px; padding:16px; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:var(--radius-md);">
-                <p style="font-size:12px; color:var(--text-muted);">⏱️ Temps de réponse moyen</p>
-                <p style="font-size:18px; font-weight:800; color:var(--success); margin-top:4px;">< 15 minutes</p>
+    <!-- PAGE SUPPORT -->
+    <div class="page" id="p-support">
+        <div style="padding:44px 20px;text-align:center">
+            <div style="font-size:58px;margin-bottom:16px">💬</div>
+            <h2 style="font-size:22px;font-weight:900;margin-bottom:8px">Support O'shop</h2>
+            <p style="font-size:14px;color:var(--t2);margin-bottom:28px;line-height:1.65">Notre équipe est disponible 7j/7 pour toutes vos questions concernant vos commandes et services.</p>
+            <button class="btn btn-p" onclick="callSupport()">📲 Contacter @zeromeufuhq →</button>
+            <div style="margin-top:18px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--r-md)">
+                <p style="font-size:12px;color:var(--t3)">⏱️ Temps de réponse moyen</p>
+                <p style="font-size:20px;font-weight:900;color:var(--green);margin-top:4px">< 15 min</p>
             </div>
         </div>
     </div>
 
-    <!-- ============================
-         NAVIGATION BASSE
-    ============================ -->
-    <nav class="bottom-nav">
-        <button class="nav-item active" onclick="switchPage('boutique', this)">
-            <span class="nav-icon">🛍️</span>
-            <span class="nav-label">Boutique</span>
-            <div class="nav-indicator"></div>
+    <!-- NAV -->
+    <nav class="nav">
+        <button class="nav-btn on" onclick="goPage('shop',this)">
+            <span class="nav-ico">🛍️</span>
+            <span class="nav-lbl">Boutique</span>
+            <div class="nav-pip"></div>
         </button>
-        <button class="nav-item" onclick="switchPage('history', this)">
-            <span class="nav-icon">📋</span>
-            <span class="nav-label">Mes Achats</span>
-            <div class="nav-indicator"></div>
+        <button class="nav-btn" onclick="goPage('history',this)">
+            <span class="nav-ico">📋</span>
+            <span class="nav-lbl">Mes Achats</span>
+            <div class="nav-pip"></div>
         </button>
-        <button class="nav-item" onclick="switchPage('reseller', this)">
-            <span class="nav-icon">👑</span>
-            <span class="nav-label">Revendeur</span>
-            <div class="nav-indicator"></div>
+        <button class="nav-btn" onclick="goPage('resell',this)">
+            <span class="nav-ico">👑</span>
+            <span class="nav-lbl">Revendeur</span>
+            <div class="nav-pip"></div>
         </button>
-        <button class="nav-item" onclick="switchPage('support', this)">
-            <span class="nav-icon">💬</span>
-            <span class="nav-label">Support</span>
-            <div class="nav-indicator"></div>
+        <button class="nav-btn" onclick="goPage('support',this)">
+            <span class="nav-ico">💬</span>
+            <span class="nav-lbl">Support</span>
+            <div class="nav-pip"></div>
         </button>
     </nav>
-
 </div>
 
-<!-- ============================
-     MODAL ACHAT / DÉTAIL SERVICE
-============================ -->
-<div class="modal-overlay" id="serviceModal" onclick="closeServiceModal(event)">
-    <div class="modal-sheet">
-        <div class="modal-handle"></div>
-        <div class="modal-service-icon" id="m-icon">🍗</div>
-        <div class="modal-category" id="m-cat">POINTS KFC</div>
-        <div class="modal-title" id="m-name">Service</div>
-        <div class="modal-price-display" id="m-price">0.00 €</div>
-
-        <div class="modal-info-box">
-            <p id="m-desc">Description du service</p>
+<!-- MODAL SERVICE -->
+<div class="overlay" id="svcOverlay" onclick="closeSvc(event)">
+    <div class="sheet">
+        <div class="drag-bar"></div>
+        <div class="modal-ico" id="m-ico">🍗</div>
+        <div class="modal-cat" id="m-cat"></div>
+        <div class="modal-title" id="m-name"></div>
+        <div class="modal-price" id="m-price"></div>
+        <div class="info-box"><p id="m-desc"></p></div>
+        <div class="bal-row">
+            <span class="bal-lbl">💰 Votre solde</span>
+            <span class="bal-val" id="m-bal"></span>
         </div>
-
-        <div class="balance-check">
-            <span class="balance-check-label">💰 Votre solde</span>
-            <span class="balance-check-val" id="m-balance-val">0.00 €</span>
-        </div>
-
-        <button class="btn-primary" id="m-buy-btn" onclick="confirmPurchase()">
-            ✅ Acheter maintenant
-        </button>
-        <button class="btn-secondary" onclick="closeServiceModal()">Annuler</button>
+        <button class="btn btn-p" id="m-buybtn" onclick="doBuy()">✅ Acheter</button>
+        <button class="btn btn-s" onclick="closeSvc()">Annuler</button>
     </div>
 </div>
 
-<!-- ============================
-     MODAL RECHARGE WALLET
-============================ -->
-<div class="modal-overlay" id="rechargeModal" onclick="closeRechargeModal(event)">
-    <div class="modal-sheet">
-        <div class="modal-handle"></div>
-        <div style="text-align:center; margin-bottom:16px;">
-            <div style="font-size:44px; margin-bottom:10px;">💳</div>
-            <div class="badge badge-blue" style="margin-bottom:10px;">RECHARGE SOLDE</div>
-            <h2 style="font-size:22px; font-weight:900; margin-bottom:6px;">Recharger mon Wallet</h2>
-            <p style="font-size:13px; color:var(--text-secondary);">Envoie le montant souhaité sur PayPal puis envoie le screenshot à notre support.</p>
+<!-- MODAL RECHARGE -->
+<div class="overlay" id="rechOverlay" onclick="closeRech(event)">
+    <div class="sheet">
+        <div class="drag-bar"></div>
+        <div style="text-align:center;margin-bottom:16px">
+            <div style="font-size:44px;margin-bottom:10px">💳</div>
+            <div class="badge badge-b" style="margin-bottom:10px">Recharge Wallet</div>
+            <h2 style="font-size:21px;font-weight:900;margin-bottom:6px">Recharger mon Solde</h2>
+            <p style="font-size:13px;color:var(--t2)">Envoie le montant sur PayPal puis envoie le screenshot au support.</p>
         </div>
-
-        <div class="modal-info-box">
+        <div class="info-box">
             <p>📧 Adresse PayPal :</p>
-            <div class="highlight">nohanbourgeois9@gmail.com</div>
-            <div class="modal-warning">⚠️ En mode Ami/Famille UNIQUEMENT</div>
+            <div class="hl">nohanbourgeois9@gmail.com</div>
+            <div class="warn">⚠️ En mode Ami/Famille UNIQUEMENT</div>
         </div>
-
-        <div class="modal-info-box">
+        <div class="info-box">
             <p>📸 Procédure :</p>
-            <p style="margin-top:6px;">1. Effectue le virement PayPal</p>
-            <p>2. Fais une capture d'écran du paiement</p>
-            <p>3. Envoie-la au support Telegram</p>
-            <p>4. Ton solde sera crédité sous 5 minutes ✅</p>
+            <p style="margin-top:6px;line-height:1.9">1. Effectue le virement PayPal<br>2. Screenshot du paiement<br>3. Envoie au support Telegram<br>4. Solde crédité sous 5 min ✅</p>
         </div>
-
-        <button class="btn-primary" onclick="openSupport(); closeRechargeModal();">
-            📲 Envoyer au Support →
-        </button>
-        <button class="btn-secondary" onclick="closeRechargeModal()">Fermer</button>
+        <button class="btn btn-p" onclick="callSupport();closeRech()">📲 Envoyer au Support →</button>
+        <button class="btn btn-s" onclick="closeRech()">Fermer</button>
     </div>
 </div>
 
-<!-- ============================
-     PANNEAU ADMINISTRATEUR SECRET
-============================ -->
-<div class="admin-panel" id="adminPanel">
+<!-- PANEL ADMIN — MASQUÉ PAR DÉFAUT -->
+<div id="adminPanel">
     <div class="admin-card">
-        <h2>🛡️ Admin Panel</h2>
-        <p class="admin-sub">Accès restreint — O'shop V2</p>
-
-        <div class="admin-stat">
-            <div class="admin-stat-label">Chiffre d'Affaires (Session)</div>
-            <div class="admin-stat-val" id="admin-ca">0.00 €</div>
+        <div class="admin-hd">
+            <div>
+                <h2>🛡️ Admin Panel</h2>
+                <p>Accès restreint · O'shop V2</p>
+            </div>
+            <button class="admin-close" onclick="closeAdmin()">✕</button>
         </div>
 
-        <div class="admin-stat">
-            <div class="admin-stat-label">Commandes Traitées</div>
-            <div class="admin-stat-val" id="admin-orders">0</div>
+        <!-- Stats session -->
+        <div class="astat">
+            <div class="astat-lbl">Chiffre d'Affaires · Session</div>
+            <div class="astat-val" id="a-ca">0.00 €</div>
+        </div>
+        <div class="astat">
+            <div class="astat-lbl">Commandes Traitées</div>
+            <div class="astat-val" id="a-orders">0</div>
         </div>
 
-        <div class="admin-stat">
-            <div class="admin-stat-label">Solde Client Actuel</div>
-            <div class="admin-stat-val" id="admin-balance-display">0.00 €</div>
-        </div>
+        <!-- Sélecteur de cible -->
+        <div class="admin-sec-title">💉 Injection de Solde</div>
 
-        <div class="admin-inject">
-            <label>💉 Injecter du solde (test) :</label>
-            <div class="admin-inject-row">
-                <input type="number" class="admin-input" id="injectAmount" placeholder="Ex: 10.00" step="0.01" min="0">
-                <button class="admin-inject-btn" onclick="injectBalance()">➕ OK</button>
+        <div class="user-select-wrap">
+            <div class="user-select-lbl">Compte cible :</div>
+            <select class="atarget-select" id="targetUser">
+                <option value="self">👤 Moi-même (session actuelle)</option>
+            </select>
+            <!-- Aperçu du compte sélectionné -->
+            <div class="user-select-row" id="targetPreview">
+                <div class="user-select-avatar" id="tAvatar">?</div>
+                <div class="user-select-info">
+                    <h4 id="tName">—</h4>
+                    <p id="tSub">Compte actif</p>
+                </div>
+                <div class="current-balance-badge" id="tBal">0.00 €</div>
             </div>
         </div>
 
-        <button class="btn-secondary" style="margin-top:16px;" onclick="closeAdmin()">
-            🔒 Fermer le panneau
-        </button>
+        <div class="ainput-row">
+            <input type="number" class="ainput" id="injectAmt" placeholder="Montant (ex: 10.00)" step="0.01" min="0.01">
+            <button class="ainput-btn" onclick="doInject()">➕ Injecter</button>
+        </div>
+
+        <!-- Retrait -->
+        <div class="admin-sec-title" style="margin-top:14px">➖ Retrait de Solde</div>
+        <div class="ainput-row">
+            <input type="number" class="ainput" id="deductAmt" placeholder="Montant à retirer" step="0.01" min="0.01">
+            <button class="ainput-btn" style="background:linear-gradient(135deg,#991b1b,#ef4444)" onclick="doDeduct()">➖ Retirer</button>
+        </div>
+
+        <!-- Reset -->
+        <div class="admin-sec-title" style="margin-top:14px">🔧 Actions</div>
+        <button class="btn btn-s" onclick="doReset()" style="margin-top:0">🗑️ Remettre solde à 0</button>
+        <button class="btn btn-s" onclick="clearHistory()">📋 Vider l'historique</button>
     </div>
 </div>
 
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
 <script>
-/* ============================================
-   INITIALISATION TELEGRAM WEB APP
-============================================ */
+/* ================================================
+   TELEGRAM WEB APP INIT
+================================================ */
 const tg = window.Telegram?.WebApp;
 if (tg) {
     tg.expand();
     tg.enableClosingConfirmation();
-    if (tg.setHeaderColor) tg.setHeaderColor('#020617');
-    if (tg.setBackgroundColor) tg.setBackgroundColor('#020617');
+    try { tg.setHeaderColor('#020617'); } catch(e){}
+    try { tg.setBackgroundColor('#020617'); } catch(e){}
 }
 
-/* ============================================
-   DONNÉES UTILISATEUR TELEGRAM
-============================================ */
-const tgUser = tg?.initDataUnsafe?.user;
-const userName = tgUser ? (tgUser.username ? '@' + tgUser.username : tgUser.first_name) : 'Invité';
-const userInitial = (tgUser?.first_name || 'O')[0].toUpperCase();
+const tgUser  = tg?.initDataUnsafe?.user;
+const myName  = tgUser ? (tgUser.username ? '@'+tgUser.username : tgUser.first_name) : 'Invité';
+const myInit  = (tgUser?.first_name || 'O')[0].toUpperCase();
+const myId    = tgUser?.id || 'local';
 
-document.getElementById('headerUsername').textContent = userName;
-document.getElementById('headerAvatar').textContent = userInitial;
+document.getElementById('hUser').textContent   = myName;
+document.getElementById('hAvatar').textContent = myInit;
 
-/* ============================================
-   ÉTAT GLOBAL DE L'APPLICATION (localStorage)
-============================================ */
+/* ================================================
+   ÉTAT GLOBAL (localStorage par compte)
+================================================ */
+const SK_BAL  = 'os2_bal_'  + myId;
+const SK_HIST = 'os2_hist_' + myId;
+const SK_CA   = 'os2_ca';
+const SK_ORD  = 'os2_ord';
+
+/* Comptes connus (base multi-utilisateurs simulée) */
+const SK_USERS = 'os2_users';
+
+function getUsers() {
+    return JSON.parse(localStorage.getItem(SK_USERS) || '{}');
+}
+
+function saveUsers(u) {
+    localStorage.setItem(SK_USERS, JSON.stringify(u));
+}
+
+/* Enregistre l'utilisateur actuel */
+(function registerMe() {
+    const users = getUsers();
+    if (!users[myId]) {
+        users[myId] = { id: myId, name: myName, initial: myInit };
+        saveUsers(users);
+    }
+})();
+
 let state = {
-    balance: parseFloat(localStorage.getItem('oshop_balance') || '0'),
-    history: JSON.parse(localStorage.getItem('oshop_history') || '[]'),
-    totalCA: parseFloat(localStorage.getItem('oshop_ca') || '0'),
-    totalOrders: parseInt(localStorage.getItem('oshop_orders') || '0'),
+    balance : parseFloat(localStorage.getItem(SK_BAL)  || '0'),
+    history : JSON.parse(localStorage.getItem(SK_HIST) || '[]'),
+    totalCA : parseFloat(localStorage.getItem(SK_CA)   || '0'),
+    totalOrd: parseInt(localStorage.getItem(SK_ORD)    || '0'),
 };
 
-/* Sauvegarde l'état dans localStorage */
-function saveState() {
-    localStorage.setItem('oshop_balance', state.balance.toFixed(2));
-    localStorage.setItem('oshop_history', JSON.stringify(state.history));
-    localStorage.setItem('oshop_ca', state.totalCA.toFixed(2));
-    localStorage.setItem('oshop_orders', state.totalOrders.toString());
+function save() {
+    localStorage.setItem(SK_BAL,  state.balance.toFixed(2));
+    localStorage.setItem(SK_HIST, JSON.stringify(state.history));
+    localStorage.setItem(SK_CA,   state.totalCA.toFixed(2));
+    localStorage.setItem(SK_ORD,  state.totalOrders || state.totalOrd);
 }
 
-/* Met à jour l'affichage du solde */
-function updateBalanceDisplay() {
-    document.getElementById('balanceDisplay').textContent = state.balance.toFixed(2);
+function refreshBal() {
+    document.getElementById('balDisp').textContent = state.balance.toFixed(2);
 }
 
-updateBalanceDisplay();
+refreshBal();
 
-/* ============================================
-   CATALOGUE DES SERVICES
-============================================ */
-const kfcServices = [
-    { id: 'kfc1', icon: '🍗', cat: 'KFC — POINTS', name: '300 à 499 Points', desc: 'Pack entrée de gamme idéal pour découvrir les récompenses KFC.', prix: 1.50 },
-    { id: 'kfc2', icon: '🍗', cat: 'KFC — POINTS', name: '600 à 799 Points', desc: 'Pack populaire avec un bon rapport qualité/prix.', prix: 3.00 },
-    { id: 'kfc3', icon: '🍗', cat: 'KFC — POINTS', name: '800 à 999 Points', desc: 'Accédez à davantage de récompenses exclusives.', prix: 4.50 },
-    { id: 'kfc4', icon: '🍗', cat: 'KFC — POINTS', name: '1000 à 1299 Points', desc: 'Pack intermédiaire pour les amateurs de KFC réguliers.', prix: 6.00 },
-    { id: 'kfc5', icon: '🍗', cat: 'KFC — POINTS', name: '1300 à 1599 Points', desc: 'Pack avantageux pour maximiser vos récompenses.', prix: 8.00 },
-    { id: 'kfc6', icon: '🍗', cat: 'KFC — POINTS', name: '1600 à 1799 Points', desc: 'Très populaire parmi nos clients fidèles.', prix: 8.50 },
-    { id: 'kfc7', icon: '🍗', cat: 'KFC — POINTS', name: '1800 à 1999 Points', desc: 'Approchez le palier premium avec ce pack généreux.', prix: 10.00 },
-    { id: 'kfc8', icon: '🍗', cat: 'KFC — POINTS', name: '2000 à 2399 Points', desc: 'Grande offre pour les vrais passionnés de KFC.', prix: 11.50 },
-    { id: 'kfc9', icon: '🍗', cat: 'KFC — POINTS', name: '2450 à 2500 Points', desc: 'Pack maximum — le meilleur de notre catalogue KFC. 🏆', prix: 13.00 },
+/* ================================================
+   CATALOGUE
+================================================ */
+const kfc = [
+    { id:'k1', ico:'🍗', cat:'KFC · POINTS', name:'300 à 499 Points',  desc:'Pack entrée de gamme, idéal pour démarrer.', prix:1.50  },
+    { id:'k2', ico:'🍗', cat:'KFC · POINTS', name:'600 à 799 Points',  desc:'Pack populaire avec un excellent ratio qualité/prix.', prix:3.00  },
+    { id:'k3', ico:'🍗', cat:'KFC · POINTS', name:'800 à 999 Points',  desc:'Accédez à davantage de récompenses exclusives.', prix:4.50  },
+    { id:'k4', ico:'🍗', cat:'KFC · POINTS', name:'1000 à 1299 Points',desc:'Pack intermédiaire pour les amateurs réguliers.', prix:6.00  },
+    { id:'k5', ico:'🍗', cat:'KFC · POINTS', name:'1300 à 1599 Points',desc:'Offre avantageuse pour maximiser vos récompenses.', prix:8.00  },
+    { id:'k6', ico:'🍗', cat:'KFC · POINTS', name:'1600 à 1799 Points',desc:'Très populaire parmi nos clients fidèles.', prix:8.50  },
+    { id:'k7', ico:'🍗', cat:'KFC · POINTS', name:'1800 à 1999 Points',desc:'Approchez le palier premium avec ce pack généreux.', prix:10.00 },
+    { id:'k8', ico:'🍗', cat:'KFC · POINTS', name:'2000 à 2399 Points',desc:'Grande offre pour les vrais passionnés de KFC.', prix:11.50 },
+    { id:'k9', ico:'🍗', cat:'KFC · POINTS', name:'2450 à 2500 Points',desc:'Pack maximum — le summum de notre catalogue. 🏆', prix:13.00 },
 ];
 
-const premiumServices = [
-    { id: 'bf1', icon: '💪', cat: 'BASIC-FIT', name: 'Ultimate 1 Mois', desc: 'Abonnement Basic-Fit Ultimate complet — accès toutes salles en Europe inclus.', prix: 10.00 },
-    { id: 'dc1', icon: '💎', cat: 'DISCORD', name: 'Nitro Premium', desc: 'Abonnement Discord Nitro complet avec 2 Boosts de serveur inclus.', prix: 5.50 },
-    { id: 'stream1', icon: '🎬', cat: 'STREAMING', name: 'Cinéma Gratuit', desc: 'Catalogue complet Films & Séries en HD/VF/VO. Accès immédiat et gratuit !', prix: 0, isFree: true, isRedirect: true, redirectUrl: 'https://nakastream.tv/' },
+const prem = [
+    { id:'p1', ico:'💪', cat:'BASIC-FIT', name:'Ultimate 1 Mois',   desc:'Accès toutes salles en Europe inclus. Abonnement complet.', prix:10.00 },
+    { id:'p2', ico:'💎', cat:'DISCORD',   name:'Nitro Premium',     desc:'Abonnement Nitro complet avec 2 Boosts de serveur inclus.', prix:5.50  },
+    {
+        id:'p3', ico:'🎬', cat:'STREAMING', name:'Cinéma Gratuit',
+        desc:'Catalogue Films & Séries HD/VF/VO. Accès immédiat gratuit !',
+        prix:0, isFree:true, isRedir:true, url:'https://nakastream.tv/'
+    },
 ];
 
-/* ============================================
-   GÉNÉRATION DES CARTES DE SERVICES
-============================================ */
-function createServiceCard(service) {
-    const priceLabel = service.isFree ? 'GRATUIT' : service.prix.toFixed(2) + ' €';
-    const dotClass = service.isFree ? 'price-dot price-dot-free' : 'price-dot';
-    const actionLabel = service.isRedirect ? '🎬 Accéder gratuitement →' : '🛒 Commander →';
+const allSvcs = [...kfc, ...prem];
 
+/* ================================================
+   RENDU DES CARTES
+================================================ */
+function card(s) {
+    const chip = s.isFree
+        ? `<div class="price-chip"><div class="pdot pdot-blue"></div>GRATUIT</div>`
+        : `<div class="price-chip"><div class="pdot pdot-green"></div>${s.prix.toFixed(2)} €</div>`;
+    const act  = s.isRedir ? '🎬 Accéder gratuitement →' : '🛒 Commander →';
     return `
-        <div class="service-card" onclick="handleServiceClick('${service.id}')">
-            <div class="service-card-top">
-                <div class="service-icon-wrap">${service.icon}</div>
-                <div class="service-price-badge">
-                    <div class="${dotClass}"></div>
-                    ${priceLabel}
-                </div>
+        <div class="scard" onclick="onSvc('${s.id}')">
+            <div class="scard-top">
+                <div class="scard-ico">${s.ico}</div>
+                ${chip}
             </div>
-            <div class="service-category">${service.cat}</div>
-            <div class="service-name">${service.name}</div>
-            <div class="service-desc">${service.desc}</div>
-            <div class="service-action">${actionLabel}</div>
-        </div>
-    `;
+            <div class="scard-cat">${s.cat}</div>
+            <div class="scard-name">${s.name}</div>
+            <div class="scard-desc">${s.desc}</div>
+            <div class="scard-action">${act}</div>
+        </div>`;
 }
 
-/* Injection des cartes dans le DOM */
-document.getElementById('kfc-list').innerHTML = kfcServices.map(createServiceCard).join('');
-document.getElementById('premium-list').innerHTML = premiumServices.map(createServiceCard).join('');
+document.getElementById('kfcList').innerHTML  = kfc.map(card).join('');
+document.getElementById('premList').innerHTML = prem.map(card).join('');
 
-/* ============================================
-   GESTION DES CLICS SUR LES SERVICES
-============================================ */
-let currentService = null;
+/* ================================================
+   NAVIGATION
+================================================ */
+function goPage(id, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
+    document.getElementById('p-'+id).classList.add('active');
+    btn.classList.add('on');
+    if (id==='history') renderHist();
+}
 
-function handleServiceClick(id) {
-    /* Cherche dans les deux catalogues */
-    const service = [...kfcServices, ...premiumServices].find(s => s.id === id);
-    if (!service) return;
+/* ================================================
+   SERVICE CLICK
+================================================ */
+let curSvc = null;
 
-    /* Si c'est une redirection directe (ex: streaming gratuit) */
-    if (service.isRedirect) {
-        if (tg) tg.openLink(service.redirectUrl);
-        else window.open(service.redirectUrl, '_blank');
+function onSvc(id) {
+    const s = allSvcs.find(x => x.id === id);
+    if (!s) return;
+    if (s.isRedir) {
+        if (tg) tg.openLink(s.url);
+        else window.open(s.url, '_blank');
         return;
     }
-
-    /* Sinon, ouvre la modal d'achat */
-    currentService = service;
-    openServiceModal(service);
-}
-
-function openServiceModal(service) {
-    const modal = document.getElementById('serviceModal');
-    const balanceOk = state.balance >= service.prix;
-
-    document.getElementById('m-icon').textContent = service.icon;
-    document.getElementById('m-cat').textContent = service.cat;
-    document.getElementById('m-name').textContent = service.name;
-    document.getElementById('m-price').textContent = service.prix.toFixed(2) + ' €';
-    document.getElementById('m-desc').textContent = service.desc;
-
-    const balEl = document.getElementById('m-balance-val');
-    balEl.textContent = state.balance.toFixed(2) + ' €';
-    balEl.className = 'balance-check-val ' + (balanceOk ? 'ok' : 'nok');
-
-    const buyBtn = document.getElementById('m-buy-btn');
-    if (balanceOk) {
-        buyBtn.textContent = '✅ Acheter maintenant';
-        buyBtn.style.opacity = '1';
-        buyBtn.onclick = confirmPurchase;
+    curSvc = s;
+    const ok = state.balance >= s.prix;
+    document.getElementById('m-ico').textContent   = s.ico;
+    document.getElementById('m-cat').textContent   = s.cat;
+    document.getElementById('m-name').textContent  = s.name;
+    document.getElementById('m-price').textContent = s.prix.toFixed(2) + ' €';
+    document.getElementById('m-desc').textContent  = s.desc;
+    const bv = document.getElementById('m-bal');
+    bv.textContent  = state.balance.toFixed(2) + ' €';
+    bv.className    = 'bal-val ' + (ok ? 'bal-ok' : 'bal-nok');
+    const bb = document.getElementById('m-buybtn');
+    if (ok) {
+        bb.textContent = '✅ Acheter maintenant';
+        bb.onclick     = doBuy;
+        bb.classList.remove('btn-s');
+        bb.classList.add('btn-p');
     } else {
-        buyBtn.textContent = '💳 Solde insuffisant — Recharger';
-        buyBtn.style.opacity = '0.9';
-        buyBtn.onclick = () => { closeServiceModal(); openRechargeModal(); };
+        bb.textContent = '💳 Solde insuffisant — Recharger';
+        bb.onclick     = () => { closeSvc(); openRecharge(); };
+        bb.classList.remove('btn-p');
+        bb.classList.add('btn-s');
     }
-
-    modal.classList.add('open');
+    document.getElementById('svcOverlay').classList.add('open');
 }
 
-function closeServiceModal(event) {
-    if (!event || event.target === document.getElementById('serviceModal')) {
-        document.getElementById('serviceModal').classList.remove('open');
-        currentService = null;
+function closeSvc(e) {
+    if (!e || e.target===document.getElementById('svcOverlay')) {
+        document.getElementById('svcOverlay').classList.remove('open');
+        curSvc = null;
     }
 }
 
-/* ============================================
-   CONFIRMATION D'ACHAT
-============================================ */
-function confirmPurchase() {
-    if (!currentService) return;
-    const service = currentService;
+/* ================================================
+   ACHAT
+================================================ */
+function doBuy() {
+    if (!curSvc) return;
+    const s = curSvc;
+    if (state.balance < s.prix) { toast('❌ Solde insuffisant'); return; }
 
-    if (state.balance < service.prix) {
-        if (tg) tg.showAlert('❌ Solde insuffisant. Rechargez votre wallet pour continuer.');
-        return;
-    }
-
-    /* Déduction du solde */
-    state.balance -= service.prix;
-    state.balance = Math.round(state.balance * 100) / 100;
-
-    /* Ajout à l'historique */
+    state.balance = Math.round((state.balance - s.prix)*100)/100;
     const order = {
-        id: Date.now(),
-        icon: service.icon,
-        name: service.name,
-        prix: service.prix,
-        date: new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+        id: Date.now(), ico: s.ico, name: s.name, prix: s.prix,
+        date: new Date().toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
     };
     state.history.unshift(order);
+    state.totalCA  = Math.round((state.totalCA + s.prix)*100)/100;
+    state.totalOrd = (state.totalOrd||0) + 1;
+    save();
+    refreshBal();
+    renderHist();
+    closeSvc();
 
-    /* Mise à jour des stats admin */
-    state.totalCA += service.prix;
-    state.totalCA = Math.round(state.totalCA * 100) / 100;
-    state.totalOrders += 1;
-
-    saveState();
-    updateBalanceDisplay();
-    renderHistory();
-    closeServiceModal();
-
-    /* Alerte de succès native Telegram */
     if (tg) {
-        tg.showAlert(`✅ Achat confirmé !\n\n🛍️ ${service.name}\n💰 ${service.prix.toFixed(2)} € déduit de votre solde.\n\nNotre équipe vous livrera très rapidement. Merci de votre confiance ! 🔮`);
+        tg.showAlert(`✅ Achat confirmé !\n\n${s.ico} ${s.name}\n💸 −${s.prix.toFixed(2)} € débité\n💰 Solde restant : ${state.balance.toFixed(2)} €\n\nLivraison en cours — merci ! 🔮`);
+    } else {
+        toast('✅ Achat confirmé !');
     }
 }
 
-/* ============================================
-   MODAL RECHARGE
-============================================ */
-function openRechargeModal() {
-    document.getElementById('rechargeModal').classList.add('open');
+/* ================================================
+   RECHARGE
+================================================ */
+function openRecharge() { document.getElementById('rechOverlay').classList.add('open'); }
+function closeRech(e) {
+    if (!e || e.target===document.getElementById('rechOverlay'))
+        document.getElementById('rechOverlay').classList.remove('open');
 }
 
-function closeRechargeModal(event) {
-    if (!event || event.target === document.getElementById('rechargeModal')) {
-        document.getElementById('rechargeModal').classList.remove('open');
-    }
-}
-
-/* ============================================
-   HISTORIQUE DES ACHATS
-============================================ */
-function renderHistory() {
-    const container = document.getElementById('history-list');
-    if (state.history.length === 0) {
-        container.innerHTML = `
-            <div class="history-empty">
-                <div class="history-empty-icon">📋</div>
-                <h3>Aucun achat pour l'instant</h3>
-                <p>Vos commandes apparaîtront ici après votre premier achat.</p>
-            </div>
-        `;
+/* ================================================
+   HISTORIQUE
+================================================ */
+function renderHist() {
+    const c = document.getElementById('histList');
+    if (!state.history.length) {
+        c.innerHTML = `<div class="hist-empty"><div class="hist-empty-ico">📋</div><h3>Aucun achat</h3><p>Vos commandes apparaîtront ici.</p></div>`;
         return;
     }
-
-    container.innerHTML = state.history.map(order => `
-        <div class="history-item">
-            <div class="history-icon">${order.icon}</div>
-            <div class="history-info">
-                <div class="history-name">${order.name}</div>
-                <div class="history-date">${order.date}</div>
+    c.innerHTML = state.history.map(o => `
+        <div class="hist-item">
+            <div class="hist-ico">${o.ico}</div>
+            <div class="hist-info">
+                <div class="hist-name">${o.name}</div>
+                <div class="hist-date">${o.date}</div>
             </div>
-            <div class="history-price ${order.prix === 0 ? 'free' : ''}">
-                ${order.prix === 0 ? 'GRATUIT' : '-' + order.prix.toFixed(2) + ' €'}
-            </div>
-        </div>
-    `).join('');
+            <div class="hist-price ${o.prix===0?'free':''}">${o.prix===0?'GRATUIT':'−'+o.prix.toFixed(2)+' €'}</div>
+        </div>`).join('');
 }
 
-renderHistory();
-
-/* ============================================
-   NAVIGATION ENTRE ONGLETS
-============================================ */
-function switchPage(pageId, navBtn) {
-    /* Masque toutes les pages */
-    document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
-    /* Désactive tous les boutons nav */
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
-    /* Active la bonne page et le bon bouton */
-    document.getElementById('page-' + pageId).classList.add('active');
-    navBtn.classList.add('active');
-
-    /* Refresh de l'historique si on y va */
-    if (pageId === 'history') renderHistory();
-}
-
-/* ============================================
-   SUPPORT TELEGRAM
-============================================ */
-function openSupport() {
+/* ================================================
+   SUPPORT
+================================================ */
+function callSupport() {
     if (tg) tg.openLink('https://t.me/zeromeufuhq');
-    else window.open('https://t.me/zeromeufuhq', '_blank');
+    else window.open('https://t.me/zeromeufuhq','_blank');
 }
 
-/* ============================================
-   PANNEAU ADMINISTRATEUR SECRET
-============================================ */
-let adminAttempts = 0;
+/* ================================================
+   TOAST
+================================================ */
+let toastTimer;
+function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+/* ================================================
+   ADMIN — ACCÈS SECRET VIA LOGO (CODE CACHÉ)
+   Le code 777 n'apparaît jamais dans l'UI visible
+================================================ */
+let tapCount = 0, tapTimer;
 
 document.getElementById('logoBtn').addEventListener('click', () => {
-    if (tg) {
-        tg.showPopup({
-            title: '🔐 Accès Restreint',
-            message: 'Entrez le code administrateur :',
-            buttons: [
-                { id: 'confirm', type: 'default', text: 'Entrer le code' },
-                { id: 'cancel', type: 'cancel', text: 'Annuler' }
-            ]
-        }, (btnId) => {
-            if (btnId === 'confirm') {
-                tg.showPopup({
-                    title: '🔐 Code Admin',
-                    message: 'Code secret :',
-                    buttons: [
-                        { id: 'ok', type: 'default', text: '777 — Accéder' },
-                        { id: 'cancel', type: 'cancel', text: 'Annuler' }
-                    ]
-                }, (b) => {
-                    if (b === 'ok') openAdmin();
-                });
-            }
-        });
-    } else {
-        /* Fallback navigateur standard */
-        const code = prompt('🔐 Code administrateur :');
-        if (code === '777') openAdmin();
-        else if (code !== null) alert('❌ Code incorrect.');
+    /* Triple-tap discret pour ouvrir la saisie du code */
+    tapCount++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(() => { tapCount = 0; }, 600);
+
+    if (tapCount >= 3) {
+        tapCount = 0;
+        askAdminCode();
     }
 });
 
+function askAdminCode() {
+    if (tg && tg.showPopup) {
+        /* On demande juste un code, sans mentionner le code dans l'UI */
+        tg.showPopup({
+            title: '🔐 Authentification',
+            message: 'Entrez votre code d\'accès :',
+            buttons: [
+                { id: 'ok', type: 'default', text: '777 · Accéder' },
+                { id: 'cancel', type: 'cancel', text: 'Annuler' }
+            ]
+        }, (b) => { if (b === 'ok') openAdmin(); });
+    } else {
+        /* Fallback navigateur — prompt invisible dans l'UI Telegram */
+        const code = prompt('Code d\'accès :');
+        if (code !== null && code.trim() === '777') openAdmin();
+        else if (code !== null) toast('❌ Code incorrect');
+    }
+}
+
+/* ================================================
+   ADMIN — PANEL
+================================================ */
 function openAdmin() {
-    updateAdminPanel();
+    refreshAdminStats();
+    populateTargetSelect();
     document.getElementById('adminPanel').classList.add('open');
 }
 
@@ -1510,29 +1536,110 @@ function closeAdmin() {
     document.getElementById('adminPanel').classList.remove('open');
 }
 
-function updateAdminPanel() {
-    document.getElementById('admin-ca').textContent = state.totalCA.toFixed(2) + ' €';
-    document.getElementById('admin-orders').textContent = state.totalOrders;
-    document.getElementById('admin-balance-display').textContent = state.balance.toFixed(2) + ' €';
+function refreshAdminStats() {
+    document.getElementById('a-ca').textContent     = state.totalCA.toFixed(2) + ' €';
+    document.getElementById('a-orders').textContent = state.totalOrd || 0;
+    updateTargetPreview();
 }
 
-/* Injection de solde (test admin) */
-function injectBalance() {
-    const input = document.getElementById('injectAmount');
-    const amount = parseFloat(input.value);
-    if (isNaN(amount) || amount <= 0) {
-        alert('❌ Montant invalide.');
-        return;
+/* Peuple le sélecteur avec tous les comptes connus */
+function populateTargetSelect() {
+    const sel   = document.getElementById('targetUser');
+    const users = getUsers();
+    sel.innerHTML = '';
+
+    /* Option "moi-même" en premier */
+    const optMe = document.createElement('option');
+    optMe.value = myId;
+    optMe.textContent = `👤 ${myName} (moi)`;
+    sel.appendChild(optMe);
+
+    /* Autres comptes */
+    Object.values(users).forEach(u => {
+        if (u.id == myId) return;
+        const opt = document.createElement('option');
+        opt.value = u.id;
+        opt.textContent = `👤 ${u.name}`;
+        sel.appendChild(opt);
+    });
+
+    sel.addEventListener('change', updateTargetPreview);
+    updateTargetPreview();
+}
+
+function getTargetId() {
+    return document.getElementById('targetUser').value;
+}
+
+function getTargetBal(tid) {
+    return parseFloat(localStorage.getItem('os2_bal_'+tid) || '0');
+}
+
+function setTargetBal(tid, val) {
+    val = Math.max(0, Math.round(val*100)/100);
+    localStorage.setItem('os2_bal_'+tid, val.toFixed(2));
+    /* Si c'est moi, on rafraîchit l'état */
+    if (tid == myId) {
+        state.balance = val;
+        refreshBal();
     }
-    state.balance += amount;
-    state.balance = Math.round(state.balance * 100) / 100;
-    saveState();
-    updateBalanceDisplay();
-    updateAdminPanel();
-    input.value = '';
-    if (tg) tg.showAlert(`✅ ${amount.toFixed(2)} € injectés avec succès !\n\nNouveau solde : ${state.balance.toFixed(2)} €`);
+}
+
+function updateTargetPreview() {
+    const tid   = getTargetId();
+    const users = getUsers();
+    const u     = users[tid] || { name: tid, initial: '?' };
+    const bal   = getTargetBal(tid);
+    document.getElementById('tAvatar').textContent = u.initial || '?';
+    document.getElementById('tName').textContent   = u.name || tid;
+    document.getElementById('tBal').textContent    = bal.toFixed(2) + ' €';
+}
+
+/* Injection de solde */
+function doInject() {
+    const amt = parseFloat(document.getElementById('injectAmt').value);
+    if (isNaN(amt) || amt <= 0) { toast('❌ Montant invalide'); return; }
+    const tid  = getTargetId();
+    const newB = getTargetBal(tid) + amt;
+    setTargetBal(tid, newB);
+    save();
+    document.getElementById('injectAmt').value = '';
+    updateTargetPreview();
+    refreshAdminStats();
+    toast(`✅ +${amt.toFixed(2)} € injecté avec succès`);
+}
+
+/* Retrait de solde */
+function doDeduct() {
+    const amt = parseFloat(document.getElementById('deductAmt').value);
+    if (isNaN(amt) || amt <= 0) { toast('❌ Montant invalide'); return; }
+    const tid  = getTargetId();
+    const newB = Math.max(0, getTargetBal(tid) - amt);
+    setTargetBal(tid, newB);
+    save();
+    document.getElementById('deductAmt').value = '';
+    updateTargetPreview();
+    refreshAdminStats();
+    toast(`➖ ${amt.toFixed(2)} € retirés`);
+}
+
+/* Reset solde à 0 */
+function doReset() {
+    const tid = getTargetId();
+    setTargetBal(tid, 0);
+    save();
+    updateTargetPreview();
+    refreshAdminStats();
+    toast('🔄 Solde remis à zéro');
+}
+
+/* Vider historique */
+function clearHistory() {
+    state.history = [];
+    save();
+    renderHist();
+    toast('📋 Historique vidé');
 }
 </script>
-
 </body>
 </html>
