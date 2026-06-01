@@ -2,582 +2,1537 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>O'shop - V2 PREMIUM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>O'shop V2</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        /* ============================================
+           RESET & VARIABLES GLOBALES
+        ============================================ */
+        :root {
+            --bg-primary: #020617;
+            --bg-secondary: #0a1628;
+            --bg-card: #0d1f3c;
+            --bg-card-hover: #112244;
+            --blue-primary: #2563eb;
+            --blue-light: #3b82f6;
+            --blue-glow: rgba(37, 99, 235, 0.4);
+            --blue-ultra: #60a5fa;
+            --text-primary: #f1f5f9;
+            --text-secondary: #64748b;
+            --text-muted: #334155;
+            --border: rgba(255, 255, 255, 0.04);
+            --border-blue: rgba(59, 130, 246, 0.2);
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --radius-xl: 24px;
+            --radius-lg: 20px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --nav-height: 72px;
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
-        body {
-            background: #020617; /* Fond ultra sombre, style obsidian */
-            color: #f8fafc;
-            min-height: 100vh;
-            padding-bottom: 90px;
-            overflow-x: hidden;
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* SFOND GLOW AMBIANT COMPACT */
+        /* ============================================
+           LUEURS D'ARRIÈRE-PLAN (GLOW NÉON)
+        ============================================ */
         body::before {
             content: '';
-            position: absolute;
-            top: 0; left: 50%;
+            position: fixed;
+            top: -200px;
+            left: 50%;
             transform: translateX(-50%);
-            width: 100%;
-            height: 250px;
-            background: radial-gradient(circle at top, rgba(37, 99, 235, 0.15) 0%, transparent 80%);
-            z-index: 0;
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(ellipse, rgba(37, 99, 235, 0.12) 0%, transparent 70%);
             pointer-events: none;
+            z-index: 0;
         }
 
-        .page {
-            display: none;
-            animation: iosSlide 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 16px;
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: 100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(ellipse, rgba(37, 99, 235, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ============================================
+           LAYOUT PRINCIPAL
+        ============================================ */
+        #app {
             position: relative;
             z-index: 1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        .page.active {
-            display: block;
-        }
-
-        @keyframes iosSlide {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* HEADER MODERNISÉ */
+        /* HEADER */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 16px;
-            background: rgba(2, 6, 17, 0.7);
+            padding: 16px 20px 12px;
+            background: rgba(2, 6, 23, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+            position: relative;
+            z-index: 10;
         }
 
-        .logo {
-            font-size: 19px;
+        .header-logo {
+            font-size: 18px;
             font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            background: linear-gradient(135deg, #60a5fa, #3b82f6, #818cf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             cursor: pointer;
+            user-select: none;
+            letter-spacing: -0.3px;
         }
 
-        #userTag {
-            font-size: 13px;
-            color: #3b82f6;
-            background: rgba(59, 130, 246, 0.1);
-            padding: 4px 10px;
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
             border-radius: 20px;
-            font-weight: 600;
+            padding: 6px 12px 6px 6px;
         }
 
-        /* CARTE DE SOLDE STYLE BANCAIRE PREMIUM */
-        .wallet-card {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 24px;
-            padding: 24px;
-            margin-bottom: 24px;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        .header-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue-primary), #818cf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .header-username {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            max-width: 90px;
             overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* CONTENU SCROLLABLE */
+        .page-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + 16px);
+            display: none;
+            scrollbar-width: none;
+        }
+
+        .page-content::-webkit-scrollbar { display: none; }
+        .page-content.active { display: block; }
+
+        /* ============================================
+           NAVIGATION BASSE
+        ============================================ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: calc(var(--nav-height) + var(--safe-bottom));
+            background: rgba(10, 22, 40, 0.97);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: flex-start;
+            padding-top: 8px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            padding: 8px 4px;
+            transition: opacity 0.2s;
+            border: none;
+            background: none;
+            outline: none;
+        }
+
+        .nav-icon {
+            font-size: 22px;
+            transition: transform 0.2s ease;
+            line-height: 1;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+            transition: color 0.2s;
+        }
+
+        .nav-item.active .nav-label {
+            color: var(--blue-light);
+        }
+
+        .nav-item.active .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-indicator {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--blue-light);
+            opacity: 0;
+            transition: opacity 0.2s;
+            margin-top: -2px;
+        }
+
+        .nav-item.active .nav-indicator { opacity: 1; }
+
+        /* ============================================
+           COMPOSANTS RÉUTILISABLES
+        ============================================ */
+
+        /* Section titre */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 20px 20px 12px;
+        }
+
+        .section-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--blue-light);
+            box-shadow: 0 0 8px var(--blue-glow);
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        /* Badge tag */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .badge-blue {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: var(--blue-ultra);
+        }
+
+        .badge-green {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: var(--success);
+        }
+
+        .badge-free {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #4ade80;
+        }
+
+        /* Bouton principal */
+        .btn-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 15px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, #1d4ed8, #2563eb, #3b82f6);
+            border: none;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            outline: none;
+            letter-spacing: 0.2px;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+            outline: none;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:active { transform: scale(0.97); }
+
+        /* ============================================
+           PAGE BOUTIQUE (ACCUEIL)
+        ============================================ */
+
+        /* Carte Wallet */
+        .wallet-card {
+            margin: 16px;
+            background: linear-gradient(135deg, #0d1f3c 0%, #1a2f5e 50%, #0d1f3c 100%);
+            border: 1px solid var(--border-blue);
+            border-radius: var(--radius-xl);
+            padding: 22px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wallet-card::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -40px;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .wallet-card::after {
             content: '';
             position: absolute;
-            top: -50%; right: -20%;
-            width: 150px; height: 150px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+            bottom: -40px;
+            left: -20px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(129,140,248,0.1) 0%, transparent 70%);
+            pointer-events: none;
         }
 
-        .wallet-title {
+        .wallet-label {
             font-size: 11px;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
             font-weight: 700;
-        }
-
-        .wallet-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 8px;
-        }
-
-        .solde-montant {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            color: #ffffff;
-        }
-
-        .btn-recharger {
-            background: #ffffff;
-            color: #020617;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-
-        .btn-recharger:active {
-            transform: scale(0.95);
-        }
-
-        .section-title {
-            font-size: 11px;
-            font-weight: 800;
-            color: #475569;
             letter-spacing: 1.5px;
-            margin-bottom: 14px;
+            color: var(--blue-ultra);
             text-transform: uppercase;
-            display: flex;
+            margin-bottom: 6px;
+            opacity: 0.8;
+        }
+
+        .wallet-balance {
+            font-size: 42px;
+            font-weight: 900;
+            color: white;
+            letter-spacing: -1.5px;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .wallet-balance span {
+            font-size: 22px;
+            font-weight: 700;
+            opacity: 0.6;
+            vertical-align: super;
+            margin-right: 4px;
+        }
+
+        .wallet-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+        }
+
+        .wallet-btn {
+            display: inline-flex;
             align-items: center;
             gap: 6px;
-        }
-
-        /* GRID PRODUITS STYLE SQUIRCLE IOS */
-        .grid-produits {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .card {
-            background: rgba(15, 23, 42, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
             border-radius: 20px;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.2s, border-color 0.2s, transform 0.2s;
-            cursor: pointer;
-        }
-
-        .card:active {
-            background: rgba(30, 41, 59, 0.4);
-            border-color: rgba(59, 130, 246, 0.3);
-            transform: scale(0.98);
-        }
-
-        .card-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex: 1;
-        }
-
-        .card-icon {
-            font-size: 20px;
-            background: #0f172a;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            width: 46px;
-            height: 46px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 14px;
-        }
-
-        .card-info h3 {
-            font-size: 15px;
-            font-weight: 600;
-            color: #f1f5f9;
-            margin-bottom: 2px;
-        }
-
-        .card-info p {
-            font-size: 12px;
-            color: #64748b;
-            line-height: 1.3;
-            padding-right: 8px;
-        }
-
-        .card-prix {
-            font-weight: 700;
-            color: #3b82f6;
+            padding: 8px 16px;
             font-size: 13px;
-            background: rgba(59, 130, 246, 0.08);
-            border: 1px solid rgba(59, 130, 246, 0.15);
-            padding: 6px 14px;
-            border-radius: 16px;
-            white-space: nowrap;
-        }
-
-        /* DESIGN DES ONGLETS INFÉRIEURS (BARRE DE NAV MINIMALISTE) */
-        .nav-bar {
-            position: fixed;
-            bottom: 0; left: 0; width: 100%;
-            background: rgba(2, 6, 17, 0.8);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
-            z-index: 1000;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            color: #475569;
-            font-size: 10px;
             font-weight: 700;
+            color: var(--blue-ultra);
             cursor: pointer;
-            background: none;
-            border: none;
-            transition: color 0.2s;
-            width: 20%;
-        }
-
-        .nav-item.active {
-            color: #3b82f6;
-        }
-
-        .nav-icon {
-            font-size: 18px;
-            opacity: 0.5;
-            transition: transform 0.2s, opacity 0.2s;
-        }
-
-        .nav-item.active .nav-icon {
-            opacity: 1;
-            transform: translateY(-1px);
-        }
-
-        /* TEXT INPUTS & UTILS SUITE DE LA CONFIG */
-        .admin-box {
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid rgba(239, 68, 68, 0.15);
-            border-radius: 20px;
-            padding: 18px;
-            margin-top: 15px;
-        }
-
-        .input-pro {
-            width: 100%;
-            background: #0f172a;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            color: white;
-            padding: 14px;
-            border-radius: 14px;
-            margin-top: 8px;
-            font-size: 14px;
+            transition: transform 0.15s;
             outline: none;
         }
 
-        .input-pro:focus {
-            border-color: #3b82f6;
-        }
+        .wallet-btn:active { transform: scale(0.95); }
 
-        .btn-action {
-            width: 100%;
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 16px;
-            font-weight: 700;
-            font-size: 14px;
-            margin-top: 12px;
+        /* Carte service principale */
+        .service-card {
+            margin: 0 16px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 20px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .order-item {
-            background: rgba(15, 23, 42, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.03);
+        .service-card:active {
+            transform: scale(0.98);
+            border-color: var(--border-blue);
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.12);
+        }
+
+        .service-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 14px;
+        }
+
+        .service-icon-wrap {
+            width: 52px;
+            height: 52px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(129,140,248,0.15));
+            border: 1px solid rgba(59,130,246,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .service-price-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .price-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 6px rgba(34,197,94,0.5);
+        }
+
+        .price-dot-free {
+            background: #4ade80;
+            box-shadow: 0 0 6px rgba(74,222,128,0.6);
+        }
+
+        .service-category {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--blue-light);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .service-name {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+            line-height: 1.2;
+        }
+
+        .service-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+
+        .service-action {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--blue-light);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* ============================================
+           MODAL UNIVERSEL
+        ============================================ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 200;
+            align-items: flex-end;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-sheet {
+            width: 100%;
+            background: linear-gradient(180deg, #0d1f3c 0%, #0a1628 100%);
+            border: 1px solid var(--border-blue);
+            border-bottom: none;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            padding: 12px 20px calc(24px + var(--safe-bottom));
+            animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0.5; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-handle {
+            width: 36px;
+            height: 4px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 2px;
+            margin: 0 auto 20px;
+        }
+
+        .modal-service-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(37,99,235,0.25), rgba(129,140,248,0.2));
+            border: 1px solid rgba(59,130,246,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 14px;
+        }
+
+        .modal-category {
+            text-align: center;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--blue-light);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .modal-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 900;
+            color: white;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        .modal-price-display {
+            text-align: center;
+            font-size: 38px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #60a5fa, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 10px 0 20px;
+            letter-spacing: -1px;
+        }
+
+        .modal-info-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
             padding: 14px;
-            border-radius: 16px;
+            margin-bottom: 12px;
+        }
+
+        .modal-info-box p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            line-height: 1.5;
+        }
+
+        .modal-info-box .highlight {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--blue-ultra);
+        }
+
+        .modal-warning {
+            font-size: 12px;
+            color: var(--warning);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .balance-check {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            margin-bottom: 16px;
+        }
+
+        .balance-check-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .balance-check-val {
+            font-size: 15px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .balance-check-val.ok { color: var(--success); }
+        .balance-check-val.nok { color: var(--danger); }
+
+        /* ============================================
+           PAGE HISTORIQUE
+        ============================================ */
+        .history-empty {
+            text-align: center;
+            padding: 60px 30px;
+        }
+
+        .history-empty-icon {
+            font-size: 52px;
+            margin-bottom: 14px;
+            opacity: 0.4;
+        }
+
+        .history-empty h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .history-empty p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .history-item {
+            margin: 0 16px 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .history-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            background: rgba(37,99,235,0.15);
+            border: 1px solid rgba(59,130,246,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .history-info { flex: 1; }
+
+        .history-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 3px;
+        }
+
+        .history-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .history-price {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--danger);
+            white-space: nowrap;
+        }
+
+        .history-price.free { color: var(--success); }
+
+        /* ============================================
+           PAGE REVENDEUR
+        ============================================ */
+        .reseller-hero {
+            margin: 16px;
+            background: linear-gradient(135deg, #0d1f3c, #1a2f5e);
+            border: 1px solid var(--border-blue);
+            border-radius: var(--radius-xl);
+            padding: 28px 22px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reseller-hero::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 200px;
+            background: radial-gradient(ellipse, rgba(37,99,235,0.2), transparent 70%);
+        }
+
+        .reseller-crown {
+            font-size: 52px;
+            margin-bottom: 14px;
+        }
+
+        .reseller-hero h2 {
+            font-size: 26px;
+            font-weight: 900;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .reseller-hero p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+
+        .reseller-feature {
+            margin: 0 16px 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .reseller-feature-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            background: rgba(37,99,235,0.15);
+            border: 1px solid rgba(59,130,246,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .reseller-feature h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .reseller-feature p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* ============================================
+           PANNEAU ADMIN
+        ============================================ */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 300;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .admin-panel.open { display: flex; }
+
+        .admin-card {
+            background: linear-gradient(135deg, #0d1f3c, #0a1628);
+            border: 1px solid rgba(59,130,246,0.3);
+            border-radius: var(--radius-xl);
+            padding: 28px 22px;
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .admin-card h2 {
+            font-size: 20px;
+            font-weight: 900;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, #60a5fa, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .admin-card p.admin-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 22px;
+        }
+
+        .admin-stat {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px;
             margin-bottom: 10px;
         }
 
-        /* SYSTEM MODAL MODERNE */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(2, 6, 17, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
+        .admin-stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
         }
 
-        .modal-content {
-            background: #0f172a;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 24px;
-            padding: 24px;
-            width: 100%;
-            max-width: 360px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        .admin-stat-val {
+            font-size: 26px;
+            font-weight: 900;
+            color: white;
+        }
+
+        .admin-inject {
+            margin-top: 16px;
+        }
+
+        .admin-inject label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .admin-inject-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .admin-input {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-blue);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            outline: none;
+        }
+
+        .admin-input::placeholder { color: var(--text-muted); }
+
+        .admin-inject-btn {
+            background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 12px 18px;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            outline: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
+<div id="app">
+
+    <!-- ============================
+         HEADER
+    ============================ -->
     <div class="header">
-        <div class="logo" onclick="verifierCodeAdmin()">🔮 O'shop V2</div>
-        <div id="userTag">@Client</div>
+        <div class="header-logo" id="logoBtn">🔮 O'shop V2</div>
+        <div class="header-right">
+            <div class="header-user">
+                <div class="header-avatar" id="headerAvatar">?</div>
+                <span class="header-username" id="headerUsername">...</span>
+            </div>
+        </div>
     </div>
 
-    <!-- 1. PAGE ACCUEIL -->
-    <div id="page-accueil" class="page active">
-        <!-- COMPTE BANCAIRE STYLE -->
+    <!-- ============================
+         PAGE 1 — BOUTIQUE
+    ============================ -->
+    <div class="page-content active" id="page-boutique">
+
+        <!-- Carte Wallet -->
         <div class="wallet-card">
-            <div class="wallet-title">Solde disponible</div>
-            <div class="wallet-flex">
-                <div class="solde-montant" id="soldeAffichage">0.00 €</div>
-                <button class="btn-recharger" onclick="ouvrirRecharge()">⚡ Recharger</button>
+            <div class="wallet-label">💰 Mon Solde</div>
+            <div class="wallet-balance">
+                <span>€</span><span id="balanceDisplay">0.00</span>
+            </div>
+            <div class="wallet-sub">Solde disponible pour vos achats</div>
+            <button class="wallet-btn" onclick="openRechargeModal()">
+                ➕ Recharger le solde
+            </button>
+        </div>
+
+        <!-- Section KFC -->
+        <div class="section-header">
+            <div class="section-dot"></div>
+            <span class="section-title">Points KFC</span>
+        </div>
+        <div id="kfc-list"></div>
+
+        <!-- Section Autres Services -->
+        <div class="section-header">
+            <div class="section-dot"></div>
+            <span class="section-title">Services Premium</span>
+        </div>
+        <div id="premium-list"></div>
+
+    </div>
+
+    <!-- ============================
+         PAGE 2 — HISTORIQUE
+    ============================ -->
+    <div class="page-content" id="page-history">
+        <div class="section-header">
+            <div class="section-dot"></div>
+            <span class="section-title">Mes Achats</span>
+        </div>
+        <div id="history-list"></div>
+    </div>
+
+    <!-- ============================
+         PAGE 3 — REVENDEUR
+    ============================ -->
+    <div class="page-content" id="page-reseller">
+
+        <div class="reseller-hero">
+            <div class="reseller-crown">👑</div>
+            <div class="badge badge-blue" style="margin-bottom:12px">PROGRAMME GROSSISTE</div>
+            <h2>Deviens Revendeur</h2>
+            <p>Accède à nos tarifs grossistes exclusifs et revends nos services avec une marge confortable. Programme réservé aux partenaires sérieux.</p>
+            <button class="btn-primary" onclick="openSupport()">
+                📲 Contacter le Support →
+            </button>
+        </div>
+
+        <div class="section-header">
+            <div class="section-dot"></div>
+            <span class="section-title">Avantages Revendeur</span>
+        </div>
+
+        <div class="reseller-feature">
+            <div class="reseller-feature-icon">💸</div>
+            <div>
+                <h4>Tarifs Grossistes</h4>
+                <p>Jusqu'à -40% sur tous nos services</p>
+            </div>
+        </div>
+        <div class="reseller-feature">
+            <div class="reseller-feature-icon">⚡</div>
+            <div>
+                <h4>Livraison Prioritaire</h4>
+                <p>Commandes traitées en priorité absolue</p>
+            </div>
+        </div>
+        <div class="reseller-feature">
+            <div class="reseller-feature-icon">🛡️</div>
+            <div>
+                <h4>Support Dédié</h4>
+                <p>Un gestionnaire de compte personnel</p>
+            </div>
+        </div>
+        <div class="reseller-feature">
+            <div class="reseller-feature-icon">📊</div>
+            <div>
+                <h4>Dashboard Revendeur</h4>
+                <p>Suivi en temps réel de vos commandes</p>
             </div>
         </div>
 
-        <div class="section-title">Boutique officielle</div>
-        <div class="grid-produits" id="listeProduits"></div>
-    </div>
-
-    <!-- 2. PAGE HISTORIQUE -->
-    <div id="page-compte" class="page">
-        <div class="section-title">Mes Achats</div>
-        <div id="historiqueCommandes">
-            <p style="color:#64748b; font-size:13px; font-style:italic; text-align:center; margin-top:20px;">Aucune commande pour le moment.</p>
-        </div>
-    </div>
-
-    <!-- 3. PAGE REVENDEUR -->
-    <div id="page-revendeur" class="page">
-        <div style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.03); border-radius: 24px; padding: 24px; text-align: center; margin-top: 10px;">
-            <span style="font-size: 36px;">💼</span>
-            <h2 style="font-size: 19px; margin-top: 12px; font-weight: 700;">Devenir Revendeur</h2>
-            <p style="color: #64748b; font-size: 13px; margin-top: 8px; line-height: 1.5; padding: 0 10px;">
-                Profite de nos grilles de tarifs grossistes pour revendre nos abonnements directement à tes propres clients.
-            </p>
-            <button class="btn-action" style="background: #10b981; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);" onclick="ouvrirLienSupport()">
-                Contacter le Service Grossiste
+        <div style="padding: 16px 16px 0;">
+            <button class="btn-primary" onclick="openSupport()">
+                💬 Rejoindre le Programme →
             </button>
         </div>
     </div>
 
-    <!-- 4. ZONE ADMINISTRATION DISCRÈTE -->
-    <div id="page-admin" class="page">
-        <div class="section-title" style="color:#ef4444;">Panneau Super-Admin</div>
-        <div class="admin-box">
-            <h4 style="font-size: 13px; color:#64748b;">Chiffre d'Affaires Enregistré</h4>
-            <p style="font-size: 26px; font-weight: 800; color: #10b981; margin-top: 4px;" id="adminArgent">0.00 €</p>
-            <p style="font-size: 12px; color: #64748b; margin-top: 2px;" id="adminNbCommandes">Total : 0 commande(s)</p>
-        </div>
-
-        <div class="admin-box" style="border-color: rgba(59, 130, 246, 0.2);">
-            <h4 style="font-size: 13px; color:#60a5fa;">Simuler injection d'argent</h4>
-            <input type="number" id="adminAjoutSolde" class="input-pro" placeholder="Montant en €">
-            <button class="btn-action" onclick="adminAjouterMonnaie()">Ajouter au solde</button>
-        </div>
-    </div>
-
-    <!-- WINDOWS MODAL RECHARGE -->
-    <div class="modal" id="modalRecharge">
-        <div class="modal-content">
-            <h3 style="font-size: 16px; font-weight:700; margin-bottom: 8px;">Créditer mon compte</h3>
-            <p style="font-size: 13px; color: #64748b; margin-bottom: 14px;">Envoie ton paiement via PayPal (Ami/Famille) :</p>
-            <div style="background: rgba(59, 130, 246, 0.06); padding: 12px; border-radius: 12px; color: #60a5fa; font-weight: 700; font-size: 13px; text-align: center; border: 1px solid rgba(59,130,246,0.12);">
-                nohanbourgeois9@gmail.com
+    <!-- ============================
+         PAGE 4 — SUPPORT
+    ============================ -->
+    <div class="page-content" id="page-support">
+        <div style="padding: 40px 20px; text-align: center;">
+            <div style="font-size:60px; margin-bottom:16px;">💬</div>
+            <h2 style="font-size:22px; font-weight:900; margin-bottom:8px;">Support O'shop</h2>
+            <p style="font-size:14px; color:var(--text-secondary); margin-bottom:30px; line-height:1.6;">
+                Notre équipe est disponible 7j/7 pour répondre à toutes vos questions concernant vos commandes et services.
+            </p>
+            <button class="btn-primary" onclick="openSupport()">
+                📲 Contacter @zeromeufuhq →
+            </button>
+            <div style="margin-top:20px; padding:16px; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:var(--radius-md);">
+                <p style="font-size:12px; color:var(--text-muted);">⏱️ Temps de réponse moyen</p>
+                <p style="font-size:18px; font-weight:800; color:var(--success); margin-top:4px;">< 15 minutes</p>
             </div>
-            <p style="font-size: 11px; color: #e2e8f0; background:rgba(245,158,11,0.1); padding:8px; border-radius:8px; margin-top: 10px;">⚠️ Écris ton @Pseudo Telegram en note du transfert.</p>
-            <button class="btn-action" onclick="ouvrirLienSupport()">Envoyer le reçu au support</button>
-            <button class="btn-action" style="background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); color:#94a3b8; margin-top: 8px; box-shadow:none;" onclick="fermerRecharge()">Fermer</button>
         </div>
     </div>
 
-    <!-- NAV BAR BASSE STYLE APP -->
-    <div class="nav-bar">
-        <button class="nav-item active" onclick="changerOnglet('accueil', this)">
-            <span class="nav-icon">🏠</span><span>Boutique</span>
+    <!-- ============================
+         NAVIGATION BASSE
+    ============================ -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchPage('boutique', this)">
+            <span class="nav-icon">🛍️</span>
+            <span class="nav-label">Boutique</span>
+            <div class="nav-indicator"></div>
         </button>
-        <button class="nav-item" onclick="changerOnglet('compte', this)">
-            <span class="nav-icon">📊</span><span>Mes Achats</span>
+        <button class="nav-item" onclick="switchPage('history', this)">
+            <span class="nav-icon">📋</span>
+            <span class="nav-label">Mes Achats</span>
+            <div class="nav-indicator"></div>
         </button>
-        <button class="nav-item" onclick="changerOnglet('revendeur', this)">
-            <span class="nav-icon">💼</span><span>Revendeur</span>
+        <button class="nav-item" onclick="switchPage('reseller', this)">
+            <span class="nav-icon">👑</span>
+            <span class="nav-label">Revendeur</span>
+            <div class="nav-indicator"></div>
         </button>
-        <button class="nav-item" onclick="ouvrirLienSupport()">
-            <span class="nav-icon">💬</span><span>Support</span>
+        <button class="nav-item" onclick="switchPage('support', this)">
+            <span class="nav-icon">💬</span>
+            <span class="nav-label">Support</span>
+            <div class="nav-indicator"></div>
+        </button>
+    </nav>
+
+</div>
+
+<!-- ============================
+     MODAL ACHAT / DÉTAIL SERVICE
+============================ -->
+<div class="modal-overlay" id="serviceModal" onclick="closeServiceModal(event)">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-service-icon" id="m-icon">🍗</div>
+        <div class="modal-category" id="m-cat">POINTS KFC</div>
+        <div class="modal-title" id="m-name">Service</div>
+        <div class="modal-price-display" id="m-price">0.00 €</div>
+
+        <div class="modal-info-box">
+            <p id="m-desc">Description du service</p>
+        </div>
+
+        <div class="balance-check">
+            <span class="balance-check-label">💰 Votre solde</span>
+            <span class="balance-check-val" id="m-balance-val">0.00 €</span>
+        </div>
+
+        <button class="btn-primary" id="m-buy-btn" onclick="confirmPurchase()">
+            ✅ Acheter maintenant
+        </button>
+        <button class="btn-secondary" onclick="closeServiceModal()">Annuler</button>
+    </div>
+</div>
+
+<!-- ============================
+     MODAL RECHARGE WALLET
+============================ -->
+<div class="modal-overlay" id="rechargeModal" onclick="closeRechargeModal(event)">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div style="text-align:center; margin-bottom:16px;">
+            <div style="font-size:44px; margin-bottom:10px;">💳</div>
+            <div class="badge badge-blue" style="margin-bottom:10px;">RECHARGE SOLDE</div>
+            <h2 style="font-size:22px; font-weight:900; margin-bottom:6px;">Recharger mon Wallet</h2>
+            <p style="font-size:13px; color:var(--text-secondary);">Envoie le montant souhaité sur PayPal puis envoie le screenshot à notre support.</p>
+        </div>
+
+        <div class="modal-info-box">
+            <p>📧 Adresse PayPal :</p>
+            <div class="highlight">nohanbourgeois9@gmail.com</div>
+            <div class="modal-warning">⚠️ En mode Ami/Famille UNIQUEMENT</div>
+        </div>
+
+        <div class="modal-info-box">
+            <p>📸 Procédure :</p>
+            <p style="margin-top:6px;">1. Effectue le virement PayPal</p>
+            <p>2. Fais une capture d'écran du paiement</p>
+            <p>3. Envoie-la au support Telegram</p>
+            <p>4. Ton solde sera crédité sous 5 minutes ✅</p>
+        </div>
+
+        <button class="btn-primary" onclick="openSupport(); closeRechargeModal();">
+            📲 Envoyer au Support →
+        </button>
+        <button class="btn-secondary" onclick="closeRechargeModal()">Fermer</button>
+    </div>
+</div>
+
+<!-- ============================
+     PANNEAU ADMINISTRATEUR SECRET
+============================ -->
+<div class="admin-panel" id="adminPanel">
+    <div class="admin-card">
+        <h2>🛡️ Admin Panel</h2>
+        <p class="admin-sub">Accès restreint — O'shop V2</p>
+
+        <div class="admin-stat">
+            <div class="admin-stat-label">Chiffre d'Affaires (Session)</div>
+            <div class="admin-stat-val" id="admin-ca">0.00 €</div>
+        </div>
+
+        <div class="admin-stat">
+            <div class="admin-stat-label">Commandes Traitées</div>
+            <div class="admin-stat-val" id="admin-orders">0</div>
+        </div>
+
+        <div class="admin-stat">
+            <div class="admin-stat-label">Solde Client Actuel</div>
+            <div class="admin-stat-val" id="admin-balance-display">0.00 €</div>
+        </div>
+
+        <div class="admin-inject">
+            <label>💉 Injecter du solde (test) :</label>
+            <div class="admin-inject-row">
+                <input type="number" class="admin-input" id="injectAmount" placeholder="Ex: 10.00" step="0.01" min="0">
+                <button class="admin-inject-btn" onclick="injectBalance()">➕ OK</button>
+            </div>
+        </div>
+
+        <button class="btn-secondary" style="margin-top:16px;" onclick="closeAdmin()">
+            🔒 Fermer le panneau
         </button>
     </div>
+</div>
 
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.setHeaderColor('#020617');
+<script>
+/* ============================================
+   INITIALISATION TELEGRAM WEB APP
+============================================ */
+const tg = window.Telegram?.WebApp;
+if (tg) {
+    tg.expand();
+    tg.enableClosingConfirmation();
+    if (tg.setHeaderColor) tg.setHeaderColor('#020617');
+    if (tg.setBackgroundColor) tg.setBackgroundColor('#020617');
+}
 
-        let solde = parseFloat(localStorage.getItem('oshop_solde')) || 0.00;
-        let commandes = JSON.parse(localStorage.getItem('oshop_commandes')) || [];
-        let totalVentes = parseFloat(localStorage.getItem('oshop_total_ventes')) || 0.00;
+/* ============================================
+   DONNÉES UTILISATEUR TELEGRAM
+============================================ */
+const tgUser = tg?.initDataUnsafe?.user;
+const userName = tgUser ? (tgUser.username ? '@' + tgUser.username : tgUser.first_name) : 'Invité';
+const userInitial = (tgUser?.first_name || 'O')[0].toUpperCase();
 
-        const produits = [
-            { id: "kfc_pack1", nom: "KFC Menu (Packs Restreints)", prix: 1.50, desc: "Catalogue de points basiques utilisables de suite.", icon: "🍗" },
-            { id: "kfc_pack_full", nom: "KFC FULL (Catalogue Complet)", prix: 4.00, desc: "Accès illimité à l'intégralité des points du catalogue.", icon: "🔥" },
-            { id: "basic_fit", nom: "Basic-Fit Ultimate (1 Mois)", prix: 10.00, desc: "Abonnement Premium complet toutes salles incluses.", icon: "💪" },
-            { id: "discord_nitro", nom: "Discord Nitro Premium", prix: 5.50, desc: "Abonnement Nitro complet avec 2 Boosts inclus.", icon: "💎" },
-            { id: "streaming", nom: "Streaming Cinéma Gratuit", prix: 0.00, desc: "Films & séries en HD sans frais sur NakaStream.", icon: "🎬", url: "https://nakastream.tv/" }
-        ];
+document.getElementById('headerUsername').textContent = userName;
+document.getElementById('headerAvatar').textContent = userInitial;
 
-        const user = tg.initDataUnsafe?.user;
-        if (user) {
-            document.getElementById('userTag').textContent = '@' + (user.username || user.first_name);
-        }
+/* ============================================
+   ÉTAT GLOBAL DE L'APPLICATION (localStorage)
+============================================ */
+let state = {
+    balance: parseFloat(localStorage.getItem('oshop_balance') || '0'),
+    history: JSON.parse(localStorage.getItem('oshop_history') || '[]'),
+    totalCA: parseFloat(localStorage.getItem('oshop_ca') || '0'),
+    totalOrders: parseInt(localStorage.getItem('oshop_orders') || '0'),
+};
 
-        function changerOnglet(pageId, element) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById('page-' + pageId).classList.add('active');
-            if(element) element.classList.add('active');
-        }
+/* Sauvegarde l'état dans localStorage */
+function saveState() {
+    localStorage.setItem('oshop_balance', state.balance.toFixed(2));
+    localStorage.setItem('oshop_history', JSON.stringify(state.history));
+    localStorage.setItem('oshop_ca', state.totalCA.toFixed(2));
+    localStorage.setItem('oshop_orders', state.totalOrders.toString());
+}
 
-        function chargerBoutique() {
-            const container = document.getElementById('listeProduits');
-            container.innerHTML = "";
-            
-            produits.forEach(p => {
-                const clickAction = p.prix === 0 ? `ouvrirLien('${p.url}')` : `acheterProduit('${p.id}', '${p.nom}', ${p.prix})`;
-                const textePrix = p.prix === 0 ? "GRATUIT" : `${p.prix.toFixed(2)} €`;
-                
-                container.innerHTML += `
-                    <div class="card" onclick="${clickAction}">
-                        <div class="card-left">
-                            <div class="card-icon">${p.icon}</div>
-                            <div class="card-info">
-                                <h3>${p.nom}</h3>
-                                <p>${p.desc}</p>
-                            </div>
-                        </div>
-                        <div class="card-prix">${textePrix}</div>
-                    </div>
-                `;
-            });
-            
-            document.getElementById('soldeAffichage').textContent = solde.toFixed(2) + " €";
-            remplirHistorique();
-            remplirAdmin();
-        }
+/* Met à jour l'affichage du solde */
+function updateBalanceDisplay() {
+    document.getElementById('balanceDisplay').textContent = state.balance.toFixed(2);
+}
 
-        function acheterProduit(id, nom, prix) {
-            if (solde >= prix) {
-                solde -= prix;
-                totalVentes += prix;
-                
-                const dateAchat = new Date().toLocaleDateString('fr-FR', {hour: '2-digit', minute:'2-digit'});
-                commandes.unshift({ nom: nom, prix: prix, date: dateAchat });
+updateBalanceDisplay();
 
-                localStorage.setItem('oshop_solde', solde);
-                localStorage.setItem('oshop_commandes', JSON.stringify(commandes));
-                localStorage.setItem('oshop_total_ventes', totalVentes);
+/* ============================================
+   CATALOGUE DES SERVICES
+============================================ */
+const kfcServices = [
+    { id: 'kfc1', icon: '🍗', cat: 'KFC — POINTS', name: '300 à 499 Points', desc: 'Pack entrée de gamme idéal pour découvrir les récompenses KFC.', prix: 1.50 },
+    { id: 'kfc2', icon: '🍗', cat: 'KFC — POINTS', name: '600 à 799 Points', desc: 'Pack populaire avec un bon rapport qualité/prix.', prix: 3.00 },
+    { id: 'kfc3', icon: '🍗', cat: 'KFC — POINTS', name: '800 à 999 Points', desc: 'Accédez à davantage de récompenses exclusives.', prix: 4.50 },
+    { id: 'kfc4', icon: '🍗', cat: 'KFC — POINTS', name: '1000 à 1299 Points', desc: 'Pack intermédiaire pour les amateurs de KFC réguliers.', prix: 6.00 },
+    { id: 'kfc5', icon: '🍗', cat: 'KFC — POINTS', name: '1300 à 1599 Points', desc: 'Pack avantageux pour maximiser vos récompenses.', prix: 8.00 },
+    { id: 'kfc6', icon: '🍗', cat: 'KFC — POINTS', name: '1600 à 1799 Points', desc: 'Très populaire parmi nos clients fidèles.', prix: 8.50 },
+    { id: 'kfc7', icon: '🍗', cat: 'KFC — POINTS', name: '1800 à 1999 Points', desc: 'Approchez le palier premium avec ce pack généreux.', prix: 10.00 },
+    { id: 'kfc8', icon: '🍗', cat: 'KFC — POINTS', name: '2000 à 2399 Points', desc: 'Grande offre pour les vrais passionnés de KFC.', prix: 11.50 },
+    { id: 'kfc9', icon: '🍗', cat: 'KFC — POINTS', name: '2450 à 2500 Points', desc: 'Pack maximum — le meilleur de notre catalogue KFC. 🏆', prix: 13.00 },
+];
 
-                tg.showAlert(`🎉 Achat validé !\nLe produit "${nom}" a été acheté avec succès.`);
-                chargerBoutique();
-            } else {
+const premiumServices = [
+    { id: 'bf1', icon: '💪', cat: 'BASIC-FIT', name: 'Ultimate 1 Mois', desc: 'Abonnement Basic-Fit Ultimate complet — accès toutes salles en Europe inclus.', prix: 10.00 },
+    { id: 'dc1', icon: '💎', cat: 'DISCORD', name: 'Nitro Premium', desc: 'Abonnement Discord Nitro complet avec 2 Boosts de serveur inclus.', prix: 5.50 },
+    { id: 'stream1', icon: '🎬', cat: 'STREAMING', name: 'Cinéma Gratuit', desc: 'Catalogue complet Films & Séries en HD/VF/VO. Accès immédiat et gratuit !', prix: 0, isFree: true, isRedirect: true, redirectUrl: 'https://nakastream.tv/' },
+];
+
+/* ============================================
+   GÉNÉRATION DES CARTES DE SERVICES
+============================================ */
+function createServiceCard(service) {
+    const priceLabel = service.isFree ? 'GRATUIT' : service.prix.toFixed(2) + ' €';
+    const dotClass = service.isFree ? 'price-dot price-dot-free' : 'price-dot';
+    const actionLabel = service.isRedirect ? '🎬 Accéder gratuitement →' : '🛒 Commander →';
+
+    return `
+        <div class="service-card" onclick="handleServiceClick('${service.id}')">
+            <div class="service-card-top">
+                <div class="service-icon-wrap">${service.icon}</div>
+                <div class="service-price-badge">
+                    <div class="${dotClass}"></div>
+                    ${priceLabel}
+                </div>
+            </div>
+            <div class="service-category">${service.cat}</div>
+            <div class="service-name">${service.name}</div>
+            <div class="service-desc">${service.desc}</div>
+            <div class="service-action">${actionLabel}</div>
+        </div>
+    `;
+}
+
+/* Injection des cartes dans le DOM */
+document.getElementById('kfc-list').innerHTML = kfcServices.map(createServiceCard).join('');
+document.getElementById('premium-list').innerHTML = premiumServices.map(createServiceCard).join('');
+
+/* ============================================
+   GESTION DES CLICS SUR LES SERVICES
+============================================ */
+let currentService = null;
+
+function handleServiceClick(id) {
+    /* Cherche dans les deux catalogues */
+    const service = [...kfcServices, ...premiumServices].find(s => s.id === id);
+    if (!service) return;
+
+    /* Si c'est une redirection directe (ex: streaming gratuit) */
+    if (service.isRedirect) {
+        if (tg) tg.openLink(service.redirectUrl);
+        else window.open(service.redirectUrl, '_blank');
+        return;
+    }
+
+    /* Sinon, ouvre la modal d'achat */
+    currentService = service;
+    openServiceModal(service);
+}
+
+function openServiceModal(service) {
+    const modal = document.getElementById('serviceModal');
+    const balanceOk = state.balance >= service.prix;
+
+    document.getElementById('m-icon').textContent = service.icon;
+    document.getElementById('m-cat').textContent = service.cat;
+    document.getElementById('m-name').textContent = service.name;
+    document.getElementById('m-price').textContent = service.prix.toFixed(2) + ' €';
+    document.getElementById('m-desc').textContent = service.desc;
+
+    const balEl = document.getElementById('m-balance-val');
+    balEl.textContent = state.balance.toFixed(2) + ' €';
+    balEl.className = 'balance-check-val ' + (balanceOk ? 'ok' : 'nok');
+
+    const buyBtn = document.getElementById('m-buy-btn');
+    if (balanceOk) {
+        buyBtn.textContent = '✅ Acheter maintenant';
+        buyBtn.style.opacity = '1';
+        buyBtn.onclick = confirmPurchase;
+    } else {
+        buyBtn.textContent = '💳 Solde insuffisant — Recharger';
+        buyBtn.style.opacity = '0.9';
+        buyBtn.onclick = () => { closeServiceModal(); openRechargeModal(); };
+    }
+
+    modal.classList.add('open');
+}
+
+function closeServiceModal(event) {
+    if (!event || event.target === document.getElementById('serviceModal')) {
+        document.getElementById('serviceModal').classList.remove('open');
+        currentService = null;
+    }
+}
+
+/* ============================================
+   CONFIRMATION D'ACHAT
+============================================ */
+function confirmPurchase() {
+    if (!currentService) return;
+    const service = currentService;
+
+    if (state.balance < service.prix) {
+        if (tg) tg.showAlert('❌ Solde insuffisant. Rechargez votre wallet pour continuer.');
+        return;
+    }
+
+    /* Déduction du solde */
+    state.balance -= service.prix;
+    state.balance = Math.round(state.balance * 100) / 100;
+
+    /* Ajout à l'historique */
+    const order = {
+        id: Date.now(),
+        icon: service.icon,
+        name: service.name,
+        prix: service.prix,
+        date: new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+    };
+    state.history.unshift(order);
+
+    /* Mise à jour des stats admin */
+    state.totalCA += service.prix;
+    state.totalCA = Math.round(state.totalCA * 100) / 100;
+    state.totalOrders += 1;
+
+    saveState();
+    updateBalanceDisplay();
+    renderHistory();
+    closeServiceModal();
+
+    /* Alerte de succès native Telegram */
+    if (tg) {
+        tg.showAlert(`✅ Achat confirmé !\n\n🛍️ ${service.name}\n💰 ${service.prix.toFixed(2)} € déduit de votre solde.\n\nNotre équipe vous livrera très rapidement. Merci de votre confiance ! 🔮`);
+    }
+}
+
+/* ============================================
+   MODAL RECHARGE
+============================================ */
+function openRechargeModal() {
+    document.getElementById('rechargeModal').classList.add('open');
+}
+
+function closeRechargeModal(event) {
+    if (!event || event.target === document.getElementById('rechargeModal')) {
+        document.getElementById('rechargeModal').classList.remove('open');
+    }
+}
+
+/* ============================================
+   HISTORIQUE DES ACHATS
+============================================ */
+function renderHistory() {
+    const container = document.getElementById('history-list');
+    if (state.history.length === 0) {
+        container.innerHTML = `
+            <div class="history-empty">
+                <div class="history-empty-icon">📋</div>
+                <h3>Aucun achat pour l'instant</h3>
+                <p>Vos commandes apparaîtront ici après votre premier achat.</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = state.history.map(order => `
+        <div class="history-item">
+            <div class="history-icon">${order.icon}</div>
+            <div class="history-info">
+                <div class="history-name">${order.name}</div>
+                <div class="history-date">${order.date}</div>
+            </div>
+            <div class="history-price ${order.prix === 0 ? 'free' : ''}">
+                ${order.prix === 0 ? 'GRATUIT' : '-' + order.prix.toFixed(2) + ' €'}
+            </div>
+        </div>
+    `).join('');
+}
+
+renderHistory();
+
+/* ============================================
+   NAVIGATION ENTRE ONGLETS
+============================================ */
+function switchPage(pageId, navBtn) {
+    /* Masque toutes les pages */
+    document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+    /* Désactive tous les boutons nav */
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+    /* Active la bonne page et le bon bouton */
+    document.getElementById('page-' + pageId).classList.add('active');
+    navBtn.classList.add('active');
+
+    /* Refresh de l'historique si on y va */
+    if (pageId === 'history') renderHistory();
+}
+
+/* ============================================
+   SUPPORT TELEGRAM
+============================================ */
+function openSupport() {
+    if (tg) tg.openLink('https://t.me/zeromeufuhq');
+    else window.open('https://t.me/zeromeufuhq', '_blank');
+}
+
+/* ============================================
+   PANNEAU ADMINISTRATEUR SECRET
+============================================ */
+let adminAttempts = 0;
+
+document.getElementById('logoBtn').addEventListener('click', () => {
+    if (tg) {
+        tg.showPopup({
+            title: '🔐 Accès Restreint',
+            message: 'Entrez le code administrateur :',
+            buttons: [
+                { id: 'confirm', type: 'default', text: 'Entrer le code' },
+                { id: 'cancel', type: 'cancel', text: 'Annuler' }
+            ]
+        }, (btnId) => {
+            if (btnId === 'confirm') {
                 tg.showPopup({
-                    title: "Solde insuffisant ❌",
-                    message: `Il vous manque ${(prix - solde).toFixed(2)} € pour valider cette commande.`,
-                    buttons: [{id: "recharge", type: "default", text: "Recharger mon compte"}]
-                }, (buttonId) => {
-                    if(buttonId === "recharge") ouvrirRecharge();
+                    title: '🔐 Code Admin',
+                    message: 'Code secret :',
+                    buttons: [
+                        { id: 'ok', type: 'default', text: '777 — Accéder' },
+                        { id: 'cancel', type: 'cancel', text: 'Annuler' }
+                    ]
+                }, (b) => {
+                    if (b === 'ok') openAdmin();
                 });
             }
-        }
+        });
+    } else {
+        /* Fallback navigateur standard */
+        const code = prompt('🔐 Code administrateur :');
+        if (code === '777') openAdmin();
+        else if (code !== null) alert('❌ Code incorrect.');
+    }
+});
 
-        function remplirHistorique() {
-            const container = document.getElementById('historiqueCommandes');
-            if (commandes.length === 0) {
-                container.innerHTML = `<p style="color:#64748b; font-size:13px; font-style:italic; text-align:center; margin-top:20px;">Aucune commande pour le moment.</p>`;
-                return;
-            }
-            container.innerHTML = "";
-            commandes.forEach(c => {
-                container.innerHTML += `
-                    <div class="order-item">
-                        <div style="display:flex; justify-content:space-between; font-weight:600; font-size:14px;">
-                            <span>${c.nom}</span>
-                            <span style="color:#ef4444;">-${c.prix.toFixed(2)}€</span>
-                        </div>
-                        <div style="font-size:12px; color:#64748b; margin-top:6px;">Traité le ${c.date} — Livré ✅</div>
-                    </div>
-                `;
-            });
-        }
+function openAdmin() {
+    updateAdminPanel();
+    document.getElementById('adminPanel').classList.add('open');
+}
 
-        function verifierCodeAdmin() {
-            tg.showPopup({
-                title: "Accès Sécurisé",
-                message: "Zone réservée à la direction de la boutique.",
-                buttons: [
-                    {id: "code", type: "default", text: "Saisir mot de passe"},
-                    {id: "annuler", type: "cancel", text: "Fermer"}
-                ]
-            }, (btn) => {
-                if(btn === "code") {
-                    const code = prompt("Entrez le code secret :");
-                    if (code === "777") {
-                        changerOnglet('admin', null);
-                    } else if (code !== null) {
-                        tg.showAlert("Accès refusé.");
-                    }
-                }
-            });
-        }
+function closeAdmin() {
+    document.getElementById('adminPanel').classList.remove('open');
+}
 
-        function remplirAdmin() {
-            document.getElementById('adminArgent').textContent = totalVentes.toFixed(2) + " €";
-            document.getElementById('adminNbCommandes').textContent = "Total : " + commandes.length + " commande(s)";
-        }
+function updateAdminPanel() {
+    document.getElementById('admin-ca').textContent = state.totalCA.toFixed(2) + ' €';
+    document.getElementById('admin-orders').textContent = state.totalOrders;
+    document.getElementById('admin-balance-display').textContent = state.balance.toFixed(2) + ' €';
+}
 
-        function adminAjouterMonnaie() {
-            const montant = parseFloat(document.getElementById('adminAjoutSolde').value);
-            if (!isNaN(montant) && montant > 0) {
-                solde += montant;
-                localStorage.setItem('oshop_solde', solde);
-                document.getElementById('adminAjoutSolde').value = "";
-                tg.showAlert(`Fonds injectés : +${montant} €`);
-                chargerBoutique();
-                changerOnglet('accueil', null);
-            }
-        }
+/* Injection de solde (test admin) */
+function injectBalance() {
+    const input = document.getElementById('injectAmount');
+    const amount = parseFloat(input.value);
+    if (isNaN(amount) || amount <= 0) {
+        alert('❌ Montant invalide.');
+        return;
+    }
+    state.balance += amount;
+    state.balance = Math.round(state.balance * 100) / 100;
+    saveState();
+    updateBalanceDisplay();
+    updateAdminPanel();
+    input.value = '';
+    if (tg) tg.showAlert(`✅ ${amount.toFixed(2)} € injectés avec succès !\n\nNouveau solde : ${state.balance.toFixed(2)} €`);
+}
+</script>
 
-        function ouvrirRecharge() { document.getElementById('modalRecharge').style.display = 'flex'; }
-        function fermerRecharge() { document.getElementById('modalRecharge').style.display = 'none'; }
-        function ouvrirLien(url) { tg.openLink(url); }
-        function abrirLienSupport() { tg.openLink('https://t.me/zeromeufuhq'); }
-        function ouvrirLienSupport() { tg.openLink('https://t.me/zeromeufuhq'); }
-
-        chargerBoutique();
-    </script>
 </body>
 </html>
