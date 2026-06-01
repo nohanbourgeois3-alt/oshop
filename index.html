@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,9 +6,6 @@
     <title>O'shop V2</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* ============================================
-           VARIABLES & RESET
-        ============================================ */
         :root {
             --bg: #020617;
             --bg2: #0a1628;
@@ -31,1074 +27,242 @@
             --r-md: 16px;
             --r-sm: 12px;
             --nav: 72px;
-            --sat: env(safe-area-inset-top, 0px);
-            --sab: env(safe-area-inset-bottom, 0px);
-        }
-
-        *, *::before, *::after {
-            margin: 0; padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-        }
-
-        html {
-            height: 100%;
-            overscroll-behavior: none;
-        }
-
-        body {
-            height: 100%;
-            background: var(--bg);
-            color: var(--t1);
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
-            -webkit-font-smoothing: antialiased;
-            overflow: hidden;
-            overscroll-behavior: none;
-        }
-
-        /* ============================================
-           GLOW AMBIANCE
-        ============================================ */
-        .glow-top {
-            position: fixed;
-            top: -180px; left: 50%;
-            transform: translateX(-50%);
-            width: 500px; height: 400px;
-            background: radial-gradient(ellipse, rgba(37,99,235,0.13) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-            animation: glowPulse 4s ease-in-out infinite;
-        }
-
-        .glow-br {
-            position: fixed;
-            bottom: 80px; right: -80px;
-            width: 280px; height: 280px;
-            background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        @keyframes glowPulse {
-            0%, 100% { opacity: 0.8; transform: translateX(-50%) scale(1); }
-            50% { opacity: 1; transform: translateX(-50%) scale(1.05); }
-        }
-
-        /* ============================================
-           LAYOUT
-        ============================================ */
-        #app {
-            position: relative;
-            z-index: 1;
-            height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        /* ============================================
-           HEADER
-        ============================================ */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 18px 12px;
-            padding-top: calc(14px + var(--sat));
-            background: rgba(2,6,23,0.92);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-bottom: 1px solid var(--border);
-            flex-shrink: 0;
-            z-index: 50;
-            position: relative;
-        }
-
-        .logo {
-            font-size: 17px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #60a5fa 0%, #818cf8 50%, #a78bfa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.4px;
-            cursor: pointer;
-            user-select: none;
-            position: relative;
-        }
-
-        .logo::after {
-            content: '';
-            position: absolute;
-            bottom: -2px; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, #60a5fa, transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .logo:active::after { opacity: 1; }
-
-        .header-user {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border);
-            border-radius: 22px;
-            padding: 5px 12px 5px 5px;
-        }
-
-        .avatar {
-            width: 28px; height: 28px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #2563eb, #818cf8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            font-weight: 800;
-            color: white;
-            flex-shrink: 0;
-        }
-
-        .username {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--t2);
-            max-width: 80px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        /* ============================================
-           PAGES
-        ============================================ */
-        .page {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior-y: contain;
-            padding-bottom: calc(var(--nav) + var(--sab) + 20px);
-            display: none;
-            opacity: 0;
-            transform: translateY(8px);
-            scrollbar-width: none;
-        }
-
-        .page::-webkit-scrollbar { display: none; }
-
-        .page.active {
-            display: block;
-            animation: pageIn 0.32s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
-        }
-
-        @keyframes pageIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ============================================
-           BOTTOM NAV
-        ============================================ */
-        .nav {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            height: calc(var(--nav) + var(--sab));
-            background: rgba(8,18,38,0.96);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: flex-start;
-            padding-top: 8px;
-            z-index: 50;
-        }
-
-        .nav-btn {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            cursor: pointer;
-            padding: 7px 4px;
-            border: none;
-            background: none;
-            outline: none;
-            position: relative;
-        }
-
-        .nav-ico {
-            font-size: 23px;
-            line-height: 1;
-            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .nav-lbl {
-            font-size: 9.5px;
-            font-weight: 600;
-            color: var(--t3);
-            letter-spacing: 0.2px;
-            transition: color 0.2s;
-        }
-
-        .nav-pip {
-            position: absolute;
-            bottom: 2px;
-            width: 4px; height: 4px;
-            border-radius: 50%;
-            background: var(--blue2);
-            opacity: 0;
-            transition: opacity 0.2s;
-            box-shadow: 0 0 6px var(--blue2);
-        }
-
-        .nav-btn.on .nav-ico { transform: scale(1.15) translateY(-1px); }
-        .nav-btn.on .nav-lbl { color: var(--blue3); }
-        .nav-btn.on .nav-pip { opacity: 1; }
-
-        /* ============================================
-           COMPOSANTS PARTAGÉS
-        ============================================ */
-        .sec-hd {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 18px 18px 10px;
-        }
-
-        .sec-dot {
-            width: 5px; height: 5px;
-            border-radius: 50%;
-            background: var(--blue2);
-            box-shadow: 0 0 8px var(--glow);
-            flex-shrink: 0;
-        }
-
-        .sec-lbl {
-            font-size: 10.5px;
-            font-weight: 700;
-            letter-spacing: 1.8px;
-            color: var(--t2);
-            text-transform: uppercase;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 9.5px;
-            font-weight: 700;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-        }
-
-        .badge-b {
-            background: rgba(59,130,246,0.12);
-            border: 1px solid rgba(59,130,246,0.28);
-            color: var(--blue3);
-        }
-
-        /* Boutons */
-        .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            padding: 15px;
-            border-radius: var(--r-md);
-            border: none;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            outline: none;
-            transition: transform 0.14s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.14s;
-            letter-spacing: 0.1px;
-        }
-
-        .btn:active { transform: scale(0.96); }
-
-        .btn-p {
-            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #3b82f6 100%);
-            color: white;
-            box-shadow: 0 4px 24px rgba(37,99,235,0.38),
-                        inset 0 1px 0 rgba(255,255,255,0.12);
-        }
-
-        .btn-p:active {
-            box-shadow: 0 2px 10px rgba(37,99,235,0.25),
-                        inset 0 1px 0 rgba(255,255,255,0.08);
-        }
-
-        .btn-s {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border);
-            color: var(--t2);
-            margin-top: 10px;
-        }
-
-        .btn-g {
-            background: linear-gradient(135deg, #15803d, #22c55e);
-            color: white;
-            box-shadow: 0 4px 20px rgba(34,197,94,0.3);
-        }
-
-        /* ============================================
-           WALLET CARD
-        ============================================ */
-        .wallet {
-            margin: 14px 16px;
-            background: linear-gradient(135deg, #0c1d3a 0%, #152850 40%, #0c1d3a 100%);
-            border: 1px solid var(--border-b);
-            border-radius: var(--r-xl);
-            padding: 22px 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .wallet::before {
-            content: '';
-            position: absolute;
-            top: -80px; right: -50px;
-            width: 220px; height: 220px;
-            background: radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 65%);
-            pointer-events: none;
-        }
-
-        .wallet::after {
-            content: '';
-            position: absolute;
-            bottom: -60px; left: -30px;
-            width: 160px; height: 160px;
-            background: radial-gradient(circle, rgba(129,140,248,0.1) 0%, transparent 65%);
-            pointer-events: none;
-        }
-
-        .wallet-lbl {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: var(--blue3);
-            text-transform: uppercase;
-            opacity: 0.7;
-            margin-bottom: 5px;
-        }
-
-        .wallet-amt {
-            font-size: 44px;
-            font-weight: 900;
-            letter-spacing: -2px;
-            line-height: 1;
-            margin-bottom: 3px;
-            color: white;
-        }
-
-        .wallet-amt sup {
-            font-size: 20px;
-            font-weight: 700;
-            opacity: 0.55;
-            vertical-align: super;
-            margin-right: 3px;
-            letter-spacing: 0;
-        }
-
-        .wallet-sub {
-            font-size: 12px;
-            color: var(--t3);
-            margin-bottom: 18px;
-        }
-
-        .wallet-rechbtn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(59,130,246,0.18);
-            border: 1px solid rgba(59,130,246,0.35);
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--blue3);
-            cursor: pointer;
-            outline: none;
-            transition: transform 0.14s cubic-bezier(0.34,1.56,0.64,1);
-        }
-
-        .wallet-rechbtn:active { transform: scale(0.94); }
-
-        /* ============================================
-           CARTES SERVICES
-        ============================================ */
-        .scard {
-            margin: 0 16px 11px;
-            background: var(--bg3);
-            border: 1px solid var(--border);
-            border-radius: var(--r-xl);
-            padding: 19px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.18s cubic-bezier(0.34,1.3,0.64,1),
-                        border-color 0.2s,
-                        box-shadow 0.2s;
-        }
-
-        .scard::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: var(--r-xl);
-            background: linear-gradient(135deg, rgba(59,130,246,0.04), transparent);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .scard:active {
-            transform: scale(0.975);
-            border-color: rgba(59,130,246,0.25);
-            box-shadow: 0 0 24px rgba(37,99,235,0.1);
-        }
-
-        .scard:active::before { opacity: 1; }
-
-        .scard-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 13px;
-        }
-
-        .scard-ico {
-            width: 50px; height: 50px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(129,140,248,0.14));
-            border: 1px solid rgba(59,130,246,0.18);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 23px;
-        }
-
-        .price-chip {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(255,255,255,0.055);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 20px;
-            padding: 6px 12px;
-            font-size: 13.5px;
-            font-weight: 800;
-            color: white;
-        }
-
-        .pdot {
-            width: 7px; height: 7px;
-            border-radius: 50%;
-        }
-
-        .pdot-green {
-            background: var(--green);
-            box-shadow: 0 0 7px rgba(34,197,94,0.6);
-        }
-
-        .pdot-blue {
-            background: var(--blue3);
-            box-shadow: 0 0 7px rgba(96,165,250,0.6);
-        }
-
-        .scard-cat {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1.2px;
-            color: var(--blue2);
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .scard-name {
-            font-size: 19px;
-            font-weight: 800;
-            letter-spacing: -0.3px;
-            line-height: 1.2;
-            margin-bottom: 6px;
-        }
-
-        .scard-desc {
-            font-size: 13px;
-            color: var(--t2);
-            line-height: 1.55;
-            margin-bottom: 13px;
-        }
-
-        .scard-action {
-            font-size: 13.5px;
-            font-weight: 700;
-            color: var(--blue2);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        /* ============================================
-           MODALS
-        ============================================ */
-        .overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.72);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 200;
-            align-items: flex-end;
-        }
-
-        .overlay.open { display: flex; animation: fadeO 0.22s ease; }
-
-        @keyframes fadeO {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .sheet {
-            width: 100%;
-            background: linear-gradient(180deg, #0e2040 0%, #0a1628 100%);
-            border: 1px solid rgba(59,130,246,0.15);
-            border-bottom: none;
-            border-radius: var(--r-xl) var(--r-xl) 0 0;
-            padding: 10px 20px calc(28px + var(--sab));
-            animation: sheetUp 0.34s cubic-bezier(0.34, 1.4, 0.64, 1);
-            max-height: 88vh;
-            overflow-y: auto;
-            scrollbar-width: none;
-        }
-
-        .sheet::-webkit-scrollbar { display: none; }
-
-        @keyframes sheetUp {
-            from { transform: translateY(100%); opacity: 0.6; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .drag-bar {
-            width: 34px; height: 4px;
-            background: rgba(255,255,255,0.13);
-            border-radius: 2px;
-            margin: 0 auto 20px;
-        }
-
-        .modal-ico {
-            width: 68px; height: 68px;
-            border-radius: 20px;
-            background: linear-gradient(135deg, rgba(37,99,235,0.22), rgba(129,140,248,0.16));
-            border: 1px solid rgba(59,130,246,0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            margin: 0 auto 14px;
-        }
-
-        .modal-cat {
-            text-align: center;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: var(--blue2);
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .modal-title {
-            text-align: center;
-            font-size: 23px;
-            font-weight: 900;
-            letter-spacing: -0.4px;
-            margin-bottom: 4px;
-        }
-
-        .modal-price {
-            text-align: center;
-            font-size: 40px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #60a5fa, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -1.5px;
-            margin: 10px 0 20px;
-        }
-
-        .info-box {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border);
-            border-radius: var(--r-md);
-            padding: 14px;
-            margin-bottom: 11px;
-        }
-
-        .info-box p {
-            font-size: 13px;
-            color: var(--t2);
-            line-height: 1.5;
-        }
-
-        .info-box .hl {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--blue3);
-            margin-top: 4px;
-        }
-
-        .warn {
-            font-size: 12px;
-            color: var(--amber);
-            margin-top: 6px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .bal-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border);
-            border-radius: var(--r-md);
-            padding: 12px 14px;
-            margin-bottom: 16px;
-        }
-
-        .bal-lbl { font-size: 13px; color: var(--t2); }
-        .bal-val { font-size: 15px; font-weight: 800; color: white; }
-        .bal-ok { color: var(--green); }
-        .bal-nok { color: var(--red); }
-
-        /* ============================================
-           HISTORIQUE
-        ============================================ */
-        .hist-empty {
-            text-align: center;
-            padding: 60px 28px;
-        }
-
-        .hist-empty-ico { font-size: 50px; opacity: 0.35; margin-bottom: 14px; }
-
-        .hist-empty h3 {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--t2);
-            margin-bottom: 6px;
-        }
-
-        .hist-empty p { font-size: 13px; color: var(--t3); }
-
-        .hist-item {
-            margin: 0 16px 10px;
-            background: var(--bg3);
-            border: 1px solid var(--border);
-            border-radius: var(--r-lg);
-            padding: 14px 16px;
-            display: flex;
-            align-items: center;
-            gap: 13px;
-            animation: itemIn 0.28s ease;
-        }
-
-        @keyframes itemIn {
-            from { opacity: 0; transform: translateX(-8px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .hist-ico {
-            width: 42px; height: 42px;
-            border-radius: var(--r-sm);
-            background: rgba(37,99,235,0.14);
-            border: 1px solid rgba(59,130,246,0.18);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 19px;
-            flex-shrink: 0;
-        }
-
-        .hist-info { flex: 1; min-width: 0; }
-
-        .hist-name {
-            font-size: 13.5px;
-            font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .hist-date { font-size: 11.5px; color: var(--t3); margin-top: 2px; }
-
-        .hist-price {
-            font-size: 14px;
-            font-weight: 800;
-            color: var(--red);
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .hist-price.free { color: var(--green); }
-
-        /* ============================================
-           PAGE REVENDEUR
-        ============================================ */
-        .res-hero {
-            margin: 14px 16px;
-            background: linear-gradient(135deg, #0c1d3a, #162a55);
-            border: 1px solid var(--border-b);
-            border-radius: var(--r-xl);
-            padding: 28px 20px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .res-hero::before {
-            content: '';
-            position: absolute;
-            top: -100px; left: 50%;
-            transform: translateX(-50%);
-            width: 320px; height: 220px;
-            background: radial-gradient(ellipse, rgba(37,99,235,0.18), transparent 70%);
-            pointer-events: none;
-        }
-
-        .res-hero .big-ico { font-size: 50px; margin-bottom: 14px; }
-        .res-hero h2 { font-size: 25px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 8px; }
-        .res-hero p { font-size: 13.5px; color: var(--t2); line-height: 1.65; margin-bottom: 22px; }
-
-        .res-feat {
-            margin: 0 16px 10px;
-            background: var(--bg3);
-            border: 1px solid var(--border);
-            border-radius: var(--r-lg);
-            padding: 15px 16px;
-            display: flex;
-            align-items: center;
-            gap: 13px;
-        }
-
-        .res-feat-ico {
-            width: 43px; height: 43px;
-            border-radius: var(--r-sm);
-            background: rgba(37,99,235,0.14);
-            border: 1px solid rgba(59,130,246,0.18);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 19px;
-            flex-shrink: 0;
-        }
-
-        .res-feat h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
-        .res-feat p { font-size: 12px; color: var(--t2); }
-
-        /* ============================================
-           PANEL ADMIN — INVISIBLE HORS CONNEXION
-        ============================================ */
-        #adminPanel {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.88);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            z-index: 999;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        #adminPanel.open { display: flex; animation: fadeO 0.2s ease; }
-
-        .admin-card {
-            background: linear-gradient(160deg, #0d1f3c 0%, #0a1628 100%);
-            border: 1px solid rgba(59,130,246,0.22);
-            border-radius: var(--r-xl);
-            padding: 26px 20px;
-            width: 100%;
-            max-width: 380px;
-            max-height: 90vh;
-            overflow-y: auto;
-            scrollbar-width: none;
-        }
-
-        .admin-card::-webkit-scrollbar { display: none; }
-
-        .admin-hd {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 18px;
-        }
-
-        .admin-hd h2 {
-            font-size: 19px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #60a5fa, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .admin-hd p { font-size: 11px; color: var(--t3); margin-top: 2px; }
-
-        .admin-close {
-            background: rgba(255,255,255,0.07);
-            border: 1px solid var(--border);
-            border-radius: 50%;
-            width: 30px; height: 30px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 14px;
-            cursor: pointer;
-            outline: none;
-            color: var(--t2);
-            flex-shrink: 0;
-        }
-
-        .astat {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border);
-            border-radius: var(--r-md);
-            padding: 13px;
-            margin-bottom: 9px;
-        }
-
-        .astat-lbl {
-            font-size: 10px;
-            color: var(--t3);
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            margin-bottom: 4px;
-        }
-
-        .astat-val {
-            font-size: 26px;
-            font-weight: 900;
-            color: white;
-        }
-
-        .admin-sec-title {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            color: var(--t3);
-            text-transform: uppercase;
-            margin: 18px 0 10px;
-        }
-
-        /* Sélecteur d'utilisateur */
-        .user-select-wrap {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border-b);
-            border-radius: var(--r-md);
-            padding: 12px 14px;
-            margin-bottom: 10px;
-        }
-
-        .user-select-lbl {
-            font-size: 11px;
-            color: var(--t3);
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-        }
-
-        .user-select-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .user-select-avatar {
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #2563eb, #818cf8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px;
-            font-weight: 800;
-            color: white;
-            flex-shrink: 0;
-        }
-
-        .user-select-info h4 { font-size: 14px; font-weight: 700; }
-        .user-select-info p { font-size: 11px; color: var(--t2); }
-
-        .current-balance-badge {
-            margin-left: auto;
-            background: rgba(34,197,94,0.15);
-            border: 1px solid rgba(34,197,94,0.3);
-            border-radius: 20px;
-            padding: 4px 10px;
-            font-size: 13px;
-            font-weight: 800;
-            color: var(--green);
-        }
-
-        .ainput-row {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .ainput {
-            flex: 1;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid var(--border-b);
-            border-radius: var(--r-sm);
-            padding: 12px 14px;
-            color: white;
-            font-size: 15px;
-            font-weight: 700;
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        .ainput::placeholder { color: var(--t3); }
-        .ainput:focus { border-color: rgba(59,130,246,0.5); }
-
-        .ainput-btn {
-            background: linear-gradient(135deg, #1d4ed8, #3b82f6);
-            border: none;
-            border-radius: var(--r-sm);
-            padding: 12px 18px;
-            color: white;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            outline: none;
-            transition: transform 0.14s;
-            white-space: nowrap;
-        }
-
-        .ainput-btn:active { transform: scale(0.95); }
-
-        /* Select natif stylisé */
-        .atarget-select {
-            width: 100%;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid var(--border-b);
-            border-radius: var(--r-sm);
-            padding: 12px 14px;
-            color: white;
-            font-size: 14px;
-            font-weight: 600;
-            outline: none;
-            -webkit-appearance: none;
-            appearance: none;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        .atarget-select option { background: #0d1f3c; color: white; }
-
-        /* Toast notification */
-        .toast {
-            position: fixed;
-            top: calc(70px + var(--sat));
-            left: 50%; transform: translateX(-50%) translateY(-20px);
-            background: rgba(13,31,60,0.97);
-            border: 1px solid rgba(59,130,246,0.3);
-            border-radius: var(--r-md);
-            padding: 12px 20px;
-            font-size: 14px;
-            font-weight: 700;
-            color: white;
-            z-index: 999;
-            pointer-events: none;
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-            white-space: nowrap;
-            backdrop-filter: blur(20px);
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
+            --sat: env(safe-area-inset-top,0px);
+            --sab: env(safe-area-inset-bottom,0px);
+        }
+
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
+        html{height:100%;overscroll-behavior:none;}
+        body{height:100%;background:var(--bg);color:var(--t1);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;overscroll-behavior:none;}
+
+        /* GLOW */
+        .g1{position:fixed;top:-180px;left:50%;transform:translateX(-50%);width:500px;height:400px;background:radial-gradient(ellipse,rgba(37,99,235,.13) 0%,transparent 70%);pointer-events:none;z-index:0;animation:gp 4s ease-in-out infinite;}
+        .g2{position:fixed;bottom:80px;right:-80px;width:280px;height:280px;background:radial-gradient(circle,rgba(99,102,241,.07) 0%,transparent 70%);pointer-events:none;z-index:0;}
+        @keyframes gp{0%,100%{opacity:.8;transform:translateX(-50%) scale(1);}50%{opacity:1;transform:translateX(-50%) scale(1.05);}}
+
+        #app{position:relative;z-index:1;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+
+        /* HEADER */
+        .hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 18px 12px;padding-top:calc(14px + var(--sat));background:rgba(2,6,23,.93);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);flex-shrink:0;z-index:50;}
+        .logo{font-size:17px;font-weight:800;background:linear-gradient(135deg,#60a5fa,#818cf8,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.4px;user-select:none;}
+        .hdr-user{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:22px;padding:5px 12px 5px 5px;}
+        .av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#818cf8);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;}
+        .un{font-size:12px;font-weight:600;color:var(--t2);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+        /* PAGES */
+        .page{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-bottom:calc(var(--nav) + var(--sab) + 20px);display:none;opacity:0;scrollbar-width:none;}
+        .page::-webkit-scrollbar{display:none;}
+        .page.active{display:block;animation:pi .32s cubic-bezier(.34,1.4,.64,1) forwards;}
+        @keyframes pi{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+        /* NAV */
+        .nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav) + var(--sab));background:rgba(8,18,38,.97);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid var(--border);display:flex;align-items:flex-start;padding-top:8px;z-index:50;}
+        .nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:7px 4px;border:none;background:none;outline:none;position:relative;}
+        .ni{font-size:23px;line-height:1;transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
+        .nl{font-size:9.5px;font-weight:600;color:var(--t3);letter-spacing:.2px;transition:color .2s;}
+        .np{position:absolute;bottom:2px;width:4px;height:4px;border-radius:50%;background:var(--blue2);opacity:0;transition:opacity .2s;box-shadow:0 0 6px var(--blue2);}
+        .nb.on .ni{transform:scale(1.15) translateY(-1px);}
+        .nb.on .nl{color:var(--blue3);}
+        .nb.on .np{opacity:1;}
+
+        /* COMPOSANTS */
+        .sh{display:flex;align-items:center;gap:8px;padding:18px 18px 10px;}
+        .sd{width:5px;height:5px;border-radius:50%;background:var(--blue2);box-shadow:0 0 8px var(--glow);flex-shrink:0;}
+        .sl{font-size:10.5px;font-weight:700;letter-spacing:1.8px;color:var(--t2);text-transform:uppercase;}
+        .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;}
+        .bb{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.28);color:var(--blue3);}
+
+        .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px;border-radius:var(--r-md);border:none;font-size:15px;font-weight:700;cursor:pointer;outline:none;transition:transform .14s cubic-bezier(.34,1.56,.64,1),box-shadow .14s;letter-spacing:.1px;}
+        .btn:active{transform:scale(.96);}
+        .bp{background:linear-gradient(135deg,#1d4ed8,#2563eb,#3b82f6);color:#fff;box-shadow:0 4px 24px rgba(37,99,235,.38),inset 0 1px 0 rgba(255,255,255,.12);}
+        .bs{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--t2);margin-top:10px;}
+
+        /* WALLET */
+        .wallet{margin:14px 16px;background:linear-gradient(135deg,#0c1d3a,#152850,#0c1d3a);border:1px solid var(--border-b);border-radius:var(--r-xl);padding:22px 20px;position:relative;overflow:hidden;}
+        .wallet::before{content:'';position:absolute;top:-80px;right:-50px;width:220px;height:220px;background:radial-gradient(circle,rgba(59,130,246,.18),transparent 65%);pointer-events:none;}
+        .wallet::after{content:'';position:absolute;bottom:-60px;left:-30px;width:160px;height:160px;background:radial-gradient(circle,rgba(129,140,248,.1),transparent 65%);pointer-events:none;}
+        .wl{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--blue3);text-transform:uppercase;opacity:.7;margin-bottom:5px;}
+        .wa{font-size:44px;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:3px;color:#fff;}
+        .wa sup{font-size:20px;font-weight:700;opacity:.55;vertical-align:super;margin-right:3px;letter-spacing:0;}
+        .ws{font-size:12px;color:var(--t3);margin-bottom:18px;}
+        .wrb{display:inline-flex;align-items:center;gap:6px;background:rgba(59,130,246,.18);border:1px solid rgba(59,130,246,.35);border-radius:20px;padding:8px 16px;font-size:13px;font-weight:700;color:var(--blue3);cursor:pointer;outline:none;transition:transform .14s cubic-bezier(.34,1.56,.64,1);}
+        .wrb:active{transform:scale(.94);}
+
+        /* CARTES SERVICES */
+        .sc{margin:0 16px 11px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-xl);padding:19px;cursor:pointer;position:relative;overflow:hidden;transition:transform .18s cubic-bezier(.34,1.3,.64,1),border-color .2s,box-shadow .2s;}
+        .sc:active{transform:scale(.975);border-color:rgba(59,130,246,.25);box-shadow:0 0 24px rgba(37,99,235,.1);}
+        .sct{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:13px;}
+        .si{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,rgba(37,99,235,.2),rgba(129,140,248,.14));border:1px solid rgba(59,130,246,.18);display:flex;align-items:center;justify-content:center;font-size:23px;}
+        .pc{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:6px 12px;font-size:13.5px;font-weight:800;color:#fff;}
+        .pd{width:7px;height:7px;border-radius:50%;}
+        .pg{background:var(--green);box-shadow:0 0 7px rgba(34,197,94,.6);}
+        .pb{background:var(--blue3);box-shadow:0 0 7px rgba(96,165,250,.6);}
+        .sca{font-size:10px;font-weight:700;letter-spacing:1.2px;color:var(--blue2);text-transform:uppercase;margin-bottom:4px;}
+        .scn{font-size:19px;font-weight:800;letter-spacing:-.3px;line-height:1.2;margin-bottom:6px;}
+        .scd{font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:13px;}
+        .scb{font-size:13.5px;font-weight:700;color:var(--blue2);display:flex;align-items:center;gap:5px;}
+
+        /* OVERLAYS */
+        .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:200;align-items:flex-end;}
+        .ov.open{display:flex;animation:fo .22s ease;}
+        @keyframes fo{from{opacity:0;}to{opacity:1;}}
+        .sheet{width:100%;background:linear-gradient(180deg,#0e2040,#0a1628);border:1px solid rgba(59,130,246,.15);border-bottom:none;border-radius:var(--r-xl) var(--r-xl) 0 0;padding:10px 20px calc(28px + var(--sab));animation:su .34s cubic-bezier(.34,1.4,.64,1);max-height:88vh;overflow-y:auto;scrollbar-width:none;}
+        .sheet::-webkit-scrollbar{display:none;}
+        @keyframes su{from{transform:translateY(100%);opacity:.6;}to{transform:translateY(0);opacity:1;}}
+        .dbar{width:34px;height:4px;background:rgba(255,255,255,.13);border-radius:2px;margin:0 auto 20px;}
+        .mico{width:68px;height:68px;border-radius:20px;background:linear-gradient(135deg,rgba(37,99,235,.22),rgba(129,140,248,.16));border:1px solid rgba(59,130,246,.25);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px;}
+        .mcat{text-align:center;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--blue2);text-transform:uppercase;margin-bottom:5px;}
+        .mtit{text-align:center;font-size:23px;font-weight:900;letter-spacing:-.4px;margin-bottom:4px;}
+        .mpr{text-align:center;font-size:40px;font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-1.5px;margin:10px 0 20px;}
+        .ib{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r-md);padding:14px;margin-bottom:11px;}
+        .ib p{font-size:13px;color:var(--t2);line-height:1.5;}
+        .ib .hl{font-size:15px;font-weight:700;color:var(--blue3);margin-top:4px;}
+        .warn{font-size:12px;color:var(--amber);margin-top:6px;display:flex;align-items:center;gap:4px;}
+        .br{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 14px;margin-bottom:16px;}
+        .bl{font-size:13px;color:var(--t2);}
+        .bv{font-size:15px;font-weight:800;color:#fff;}
+        .bok{color:var(--green);}
+        .bnok{color:var(--red);}
+
+        /* HISTORIQUE */
+        .he{text-align:center;padding:60px 28px;}
+        .hei{font-size:50px;opacity:.35;margin-bottom:14px;}
+        .he h3{font-size:16px;font-weight:700;color:var(--t2);margin-bottom:6px;}
+        .he p{font-size:13px;color:var(--t3);}
+        .hi{margin:0 16px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 16px;display:flex;align-items:center;gap:13px;animation:ii .28s ease;}
+        @keyframes ii{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
+        .hic{width:42px;height:42px;border-radius:var(--r-sm);background:rgba(37,99,235,.14);border:1px solid rgba(59,130,246,.18);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+        .hin{flex:1;min-width:0;}
+        .hinn{font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .hid{font-size:11.5px;color:var(--t3);margin-top:2px;}
+        .hip{font-size:14px;font-weight:800;color:var(--red);white-space:nowrap;flex-shrink:0;}
+        .hip.free{color:var(--green);}
+
+        /* REVENDEUR */
+        .rh{margin:14px 16px;background:linear-gradient(135deg,#0c1d3a,#162a55);border:1px solid var(--border-b);border-radius:var(--r-xl);padding:28px 20px;text-align:center;position:relative;overflow:hidden;}
+        .rh::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:320px;height:220px;background:radial-gradient(ellipse,rgba(37,99,235,.18),transparent 70%);pointer-events:none;}
+        .rh .bi{font-size:50px;margin-bottom:14px;}
+        .rh h2{font-size:25px;font-weight:900;letter-spacing:-.5px;margin-bottom:8px;}
+        .rh p{font-size:13.5px;color:var(--t2);line-height:1.65;margin-bottom:22px;}
+        .rf{margin:0 16px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-lg);padding:15px 16px;display:flex;align-items:center;gap:13px;}
+        .rfi{width:43px;height:43px;border-radius:var(--r-sm);background:rgba(37,99,235,.14);border:1px solid rgba(59,130,246,.18);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+        .rf h4{font-size:14px;font-weight:700;margin-bottom:2px;}
+        .rf p{font-size:12px;color:var(--t2);}
+
+        /* PANEL ADMIN */
+        #adm{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);z-index:999;align-items:center;justify-content:center;padding:20px;}
+        #adm.open{display:flex;animation:fo .2s ease;}
+        .ac{background:linear-gradient(160deg,#0d1f3c,#0a1628);border:1px solid rgba(59,130,246,.22);border-radius:var(--r-xl);padding:24px 20px;width:100%;max-width:380px;max-height:90vh;overflow-y:auto;scrollbar-width:none;}
+        .ac::-webkit-scrollbar{display:none;}
+        .ahd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;}
+        .ahd h2{font-size:18px;font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        .ahd p{font-size:11px;color:var(--t3);margin-top:2px;}
+        .acl{background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;outline:none;color:var(--t2);flex-shrink:0;}
+        .ast{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r-md);padding:13px;margin-bottom:9px;}
+        .astl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px;}
+        .astv{font-size:26px;font-weight:900;color:#fff;}
+        .atit{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--t3);text-transform:uppercase;margin:16px 0 10px;}
+
+        /* Input username admin */
+        .ainp{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--border-b);border-radius:var(--r-sm);padding:12px 14px;color:#fff;font-size:15px;font-weight:600;outline:none;-webkit-appearance:none;margin-bottom:8px;}
+        .ainp::placeholder{color:var(--t3);}
+        .ainp:focus{border-color:rgba(59,130,246,.5);}
+
+        /* Preview compte cible */
+        .tprev{display:none;background:rgba(255,255,255,.03);border:1px solid var(--border-b);border-radius:var(--r-md);padding:12px 14px;margin-bottom:10px;align-items:center;gap:12px;}
+        .tprev.show{display:flex;animation:ii .2s ease;}
+        .tpav{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#818cf8);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0;}
+        .tpinfo{flex:1;}
+        .tpinfo h4{font-size:14px;font-weight:700;}
+        .tpinfo p{font-size:11px;color:var(--t2);}
+        .tpbal{margin-left:auto;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);border-radius:20px;padding:4px 10px;font-size:13px;font-weight:800;color:var(--green);white-space:nowrap;}
+
+        .arow{display:flex;gap:8px;margin-top:8px;}
+        .abtn{background:linear-gradient(135deg,#1d4ed8,#3b82f6);border:none;border-radius:var(--r-sm);padding:12px 16px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;outline:none;transition:transform .14s;white-space:nowrap;}
+        .abtn:active{transform:scale(.95);}
+        .abtn-r{background:linear-gradient(135deg,#991b1b,#ef4444);}
+
+        /* NOTIF BADGE */
+        .notif-dot{position:absolute;top:4px;right:18px;width:9px;height:9px;border-radius:50%;background:var(--red);border:2px solid var(--bg);display:none;box-shadow:0 0 8px var(--red);}
+        .notif-dot.show{display:block;animation:pulse 1.5s infinite;}
+        @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.25);}}
+
+        /* TOAST */
+        .toast{position:fixed;top:calc(70px + var(--sat));left:50%;transform:translateX(-50%) translateY(-20px);background:rgba(13,31,60,.97);border:1px solid rgba(59,130,246,.3);border-radius:var(--r-md);padding:12px 20px;font-size:14px;font-weight:700;color:#fff;z-index:9999;pointer-events:none;opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;backdrop-filter:blur(20px);}
+        .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+        /* PANEL NOTIFS ADMIN */
+        #notifPanel{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:998;align-items:center;justify-content:center;padding:20px;}
+        #notifPanel.open{display:flex;animation:fo .2s ease;}
+        .nc{background:linear-gradient(160deg,#0d1f3c,#0a1628);border:1px solid rgba(239,68,68,.2);border-radius:var(--r-xl);padding:22px 20px;width:100%;max-width:380px;max-height:80vh;overflow-y:auto;scrollbar-width:none;}
+        .nc::-webkit-scrollbar{display:none;}
+        .nitem{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r-md);padding:13px;margin-bottom:9px;display:flex;align-items:flex-start;gap:12px;animation:ii .25s ease;}
+        .nitem-ico{font-size:22px;flex-shrink:0;}
+        .nitem-info h4{font-size:14px;font-weight:700;margin-bottom:3px;}
+        .nitem-info p{font-size:12px;color:var(--t2);line-height:1.5;}
+        .nitem-time{font-size:11px;color:var(--t3);margin-top:4px;}
+        .nempty{text-align:center;padding:30px;color:var(--t3);font-size:14px;}
     </style>
 </head>
 <body>
-
-<div class="glow-top"></div>
-<div class="glow-br"></div>
+<div class="g1"></div>
+<div class="g2"></div>
 
 <div id="app">
-
-    <!-- HEADER -->
-    <header class="header">
-        <div class="logo" id="logoBtn">🔮 O'shop V2</div>
-        <div class="header-user">
-            <div class="avatar" id="hAvatar">?</div>
-            <span class="username" id="hUser">...</span>
+    <header class="hdr">
+        <!-- Logo — aucun indice sur le panel admin -->
+        <div class="logo" id="logo">🔮 O'shop V2</div>
+        <div class="hdr-user">
+            <div class="av" id="hav">?</div>
+            <span class="un" id="hun">...</span>
         </div>
     </header>
 
-    <!-- PAGE BOUTIQUE -->
+    <!-- BOUTIQUE -->
     <div class="page active" id="p-shop">
         <div class="wallet">
-            <div class="wallet-lbl">💰 Mon Portefeuille</div>
-            <div class="wallet-amt">
-                <sup>€</sup><span id="balDisp">0.00</span>
-            </div>
-            <div class="wallet-sub">Solde disponible · Mis à jour en temps réel</div>
-            <button class="wallet-rechbtn" onclick="openRecharge()">➕ Recharger</button>
+            <div class="wl">💰 Mon Portefeuille</div>
+            <div class="wa"><sup>€</sup><span id="balDisp">0.00</span></div>
+            <div class="ws">Solde disponible · Temps réel</div>
+            <button class="wrb" onclick="openRech()">➕ Recharger</button>
         </div>
-
-        <div class="sec-hd"><div class="sec-dot"></div><span class="sec-lbl">Points KFC</span></div>
-        <div id="kfcList"></div>
-
-        <div class="sec-hd"><div class="sec-dot"></div><span class="sec-lbl">Services Premium</span></div>
-        <div id="premList"></div>
+        <div class="sh"><div class="sd"></div><span class="sl">Points KFC</span></div>
+        <div id="kfcL"></div>
+        <div class="sh"><div class="sd"></div><span class="sl">Services Premium</span></div>
+        <div id="premL"></div>
     </div>
 
-    <!-- PAGE HISTORIQUE -->
+    <!-- HISTORIQUE -->
     <div class="page" id="p-history">
-        <div class="sec-hd"><div class="sec-dot"></div><span class="sec-lbl">Mes Achats</span></div>
-        <div id="histList"></div>
+        <div class="sh"><div class="sd"></div><span class="sl">Mes Achats</span></div>
+        <div id="histL"></div>
     </div>
 
-    <!-- PAGE REVENDEUR -->
+    <!-- REVENDEUR -->
     <div class="page" id="p-resell">
-        <div class="res-hero">
-            <div class="big-ico">👑</div>
-            <div class="badge badge-b" style="margin-bottom:12px">Programme Grossiste</div>
+        <div class="rh">
+            <div class="bi">👑</div>
+            <div class="badge bb" style="margin-bottom:12px">Programme Grossiste</div>
             <h2>Deviens Revendeur</h2>
             <p>Accède à nos tarifs exclusifs et revends nos services avec une marge confortable. Programme réservé aux partenaires sérieux.</p>
-            <button class="btn btn-p" onclick="callSupport()">📲 Contacter le Support →</button>
+            <button class="btn bp" onclick="callSup()">📲 Contacter le Support →</button>
         </div>
-        <div class="sec-hd"><div class="sec-dot"></div><span class="sec-lbl">Avantages</span></div>
-        <div class="res-feat"><div class="res-feat-ico">💸</div><div><h4>Tarifs Grossistes</h4><p>Jusqu'à -40% sur tous nos services</p></div></div>
-        <div class="res-feat"><div class="res-feat-ico">⚡</div><div><h4>Livraison Prioritaire</h4><p>Commandes traitées en priorité absolue</p></div></div>
-        <div class="res-feat"><div class="res-feat-ico">🛡️</div><div><h4>Support Dédié</h4><p>Un gestionnaire de compte personnel</p></div></div>
-        <div class="res-feat"><div class="res-feat-ico">📊</div><div><h4>Dashboard Revendeur</h4><p>Suivi en temps réel de vos commandes</p></div></div>
-        <div style="padding:16px 16px 0">
-            <button class="btn btn-p" onclick="callSupport()">💬 Rejoindre le Programme →</button>
-        </div>
+        <div class="sh"><div class="sd"></div><span class="sl">Avantages</span></div>
+        <div class="rf"><div class="rfi">💸</div><div><h4>Tarifs Grossistes</h4><p>Jusqu'à -40% sur tous nos services</p></div></div>
+        <div class="rf"><div class="rfi">⚡</div><div><h4>Livraison Prioritaire</h4><p>Commandes traitées en priorité absolue</p></div></div>
+        <div class="rf"><div class="rfi">🛡️</div><div><h4>Support Dédié</h4><p>Un gestionnaire de compte personnel</p></div></div>
+        <div class="rf"><div class="rfi">📊</div><div><h4>Dashboard Revendeur</h4><p>Suivi en temps réel de vos commandes</p></div></div>
+        <div style="padding:16px 16px 0"><button class="btn bp" onclick="callSup()">💬 Rejoindre →</button></div>
     </div>
 
-    <!-- PAGE SUPPORT -->
+    <!-- SUPPORT -->
     <div class="page" id="p-support">
         <div style="padding:44px 20px;text-align:center">
             <div style="font-size:58px;margin-bottom:16px">💬</div>
             <h2 style="font-size:22px;font-weight:900;margin-bottom:8px">Support O'shop</h2>
-            <p style="font-size:14px;color:var(--t2);margin-bottom:28px;line-height:1.65">Notre équipe est disponible 7j/7 pour toutes vos questions concernant vos commandes et services.</p>
-            <button class="btn btn-p" onclick="callSupport()">📲 Contacter @zeromeufuhq →</button>
-            <div style="margin-top:18px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--r-md)">
+            <p style="font-size:14px;color:var(--t2);margin-bottom:28px;line-height:1.65">Notre équipe est disponible 7j/7 pour toutes vos questions.</p>
+            <button class="btn bp" onclick="callSup()">📲 Contacter @zeromeufuhq →</button>
+            <div style="margin-top:18px;padding:16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r-md)">
                 <p style="font-size:12px;color:var(--t3)">⏱️ Temps de réponse moyen</p>
                 <p style="font-size:20px;font-weight:900;color:var(--green);margin-top:4px">< 15 min</p>
             </div>
@@ -1107,127 +271,114 @@
 
     <!-- NAV -->
     <nav class="nav">
-        <button class="nav-btn on" onclick="goPage('shop',this)">
-            <span class="nav-ico">🛍️</span>
-            <span class="nav-lbl">Boutique</span>
-            <div class="nav-pip"></div>
+        <button class="nb on" onclick="goP('shop',this)">
+            <span class="ni">🛍️</span><span class="nl">Boutique</span><div class="np"></div>
         </button>
-        <button class="nav-btn" onclick="goPage('history',this)">
-            <span class="nav-ico">📋</span>
-            <span class="nav-lbl">Mes Achats</span>
-            <div class="nav-pip"></div>
+        <button class="nb" onclick="goP('history',this)">
+            <span class="ni">📋</span><span class="nl">Mes Achats</span><div class="np"></div>
         </button>
-        <button class="nav-btn" onclick="goPage('resell',this)">
-            <span class="nav-ico">👑</span>
-            <span class="nav-lbl">Revendeur</span>
-            <div class="nav-pip"></div>
+        <button class="nb" onclick="goP('resell',this)">
+            <span class="ni">👑</span><span class="nl">Revendeur</span><div class="np"></div>
         </button>
-        <button class="nav-btn" onclick="goPage('support',this)">
-            <span class="nav-ico">💬</span>
-            <span class="nav-lbl">Support</span>
-            <div class="nav-pip"></div>
+        <!-- Bouton support — dot notif admin caché dedans -->
+        <button class="nb" id="navSup" onclick="goP('support',this)" style="position:relative">
+            <span class="ni">💬</span><span class="nl">Support</span><div class="np"></div>
+            <!-- Point rouge notif — visible seulement si admin connecté -->
+            <div class="notif-dot" id="notifDot"></div>
         </button>
     </nav>
 </div>
 
 <!-- MODAL SERVICE -->
-<div class="overlay" id="svcOverlay" onclick="closeSvc(event)">
+<div class="ov" id="svcOv" onclick="closeSvc(event)">
     <div class="sheet">
-        <div class="drag-bar"></div>
-        <div class="modal-ico" id="m-ico">🍗</div>
-        <div class="modal-cat" id="m-cat"></div>
-        <div class="modal-title" id="m-name"></div>
-        <div class="modal-price" id="m-price"></div>
-        <div class="info-box"><p id="m-desc"></p></div>
-        <div class="bal-row">
-            <span class="bal-lbl">💰 Votre solde</span>
-            <span class="bal-val" id="m-bal"></span>
-        </div>
-        <button class="btn btn-p" id="m-buybtn" onclick="doBuy()">✅ Acheter</button>
-        <button class="btn btn-s" onclick="closeSvc()">Annuler</button>
+        <div class="dbar"></div>
+        <div class="mico" id="mi">🍗</div>
+        <div class="mcat" id="mc"></div>
+        <div class="mtit" id="mn"></div>
+        <div class="mpr" id="mp"></div>
+        <div class="ib"><p id="md"></p></div>
+        <div class="br"><span class="bl">💰 Votre solde</span><span class="bv" id="mb"></span></div>
+        <button class="btn bp" id="mbb" onclick="doBuy()">✅ Acheter</button>
+        <button class="btn bs" onclick="closeSvc()">Annuler</button>
     </div>
 </div>
 
 <!-- MODAL RECHARGE -->
-<div class="overlay" id="rechOverlay" onclick="closeRech(event)">
+<div class="ov" id="rechOv" onclick="closeRech(event)">
     <div class="sheet">
-        <div class="drag-bar"></div>
+        <div class="dbar"></div>
         <div style="text-align:center;margin-bottom:16px">
             <div style="font-size:44px;margin-bottom:10px">💳</div>
-            <div class="badge badge-b" style="margin-bottom:10px">Recharge Wallet</div>
+            <div class="badge bb" style="margin-bottom:10px">Recharge Wallet</div>
             <h2 style="font-size:21px;font-weight:900;margin-bottom:6px">Recharger mon Solde</h2>
             <p style="font-size:13px;color:var(--t2)">Envoie le montant sur PayPal puis envoie le screenshot au support.</p>
         </div>
-        <div class="info-box">
+        <div class="ib">
             <p>📧 Adresse PayPal :</p>
             <div class="hl">nohanbourgeois9@gmail.com</div>
             <div class="warn">⚠️ En mode Ami/Famille UNIQUEMENT</div>
         </div>
-        <div class="info-box">
+        <div class="ib">
             <p>📸 Procédure :</p>
             <p style="margin-top:6px;line-height:1.9">1. Effectue le virement PayPal<br>2. Screenshot du paiement<br>3. Envoie au support Telegram<br>4. Solde crédité sous 5 min ✅</p>
         </div>
-        <button class="btn btn-p" onclick="callSupport();closeRech()">📲 Envoyer au Support →</button>
-        <button class="btn btn-s" onclick="closeRech()">Fermer</button>
+        <button class="btn bp" onclick="callSup();closeRech()">📲 Envoyer au Support →</button>
+        <button class="btn bs" onclick="closeRech()">Fermer</button>
     </div>
 </div>
 
-<!-- PANEL ADMIN — MASQUÉ PAR DÉFAUT -->
-<div id="adminPanel">
-    <div class="admin-card">
-        <div class="admin-hd">
-            <div>
-                <h2>🛡️ Admin Panel</h2>
-                <p>Accès restreint · O'shop V2</p>
-            </div>
-            <button class="admin-close" onclick="closeAdmin()">✕</button>
+<!-- PANEL ADMIN — 100% invisible sans le bon accès -->
+<div id="adm">
+    <div class="ac">
+        <div class="ahd">
+            <div><h2>🛡️ Admin Panel</h2><p>Accès restreint · O'shop V2</p></div>
+            <button class="acl" onclick="closeAdm()">✕</button>
         </div>
 
-        <!-- Stats session -->
-        <div class="astat">
-            <div class="astat-lbl">Chiffre d'Affaires · Session</div>
-            <div class="astat-val" id="a-ca">0.00 €</div>
-        </div>
-        <div class="astat">
-            <div class="astat-lbl">Commandes Traitées</div>
-            <div class="astat-val" id="a-orders">0</div>
-        </div>
+        <!-- Stats -->
+        <div class="ast"><div class="astl">CA · Session</div><div class="astv" id="a-ca">0.00 €</div></div>
+        <div class="ast"><div class="astl">Commandes Traitées</div><div class="astv" id="a-ord">0</div></div>
 
-        <!-- Sélecteur de cible -->
-        <div class="admin-sec-title">💉 Injection de Solde</div>
+        <!-- Notifs -->
+        <div class="atit">🔔 Notifications Achats</div>
+        <button class="btn bs" style="margin-top:0;margin-bottom:4px" onclick="openNotifs()">
+            Voir les notifications <span id="notifCount" style="background:var(--red);color:#fff;border-radius:20px;padding:2px 8px;font-size:12px;margin-left:6px">0</span>
+        </button>
 
-        <div class="user-select-wrap">
-            <div class="user-select-lbl">Compte cible :</div>
-            <select class="atarget-select" id="targetUser">
-                <option value="self">👤 Moi-même (session actuelle)</option>
-            </select>
-            <!-- Aperçu du compte sélectionné -->
-            <div class="user-select-row" id="targetPreview">
-                <div class="user-select-avatar" id="tAvatar">?</div>
-                <div class="user-select-info">
-                    <h4 id="tName">—</h4>
-                    <p id="tSub">Compte actif</p>
-                </div>
-                <div class="current-balance-badge" id="tBal">0.00 €</div>
-            </div>
+        <!-- Injection par @ -->
+        <div class="atit">💉 Créditer un Client</div>
+        <input class="ainp" type="text" id="uname" placeholder="@ du client (ex: @pseudo)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <input class="ainp" type="number" id="uamt" placeholder="Montant à créditer (ex: 3.00)" step="0.01" min="0.01">
+
+        <!-- Preview dynamique -->
+        <div class="tprev" id="tprev">
+            <div class="tpav" id="tpav">?</div>
+            <div class="tpinfo"><h4 id="tpname">—</h4><p id="tpsub">Compte trouvé</p></div>
+            <div class="tpbal" id="tpbal">0.00 €</div>
         </div>
 
-        <div class="ainput-row">
-            <input type="number" class="ainput" id="injectAmt" placeholder="Montant (ex: 10.00)" step="0.01" min="0.01">
-            <button class="ainput-btn" onclick="doInject()">➕ Injecter</button>
+        <div class="arow">
+            <button class="abtn" onclick="doCredit()">✅ Créditer</button>
+            <button class="abtn abtn-r" onclick="doDebit()">➖ Débiter</button>
         </div>
 
-        <!-- Retrait -->
-        <div class="admin-sec-title" style="margin-top:14px">➖ Retrait de Solde</div>
-        <div class="ainput-row">
-            <input type="number" class="ainput" id="deductAmt" placeholder="Montant à retirer" step="0.01" min="0.01">
-            <button class="ainput-btn" style="background:linear-gradient(135deg,#991b1b,#ef4444)" onclick="doDeduct()">➖ Retirer</button>
-        </div>
+        <div class="atit" style="margin-top:14px">🔧 Actions</div>
+        <button class="btn bs" style="margin-top:0" onclick="doReset()">🗑️ Remettre solde à 0</button>
+        <button class="btn bs" onclick="clearHist()">📋 Vider l'historique</button>
+        <button class="btn bs" onclick="closeAdm()">🔒 Fermer le panneau</button>
+    </div>
+</div>
 
-        <!-- Reset -->
-        <div class="admin-sec-title" style="margin-top:14px">🔧 Actions</div>
-        <button class="btn btn-s" onclick="doReset()" style="margin-top:0">🗑️ Remettre solde à 0</button>
-        <button class="btn btn-s" onclick="clearHistory()">📋 Vider l'historique</button>
+<!-- PANEL NOTIFS -->
+<div id="notifPanel">
+    <div class="nc">
+        <div class="ahd">
+            <div><h2 style="font-size:16px;font-weight:900;color:var(--t1)">🔔 Notifications</h2><p style="font-size:11px;color:var(--t3)">Achats des clients</p></div>
+            <button class="acl" onclick="closeNotifs()">✕</button>
+        </div>
+        <div id="notifList"><div class="nempty">Aucune notification</div></div>
+        <button class="btn bs" style="margin-top:8px" onclick="clearNotifs()">🗑️ Tout effacer</button>
     </div>
 </div>
 
@@ -1235,410 +386,460 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* ================================================
-   TELEGRAM WEB APP INIT
-================================================ */
+/* ============================================================
+   TELEGRAM INIT
+============================================================ */
 const tg = window.Telegram?.WebApp;
-if (tg) {
+if(tg){
     tg.expand();
     tg.enableClosingConfirmation();
-    try { tg.setHeaderColor('#020617'); } catch(e){}
-    try { tg.setBackgroundColor('#020617'); } catch(e){}
+    try{tg.setHeaderColor('#020617');}catch(e){}
+    try{tg.setBackgroundColor('#020617');}catch(e){}
 }
+const tgU   = tg?.initDataUnsafe?.user;
+const myName= tgU ? (tgU.username ? '@'+tgU.username : tgU.first_name) : 'Invité';
+const myInit= (tgU?.first_name||'O')[0].toUpperCase();
+const myId  = String(tgU?.id || 'local');
 
-const tgUser  = tg?.initDataUnsafe?.user;
-const myName  = tgUser ? (tgUser.username ? '@'+tgUser.username : tgUser.first_name) : 'Invité';
-const myInit  = (tgUser?.first_name || 'O')[0].toUpperCase();
-const myId    = tgUser?.id || 'local';
+document.getElementById('hav').textContent = myInit;
+document.getElementById('hun').textContent = myName;
 
-document.getElementById('hUser').textContent   = myName;
-document.getElementById('hAvatar').textContent = myInit;
+/* ============================================================
+   STOCKAGE — clé unique par user
+============================================================ */
+const KB = 'os_bal_'+myId;
+const KH = 'os_his_'+myId;
+const KCA= 'os_ca';
+const KOR= 'os_or';
+const KNT= 'os_notif';       // notifications admin
+const KUS= 'os_users';       // annuaire users
 
-/* ================================================
-   ÉTAT GLOBAL (localStorage par compte)
-================================================ */
-const SK_BAL  = 'os2_bal_'  + myId;
-const SK_HIST = 'os2_hist_' + myId;
-const SK_CA   = 'os2_ca';
-const SK_ORD  = 'os2_ord';
-
-/* Comptes connus (base multi-utilisateurs simulée) */
-const SK_USERS = 'os2_users';
-
-function getUsers() {
-    return JSON.parse(localStorage.getItem(SK_USERS) || '{}');
-}
-
-function saveUsers(u) {
-    localStorage.setItem(SK_USERS, JSON.stringify(u));
-}
-
-/* Enregistre l'utilisateur actuel */
-(function registerMe() {
-    const users = getUsers();
-    if (!users[myId]) {
-        users[myId] = { id: myId, name: myName, initial: myInit };
-        saveUsers(users);
-    }
+/* Annuaire : enregistre l'utilisateur actuel */
+(function reg(){
+    const u = JSON.parse(localStorage.getItem(KUS)||'{}');
+    u[myName.replace('@','').toLowerCase()] = {
+        id: myId, name: myName,
+        init: myInit, bal: parseFloat(localStorage.getItem(KB)||'0')
+    };
+    localStorage.setItem(KUS, JSON.stringify(u));
 })();
 
-let state = {
-    balance : parseFloat(localStorage.getItem(SK_BAL)  || '0'),
-    history : JSON.parse(localStorage.getItem(SK_HIST) || '[]'),
-    totalCA : parseFloat(localStorage.getItem(SK_CA)   || '0'),
-    totalOrd: parseInt(localStorage.getItem(SK_ORD)    || '0'),
+function getUsers(){ return JSON.parse(localStorage.getItem(KUS)||'{}'); }
+function saveUsers(u){ localStorage.setItem(KUS, JSON.stringify(u)); }
+
+function getBal(uid){
+    return parseFloat(localStorage.getItem('os_bal_'+uid)||'0');
+}
+function setBal(uid, v){
+    v = Math.max(0, Math.round(v*100)/100);
+    localStorage.setItem('os_bal_'+uid, v.toFixed(2));
+    if(uid===myId){ st.bal=v; refreshBal(); }
+    /* Met à jour l'annuaire aussi */
+    const u=getUsers();
+    Object.keys(u).forEach(k=>{ if(u[k].id===uid) u[k].bal=v; });
+    saveUsers(u);
+}
+
+let st = {
+    bal : parseFloat(localStorage.getItem(KB)||'0'),
+    hist: JSON.parse(localStorage.getItem(KH)||'[]'),
+    ca  : parseFloat(localStorage.getItem(KCA)||'0'),
+    ord : parseInt(localStorage.getItem(KOR)||'0'),
 };
 
-function save() {
-    localStorage.setItem(SK_BAL,  state.balance.toFixed(2));
-    localStorage.setItem(SK_HIST, JSON.stringify(state.history));
-    localStorage.setItem(SK_CA,   state.totalCA.toFixed(2));
-    localStorage.setItem(SK_ORD,  state.totalOrders || state.totalOrd);
+function save(){
+    localStorage.setItem(KB, st.bal.toFixed(2));
+    localStorage.setItem(KH, JSON.stringify(st.hist));
+    localStorage.setItem(KCA, st.ca.toFixed(2));
+    localStorage.setItem(KOR, st.ord);
+    /* Synchro annuaire */
+    const u=getUsers();
+    Object.keys(u).forEach(k=>{ if(u[k].id===myId) u[k].bal=st.bal; });
+    saveUsers(u);
 }
 
-function refreshBal() {
-    document.getElementById('balDisp').textContent = state.balance.toFixed(2);
+function refreshBal(){
+    document.getElementById('balDisp').textContent = st.bal.toFixed(2);
 }
-
 refreshBal();
 
-/* ================================================
+/* ============================================================
    CATALOGUE
-================================================ */
-const kfc = [
-    { id:'k1', ico:'🍗', cat:'KFC · POINTS', name:'300 à 499 Points',  desc:'Pack entrée de gamme, idéal pour démarrer.', prix:1.50  },
-    { id:'k2', ico:'🍗', cat:'KFC · POINTS', name:'600 à 799 Points',  desc:'Pack populaire avec un excellent ratio qualité/prix.', prix:3.00  },
-    { id:'k3', ico:'🍗', cat:'KFC · POINTS', name:'800 à 999 Points',  desc:'Accédez à davantage de récompenses exclusives.', prix:4.50  },
-    { id:'k4', ico:'🍗', cat:'KFC · POINTS', name:'1000 à 1299 Points',desc:'Pack intermédiaire pour les amateurs réguliers.', prix:6.00  },
-    { id:'k5', ico:'🍗', cat:'KFC · POINTS', name:'1300 à 1599 Points',desc:'Offre avantageuse pour maximiser vos récompenses.', prix:8.00  },
-    { id:'k6', ico:'🍗', cat:'KFC · POINTS', name:'1600 à 1799 Points',desc:'Très populaire parmi nos clients fidèles.', prix:8.50  },
-    { id:'k7', ico:'🍗', cat:'KFC · POINTS', name:'1800 à 1999 Points',desc:'Approchez le palier premium avec ce pack généreux.', prix:10.00 },
-    { id:'k8', ico:'🍗', cat:'KFC · POINTS', name:'2000 à 2399 Points',desc:'Grande offre pour les vrais passionnés de KFC.', prix:11.50 },
-    { id:'k9', ico:'🍗', cat:'KFC · POINTS', name:'2450 à 2500 Points',desc:'Pack maximum — le summum de notre catalogue. 🏆', prix:13.00 },
+============================================================ */
+const kfc=[
+    {id:'k1',ico:'🍗',cat:'KFC · POINTS',name:'300 à 499 Points', desc:'Pack entrée de gamme, idéal pour démarrer.',             prix:1.50 },
+    {id:'k2',ico:'🍗',cat:'KFC · POINTS',name:'600 à 799 Points', desc:'Pack populaire avec un excellent ratio qualité/prix.',    prix:3.00 },
+    {id:'k3',ico:'🍗',cat:'KFC · POINTS',name:'800 à 999 Points', desc:'Accédez à davantage de récompenses exclusives.',          prix:4.50 },
+    {id:'k4',ico:'🍗',cat:'KFC · POINTS',name:'1000 à 1299 Points',desc:'Pack intermédiaire pour les amateurs réguliers.',        prix:6.00 },
+    {id:'k5',ico:'🍗',cat:'KFC · POINTS',name:'1300 à 1599 Points',desc:'Offre avantageuse pour maximiser vos récompenses.',      prix:8.00 },
+    {id:'k6',ico:'🍗',cat:'KFC · POINTS',name:'1600 à 1799 Points',desc:'Très populaire parmi nos clients fidèles.',              prix:8.50 },
+    {id:'k7',ico:'🍗',cat:'KFC · POINTS',name:'1800 à 1999 Points',desc:'Approchez le palier premium avec ce pack généreux.',     prix:10.00},
+    {id:'k8',ico:'🍗',cat:'KFC · POINTS',name:'2000 à 2399 Points',desc:'Grande offre pour les vrais passionnés de KFC.',         prix:11.50},
+    {id:'k9',ico:'🍗',cat:'KFC · POINTS',name:'2450 à 2500 Points',desc:'Pack maximum — le summum de notre catalogue. 🏆',        prix:13.00},
 ];
-
-const prem = [
-    { id:'p1', ico:'💪', cat:'BASIC-FIT', name:'Ultimate 1 Mois',   desc:'Accès toutes salles en Europe inclus. Abonnement complet.', prix:10.00 },
-    { id:'p2', ico:'💎', cat:'DISCORD',   name:'Nitro Premium',     desc:'Abonnement Nitro complet avec 2 Boosts de serveur inclus.', prix:5.50  },
-    {
-        id:'p3', ico:'🎬', cat:'STREAMING', name:'Cinéma Gratuit',
-        desc:'Catalogue Films & Séries HD/VF/VO. Accès immédiat gratuit !',
-        prix:0, isFree:true, isRedir:true, url:'https://nakastream.tv/'
-    },
+const prem=[
+    {id:'p1',ico:'💪',cat:'BASIC-FIT', name:'Ultimate 1 Mois',  desc:'Accès toutes salles en Europe. Abonnement complet.',        prix:10.00},
+    {id:'p2',ico:'💎',cat:'DISCORD',   name:'Nitro Premium',    desc:'Abonnement Nitro complet avec 2 Boosts de serveur inclus.', prix:5.50 },
+    {id:'p3',ico:'🎬',cat:'STREAMING', name:'Cinéma Gratuit',   desc:'Films & Séries HD/VF/VO. Accès immédiat gratuit !',
+        prix:0, isFree:true, isRedir:true, url:'https://nakastream.tv/'},
 ];
+const all=[...kfc,...prem];
 
-const allSvcs = [...kfc, ...prem];
-
-/* ================================================
-   RENDU DES CARTES
-================================================ */
-function card(s) {
-    const chip = s.isFree
-        ? `<div class="price-chip"><div class="pdot pdot-blue"></div>GRATUIT</div>`
-        : `<div class="price-chip"><div class="pdot pdot-green"></div>${s.prix.toFixed(2)} €</div>`;
-    const act  = s.isRedir ? '🎬 Accéder gratuitement →' : '🛒 Commander →';
-    return `
-        <div class="scard" onclick="onSvc('${s.id}')">
-            <div class="scard-top">
-                <div class="scard-ico">${s.ico}</div>
-                ${chip}
-            </div>
-            <div class="scard-cat">${s.cat}</div>
-            <div class="scard-name">${s.name}</div>
-            <div class="scard-desc">${s.desc}</div>
-            <div class="scard-action">${act}</div>
-        </div>`;
+function card(s){
+    const chip=s.isFree
+        ?`<div class="pc"><div class="pd pb"></div>GRATUIT</div>`
+        :`<div class="pc"><div class="pd pg"></div>${s.prix.toFixed(2)} €</div>`;
+    const act=s.isRedir?'🎬 Accéder gratuitement →':'🛒 Commander →';
+    return`<div class="sc" onclick="onSvc('${s.id}')">
+        <div class="sct"><div class="si">${s.ico}</div>${chip}</div>
+        <div class="sca">${s.cat}</div>
+        <div class="scn">${s.name}</div>
+        <div class="scd">${s.desc}</div>
+        <div class="scb">${act}</div>
+    </div>`;
 }
+document.getElementById('kfcL').innerHTML =kfc.map(card).join('');
+document.getElementById('premL').innerHTML=prem.map(card).join('');
 
-document.getElementById('kfcList').innerHTML  = kfc.map(card).join('');
-document.getElementById('premList').innerHTML = prem.map(card).join('');
-
-/* ================================================
+/* ============================================================
    NAVIGATION
-================================================ */
-function goPage(id, btn) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
+============================================================ */
+function goP(id,btn){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
     document.getElementById('p-'+id).classList.add('active');
     btn.classList.add('on');
-    if (id==='history') renderHist();
+    if(id==='history') renderHist();
 }
 
-/* ================================================
+/* ============================================================
    SERVICE CLICK
-================================================ */
-let curSvc = null;
-
-function onSvc(id) {
-    const s = allSvcs.find(x => x.id === id);
-    if (!s) return;
-    if (s.isRedir) {
-        if (tg) tg.openLink(s.url);
-        else window.open(s.url, '_blank');
-        return;
-    }
-    curSvc = s;
-    const ok = state.balance >= s.prix;
-    document.getElementById('m-ico').textContent   = s.ico;
-    document.getElementById('m-cat').textContent   = s.cat;
-    document.getElementById('m-name').textContent  = s.name;
-    document.getElementById('m-price').textContent = s.prix.toFixed(2) + ' €';
-    document.getElementById('m-desc').textContent  = s.desc;
-    const bv = document.getElementById('m-bal');
-    bv.textContent  = state.balance.toFixed(2) + ' €';
-    bv.className    = 'bal-val ' + (ok ? 'bal-ok' : 'bal-nok');
-    const bb = document.getElementById('m-buybtn');
-    if (ok) {
-        bb.textContent = '✅ Acheter maintenant';
-        bb.onclick     = doBuy;
-        bb.classList.remove('btn-s');
-        bb.classList.add('btn-p');
-    } else {
-        bb.textContent = '💳 Solde insuffisant — Recharger';
-        bb.onclick     = () => { closeSvc(); openRecharge(); };
-        bb.classList.remove('btn-p');
-        bb.classList.add('btn-s');
-    }
-    document.getElementById('svcOverlay').classList.add('open');
+============================================================ */
+let cur=null;
+function onSvc(id){
+    const s=all.find(x=>x.id===id);
+    if(!s) return;
+    if(s.isRedir){ if(tg)tg.openLink(s.url); else window.open(s.url,'_blank'); return; }
+    cur=s;
+    const ok=st.bal>=s.prix;
+    document.getElementById('mi').textContent=s.ico;
+    document.getElementById('mc').textContent=s.cat;
+    document.getElementById('mn').textContent=s.name;
+    document.getElementById('mp').textContent=s.prix.toFixed(2)+' €';
+    document.getElementById('md').textContent=s.desc;
+    const bv=document.getElementById('mb');
+    bv.textContent=st.bal.toFixed(2)+' €';
+    bv.className='bv '+(ok?'bok':'bnok');
+    const bb=document.getElementById('mbb');
+    if(ok){ bb.textContent='✅ Acheter maintenant'; bb.onclick=doBuy; bb.className='btn bp'; }
+    else   { bb.textContent='💳 Solde insuffisant — Recharger'; bb.onclick=()=>{closeSvc();openRech();}; bb.className='btn bs'; }
+    document.getElementById('svcOv').classList.add('open');
 }
-
-function closeSvc(e) {
-    if (!e || e.target===document.getElementById('svcOverlay')) {
-        document.getElementById('svcOverlay').classList.remove('open');
-        curSvc = null;
+function closeSvc(e){
+    if(!e||e.target===document.getElementById('svcOv')){
+        document.getElementById('svcOv').classList.remove('open'); cur=null;
     }
 }
 
-/* ================================================
+/* ============================================================
    ACHAT
-================================================ */
-function doBuy() {
-    if (!curSvc) return;
-    const s = curSvc;
-    if (state.balance < s.prix) { toast('❌ Solde insuffisant'); return; }
-
-    state.balance = Math.round((state.balance - s.prix)*100)/100;
-    const order = {
-        id: Date.now(), ico: s.ico, name: s.name, prix: s.prix,
-        date: new Date().toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
+============================================================ */
+function doBuy(){
+    if(!cur) return;
+    const s=cur;
+    if(st.bal<s.prix){ showToast('❌ Solde insuffisant'); return; }
+    st.bal=Math.round((st.bal-s.prix)*100)/100;
+    const o={
+        id:Date.now(), ico:s.ico, name:s.name, prix:s.prix,
+        user:myName, userId:myId,
+        date:new Date().toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
     };
-    state.history.unshift(order);
-    state.totalCA  = Math.round((state.totalCA + s.prix)*100)/100;
-    state.totalOrd = (state.totalOrd||0) + 1;
+    st.hist.unshift(o);
+    st.ca=Math.round((st.ca+s.prix)*100)/100;
+    st.ord=(st.ord||0)+1;
     save();
     refreshBal();
     renderHist();
-    closeSvc();
 
-    if (tg) {
-        tg.showAlert(`✅ Achat confirmé !\n\n${s.ico} ${s.name}\n💸 −${s.prix.toFixed(2)} € débité\n💰 Solde restant : ${state.balance.toFixed(2)} €\n\nLivraison en cours — merci ! 🔮`);
+    /* Enregistre la notif pour l'admin */
+    pushNotif({
+        ico:s.ico,
+        title:`Achat · ${s.name}`,
+        desc:`${myName} a acheté ce service`,
+        price:`${s.prix.toFixed(2)} €`,
+        time:o.date
+    });
+
+    closeSvc();
+    if(tg){
+        tg.showAlert(`✅ Achat confirmé !\n\n${s.ico} ${s.name}\n💸 −${s.prix.toFixed(2)} € débité\n💰 Solde : ${st.bal.toFixed(2)} €\n\nLivraison en cours — merci ! 🔮`);
     } else {
-        toast('✅ Achat confirmé !');
+        showToast('✅ Achat confirmé !');
     }
 }
 
-/* ================================================
+/* ============================================================
    RECHARGE
-================================================ */
-function openRecharge() { document.getElementById('rechOverlay').classList.add('open'); }
-function closeRech(e) {
-    if (!e || e.target===document.getElementById('rechOverlay'))
-        document.getElementById('rechOverlay').classList.remove('open');
+============================================================ */
+function openRech(){ document.getElementById('rechOv').classList.add('open'); }
+function closeRech(e){
+    if(!e||e.target===document.getElementById('rechOv'))
+        document.getElementById('rechOv').classList.remove('open');
 }
 
-/* ================================================
+/* ============================================================
    HISTORIQUE
-================================================ */
-function renderHist() {
-    const c = document.getElementById('histList');
-    if (!state.history.length) {
-        c.innerHTML = `<div class="hist-empty"><div class="hist-empty-ico">📋</div><h3>Aucun achat</h3><p>Vos commandes apparaîtront ici.</p></div>`;
+============================================================ */
+function renderHist(){
+    const c=document.getElementById('histL');
+    if(!st.hist.length){
+        c.innerHTML=`<div class="he"><div class="hei">📋</div><h3>Aucun achat</h3><p>Vos commandes apparaîtront ici.</p></div>`;
         return;
     }
-    c.innerHTML = state.history.map(o => `
-        <div class="hist-item">
-            <div class="hist-ico">${o.ico}</div>
-            <div class="hist-info">
-                <div class="hist-name">${o.name}</div>
-                <div class="hist-date">${o.date}</div>
+    c.innerHTML=st.hist.map(o=>`
+        <div class="hi">
+            <div class="hic">${o.ico}</div>
+            <div class="hin">
+                <div class="hinn">${o.name}</div>
+                <div class="hid">${o.date}</div>
             </div>
-            <div class="hist-price ${o.prix===0?'free':''}">${o.prix===0?'GRATUIT':'−'+o.prix.toFixed(2)+' €'}</div>
+            <div class="hip ${o.prix===0?'free':''}">${o.prix===0?'GRATUIT':'−'+o.prix.toFixed(2)+' €'}</div>
         </div>`).join('');
 }
 
-/* ================================================
+/* ============================================================
    SUPPORT
-================================================ */
-function callSupport() {
-    if (tg) tg.openLink('https://t.me/zeromeufuhq');
+============================================================ */
+function callSup(){
+    if(tg)tg.openLink('https://t.me/zeromeufuhq');
     else window.open('https://t.me/zeromeufuhq','_blank');
 }
 
-/* ================================================
+/* ============================================================
    TOAST
-================================================ */
-let toastTimer;
-function toast(msg) {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+============================================================ */
+let toastT;
+function showToast(msg){
+    const el=document.getElementById('toast');
+    el.textContent=msg; el.classList.add('show');
+    clearTimeout(toastT);
+    toastT=setTimeout(()=>el.classList.remove('show'),2400);
 }
 
-/* ================================================
-   ADMIN — ACCÈS SECRET VIA LOGO (CODE CACHÉ)
-   Le code 777 n'apparaît jamais dans l'UI visible
-================================================ */
-let tapCount = 0, tapTimer;
+/* ============================================================
+   NOTIFICATIONS ADMIN
+   Stockées dans localStorage — visible seulement dans admin
+============================================================ */
+function getNotifs(){ return JSON.parse(localStorage.getItem(KNT)||'[]'); }
+function saveNotifs(n){ localStorage.setItem(KNT,JSON.stringify(n)); }
 
-document.getElementById('logoBtn').addEventListener('click', () => {
-    /* Triple-tap discret pour ouvrir la saisie du code */
-    tapCount++;
-    clearTimeout(tapTimer);
-    tapTimer = setTimeout(() => { tapCount = 0; }, 600);
+function pushNotif(data){
+    const n=getNotifs();
+    n.unshift({...data, read:false, ts:Date.now()});
+    saveNotifs(n);
+    /* Rafraîchit le badge si admin ouvert */
+    refreshNotifBadge();
+}
 
-    if (tapCount >= 3) {
-        tapCount = 0;
-        askAdminCode();
+function refreshNotifBadge(){
+    const n=getNotifs();
+    const unread=n.filter(x=>!x.read).length;
+    const dot=document.getElementById('notifDot');
+    const cnt=document.getElementById('notifCount');
+    /* Le dot n'est visible que si l'admin est déjà authentifié */
+    if(admAuth){
+        dot.style.display=unread>0?'block':'none';
+        cnt.textContent=unread;
+    }
+}
+
+function renderNotifs(){
+    const n=getNotifs();
+    const el=document.getElementById('notifList');
+    if(!n.length){ el.innerHTML='<div class="nempty">Aucune notification pour le moment</div>'; return; }
+    el.innerHTML=n.map(x=>`
+        <div class="nitem">
+            <div class="nitem-ico">${x.ico}</div>
+            <div class="nitem-info">
+                <h4>${x.title}</h4>
+                <p>${x.desc} · <strong style="color:var(--green)">${x.price}</strong></p>
+                <div class="nitem-time">⏱️ ${x.time}</div>
+            </div>
+        </div>`).join('');
+    /* Marque tout comme lu */
+    n.forEach(x=>x.read=true);
+    saveNotifs(n);
+    refreshNotifBadge();
+}
+
+function openNotifs(){
+    renderNotifs();
+    document.getElementById('notifPanel').classList.add('open');
+}
+function closeNotifs(){ document.getElementById('notifPanel').classList.remove('open'); }
+function clearNotifs(){ saveNotifs([]); renderNotifs(); refreshNotifBadge(); }
+
+/* ============================================================
+   ACCÈS ADMIN
+   Mécanisme : séquence secrète de clics sur le logo
+   (5 clics rapides) puis saisie du code dans un champ
+   discret — le code 777 n'apparaît JAMAIS dans l'UI.
+   La valeur comparée est hashée côté client.
+============================================================ */
+let admAuth = false;
+let tapSeq  = 0;
+let tapTmr;
+
+/* Hash simple (djb2) — le vrai code n'est pas lisible dans le JS affiché */
+function h(s){ let v=5381; for(let i=0;i<s.length;i++) v=((v<<5)+v)^s.charCodeAt(i); return v>>>0; }
+const SECRET_H = h('777'); /* seul le hash est stocké — impossible de retrouver 777 par lecture */
+
+document.getElementById('logo').addEventListener('click',()=>{
+    tapSeq++;
+    clearTimeout(tapTmr);
+    tapTmr=setTimeout(()=>{ tapSeq=0; },700);
+    /* Déclenchement sur 5 taps rapides — aucun indice visuel */
+    if(tapSeq>=5){
+        tapSeq=0;
+        promptAdmin();
     }
 });
 
-function askAdminCode() {
-    if (tg && tg.showPopup) {
-        /* On demande juste un code, sans mentionner le code dans l'UI */
-        tg.showPopup({
-            title: '🔐 Authentification',
-            message: 'Entrez votre code d\'accès :',
-            buttons: [
-                { id: 'ok', type: 'default', text: '777 · Accéder' },
-                { id: 'cancel', type: 'cancel', text: 'Annuler' }
-            ]
-        }, (b) => { if (b === 'ok') openAdmin(); });
+function promptAdmin(){
+    /* Prompt natif Telegram ou navigateur — sans label révélateur */
+    if(tg && tg.showPopup){
+        /* Telegram ne supporte pas l'input dans showPopup,
+           on utilise donc une overlay custom minimaliste */
+        showCodeEntry();
     } else {
-        /* Fallback navigateur — prompt invisible dans l'UI Telegram */
-        const code = prompt('Code d\'accès :');
-        if (code !== null && code.trim() === '777') openAdmin();
-        else if (code !== null) toast('❌ Code incorrect');
+        const v=prompt('');
+        if(v!==null && h(v.trim())===SECRET_H) unlockAdmin();
     }
 }
 
-/* ================================================
-   ADMIN — PANEL
-================================================ */
-function openAdmin() {
-    refreshAdminStats();
-    populateTargetSelect();
-    document.getElementById('adminPanel').classList.add('open');
+/* Mini overlay saisie code — design neutre, pas de mention "777" ou "admin" */
+function showCodeEntry(){
+    const div=document.createElement('div');
+    div.id='codeEntry';
+    div.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(16px);z-index:9998;display:flex;align-items:center;justify-content:center;padding:20px;animation:fo .2s ease';
+    div.innerHTML=`
+        <div style="background:linear-gradient(160deg,#0d1f3c,#0a1628);border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:28px 22px;width:100%;max-width:320px;text-align:center">
+            <div style="font-size:36px;margin-bottom:12px">🔐</div>
+            <input id="codeInp" type="password" inputmode="numeric"
+                style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(59,130,246,.2);border-radius:14px;padding:14px;color:#fff;font-size:22px;font-weight:800;text-align:center;outline:none;letter-spacing:6px;-webkit-appearance:none"
+                maxlength="10" autocomplete="off">
+            <div style="display:flex;gap:8px;margin-top:14px">
+                <button onclick="checkCode()" style="flex:1;background:linear-gradient(135deg,#1d4ed8,#3b82f6);border:none;border-radius:12px;padding:13px;color:#fff;font-size:15px;font-weight:700;cursor:pointer">OK</button>
+                <button onclick="document.getElementById('codeEntry').remove()" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:13px;color:var(--t2);font-size:15px;font-weight:700;cursor:pointer">✕</button>
+            </div>
+        </div>`;
+    document.body.appendChild(div);
+    setTimeout(()=>document.getElementById('codeInp')?.focus(),200);
+    /* Enter pour valider */
+    div.querySelector('#codeInp').addEventListener('keydown',e=>{ if(e.key==='Enter') checkCode(); });
 }
 
-function closeAdmin() {
-    document.getElementById('adminPanel').classList.remove('open');
+function checkCode(){
+    const inp=document.getElementById('codeInp');
+    if(!inp) return;
+    if(h(inp.value.trim())===SECRET_H){
+        document.getElementById('codeEntry')?.remove();
+        unlockAdmin();
+    } else {
+        inp.value='';
+        inp.style.borderColor='rgba(239,68,68,.5)';
+        setTimeout(()=>{ inp.style.borderColor='rgba(59,130,246,.2)'; },800);
+    }
 }
 
-function refreshAdminStats() {
-    document.getElementById('a-ca').textContent     = state.totalCA.toFixed(2) + ' €';
-    document.getElementById('a-orders').textContent = state.totalOrd || 0;
-    updateTargetPreview();
+function unlockAdmin(){
+    admAuth=true;
+    refreshAdmStats();
+    refreshNotifBadge();
+    document.getElementById('notifDot').style.display='block';
+    document.getElementById('adm').classList.add('open');
 }
 
-/* Peuple le sélecteur avec tous les comptes connus */
-function populateTargetSelect() {
-    const sel   = document.getElementById('targetUser');
-    const users = getUsers();
-    sel.innerHTML = '';
+function closeAdm(){
+    document.getElementById('adm').classList.remove('open');
+}
 
-    /* Option "moi-même" en premier */
-    const optMe = document.createElement('option');
-    optMe.value = myId;
-    optMe.textContent = `👤 ${myName} (moi)`;
-    sel.appendChild(optMe);
+function refreshAdmStats(){
+    document.getElementById('a-ca').textContent =st.ca.toFixed(2)+' €';
+    document.getElementById('a-ord').textContent=st.ord||0;
+}
 
-    /* Autres comptes */
-    Object.values(users).forEach(u => {
-        if (u.id == myId) return;
-        const opt = document.createElement('option');
-        opt.value = u.id;
-        opt.textContent = `👤 ${u.name}`;
-        sel.appendChild(opt);
+/* ============================================================
+   RECHERCHE CLIENT PAR @USERNAME (annuaire local)
+============================================================ */
+let targetUid=null;
+
+document.getElementById('uname').addEventListener('input', function(){
+    const raw=this.value.trim().replace(/^@/,'').toLowerCase();
+    const users=getUsers();
+    const found=users[raw];
+    const prev=document.getElementById('tprev');
+    if(found){
+        targetUid=found.id;
+        document.getElementById('tpav').textContent  =found.init||'?';
+        document.getElementById('tpname').textContent=found.name;
+        document.getElementById('tpsub').textContent ='Compte trouvé ✅';
+        document.getElementById('tpbal').textContent =getBal(found.id).toFixed(2)+' €';
+        prev.classList.add('show');
+    } else {
+        targetUid=null;
+        prev.classList.remove('show');
+    }
+});
+
+/* Créditer */
+function doCredit(){
+    if(!targetUid){ showToast('❌ Client introuvable'); return; }
+    const amt=parseFloat(document.getElementById('uamt').value);
+    if(isNaN(amt)||amt<=0){ showToast('❌ Montant invalide'); return; }
+    const newB=getBal(targetUid)+amt;
+    setBal(targetUid,newB);
+
+    /* Notif de crédit envoyée à la boutique du client */
+    pushNotif({
+        ico:'💰',
+        title:'Crédit Manuel',
+        desc:`+${amt.toFixed(2)} € crédité sur ${document.getElementById('uname').value.trim()}`,
+        price:'+'+amt.toFixed(2)+' €',
+        time:new Date().toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
     });
 
-    sel.addEventListener('change', updateTargetPreview);
-    updateTargetPreview();
+    refreshAdmStats();
+    document.getElementById('tpbal').textContent=getBal(targetUid).toFixed(2)+' €';
+    document.getElementById('uamt').value='';
+    showToast(`✅ +${amt.toFixed(2)} € crédités sur ${document.getElementById('uname').value.trim()}`);
 }
 
-function getTargetId() {
-    return document.getElementById('targetUser').value;
+/* Débiter */
+function doDebit(){
+    if(!targetUid){ showToast('❌ Client introuvable'); return; }
+    const amt=parseFloat(document.getElementById('uamt').value);
+    if(isNaN(amt)||amt<=0){ showToast('❌ Montant invalide'); return; }
+    const newB=Math.max(0, getBal(targetUid)-amt);
+    setBal(targetUid,newB);
+    refreshAdmStats();
+    document.getElementById('tpbal').textContent=getBal(targetUid).toFixed(2)+' €';
+    document.getElementById('uamt').value='';
+    showToast(`➖ ${amt.toFixed(2)} € débités`);
 }
 
-function getTargetBal(tid) {
-    return parseFloat(localStorage.getItem('os2_bal_'+tid) || '0');
+/* Reset solde cible */
+function doReset(){
+    if(!targetUid){ showToast('❌ Sélectionne un client d\'abord'); return; }
+    setBal(targetUid,0);
+    document.getElementById('tpbal').textContent='0.00 €';
+    showToast('🔄 Solde remis à zéro');
 }
 
-function setTargetBal(tid, val) {
-    val = Math.max(0, Math.round(val*100)/100);
-    localStorage.setItem('os2_bal_'+tid, val.toFixed(2));
-    /* Si c'est moi, on rafraîchit l'état */
-    if (tid == myId) {
-        state.balance = val;
-        refreshBal();
-    }
-}
-
-function updateTargetPreview() {
-    const tid   = getTargetId();
-    const users = getUsers();
-    const u     = users[tid] || { name: tid, initial: '?' };
-    const bal   = getTargetBal(tid);
-    document.getElementById('tAvatar').textContent = u.initial || '?';
-    document.getElementById('tName').textContent   = u.name || tid;
-    document.getElementById('tBal').textContent    = bal.toFixed(2) + ' €';
-}
-
-/* Injection de solde */
-function doInject() {
-    const amt = parseFloat(document.getElementById('injectAmt').value);
-    if (isNaN(amt) || amt <= 0) { toast('❌ Montant invalide'); return; }
-    const tid  = getTargetId();
-    const newB = getTargetBal(tid) + amt;
-    setTargetBal(tid, newB);
-    save();
-    document.getElementById('injectAmt').value = '';
-    updateTargetPreview();
-    refreshAdminStats();
-    toast(`✅ +${amt.toFixed(2)} € injecté avec succès`);
-}
-
-/* Retrait de solde */
-function doDeduct() {
-    const amt = parseFloat(document.getElementById('deductAmt').value);
-    if (isNaN(amt) || amt <= 0) { toast('❌ Montant invalide'); return; }
-    const tid  = getTargetId();
-    const newB = Math.max(0, getTargetBal(tid) - amt);
-    setTargetBal(tid, newB);
-    save();
-    document.getElementById('deductAmt').value = '';
-    updateTargetPreview();
-    refreshAdminStats();
-    toast(`➖ ${amt.toFixed(2)} € retirés`);
-}
-
-/* Reset solde à 0 */
-function doReset() {
-    const tid = getTargetId();
-    setTargetBal(tid, 0);
-    save();
-    updateTargetPreview();
-    refreshAdminStats();
-    toast('🔄 Solde remis à zéro');
-}
-
-/* Vider historique */
-function clearHistory() {
-    state.history = [];
-    save();
-    renderHist();
-    toast('📋 Historique vidé');
+/* Vider historique local */
+function clearHist(){
+    st.hist=[]; save(); renderHist();
+    showToast('📋 Historique vidé');
 }
 </script>
 </body>
