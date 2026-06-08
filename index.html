@@ -44,14 +44,13 @@
 
         /* HEADER */
         .hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 18px 12px;padding-top:calc(14px + var(--sat));background:rgba(2,6,23,.93);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);flex-shrink:0;z-index:50;}
-        .logo{font-size:17px;font-weight:800;background:linear-gradient(135deg,#60a5fa,#818cf8,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.4px;user-select:none;}
+        .logo{font-size:17px;font-weight:800;background:linear-gradient(135deg,#60a5fa,#818cf8,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.4px;user-select:none;cursor:pointer;}
         .hdr-user{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:22px;padding:5px 12px 5px 5px;}
         .av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#818cf8);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;}
         .un{font-size:12px;font-weight:600;color:var(--t2);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
         /* PAGES */
         .page{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-bottom:calc(var(--nav) + var(--sab) + 20px);display:none;opacity:0;scrollbar-width:none;}
-        .page::-webkit-scrollbar{display:none;}
         .page.active{display:block;animation:pi .32s cubic-bezier(.34,1.4,.64,1) forwards;}
         @keyframes pi{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
@@ -84,7 +83,7 @@
         .wl{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--blue3);text-transform:uppercase;opacity:.7;margin-bottom:5px;}
         .wa{font-size:44px;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:3px;color:#fff;}
         .wa sup{font-size:20px;font-weight:700;opacity:.55;vertical-align:super;margin-right:3px;letter-spacing:0;}
-        .ws{font-size:12px;color:var(--t3);margin-bottom:18px;}
+        .ws{font-size:12px;color:var(--t2);margin-bottom:18px;}
         .wrb{display:inline-flex;align-items:center;gap:6px;background:rgba(59,130,246,.18);border:1px solid rgba(59,130,246,.35);border-radius:20px;padding:8px 16px;font-size:13px;font-weight:700;color:var(--blue3);cursor:pointer;outline:none;transition:transform .14s cubic-bezier(.34,1.56,.64,1);}
         .wrb:active{transform:scale(.94);}
 
@@ -110,7 +109,7 @@
         .sheet::-webkit-scrollbar{display:none;}
         @keyframes su{from{transform:translateY(100%);opacity:.6;}to{transform:translateY(0);opacity:1;}}
         .dbar{width:34px;height:4px;background:rgba(255,255,255,.13);border-radius:2px;margin:0 auto 20px;}
-        .mico{width:68px;height:68px;border-radius:20px;background:linear-gradient(135deg,rgba(37,99,235,.22),rgba(129,140,248,.16));border:1px solid rgba(59,130,246,.25);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px;}
+        .mico" {width:68px;height:68px;border-radius:20px;background:linear-gradient(135deg,rgba(37,99,235,.22),rgba(129,140,248,.16));border:1px solid rgba(59,130,246,.25);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px;}
         .mcat{text-align:center;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--blue2);text-transform:uppercase;margin-bottom:5px;}
         .mtit{text-align:center;font-size:23px;font-weight:900;letter-spacing:-.4px;margin-bottom:4px;}
         .mpr{text-align:center;font-size:40px;font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-1.5px;margin:10px 0 20px;}
@@ -210,15 +209,13 @@
 
 <div id="app">
     <header class="hdr">
-        <!-- Logo — aucun indice sur le panel admin -->
-        <div class="logo" id="logo">🔮 O'shop V2</div>
+        <div class="logo" id="logo" onclick="handleLogoClick()">🔮 O'shop V2</div>
         <div class="hdr-user">
             <div class="av" id="hav">?</div>
             <span class="un" id="hun">...</span>
         </div>
     </header>
 
-    <!-- BOUTIQUE -->
     <div class="page active" id="p-shop">
         <div class="wallet">
             <div class="wl">💰 Mon Portefeuille</div>
@@ -232,13 +229,11 @@
         <div id="premL"></div>
     </div>
 
-    <!-- HISTORIQUE -->
     <div class="page" id="p-history">
         <div class="sh"><div class="sd"></div><span class="sl">Mes Achats</span></div>
         <div id="histL"></div>
     </div>
 
-    <!-- REVENDEUR -->
     <div class="page" id="p-resell">
         <div class="rh">
             <div class="bi">👑</div>
@@ -255,7 +250,6 @@
         <div style="padding:16px 16px 0"><button class="btn bp" onclick="callSup()">💬 Rejoindre →</button></div>
     </div>
 
-    <!-- SUPPORT -->
     <div class="page" id="p-support">
         <div style="padding:44px 20px;text-align:center">
             <div style="font-size:58px;margin-bottom:16px">💬</div>
@@ -264,12 +258,11 @@
             <button class="btn bp" onclick="callSup()">📲 Contacter @zeromeufuhq →</button>
             <div style="margin-top:18px;padding:16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r-md)">
                 <p style="font-size:12px;color:var(--t3)">⏱️ Temps de réponse moyen</p>
-                <p style="font-size:20px;font-weight:900;color:var(--green);margin-top:4px">< 15 min</p>
+                <p style="font-size:20px;font-weight:900;color:var(--green);margin-top:4px">&lt; 15 min</p>
             </div>
         </div>
     </div>
 
-    <!-- NAV -->
     <nav class="nav">
         <button class="nb on" onclick="goP('shop',this)">
             <span class="ni">🛍️</span><span class="nl">Boutique</span><div class="np"></div>
@@ -280,16 +273,13 @@
         <button class="nb" onclick="goP('resell',this)">
             <span class="ni">👑</span><span class="nl">Revendeur</span><div class="np"></div>
         </button>
-        <!-- Bouton support — dot notif admin caché dedans -->
         <button class="nb" id="navSup" onclick="goP('support',this)" style="position:relative">
             <span class="ni">💬</span><span class="nl">Support</span><div class="np"></div>
-            <!-- Point rouge notif — visible seulement si admin connecté -->
             <div class="notif-dot" id="notifDot"></div>
         </button>
     </nav>
 </div>
 
-<!-- MODAL SERVICE -->
 <div class="ov" id="svcOv" onclick="closeSvc(event)">
     <div class="sheet">
         <div class="dbar"></div>
@@ -304,7 +294,6 @@
     </div>
 </div>
 
-<!-- MODAL RECHARGE -->
 <div class="ov" id="rechOv" onclick="closeRech(event)">
     <div class="sheet">
         <div class="dbar"></div>
@@ -328,41 +317,30 @@
     </div>
 </div>
 
-<!-- PANEL ADMIN — 100% invisible sans le bon accès -->
 <div id="adm">
     <div class="ac">
         <div class="ahd">
             <div><h2>🛡️ Admin Panel</h2><p>Accès restreint · O'shop V2</p></div>
             <button class="acl" onclick="closeAdm()">✕</button>
         </div>
-
-        <!-- Stats -->
         <div class="ast"><div class="astl">CA · Session</div><div class="astv" id="a-ca">0.00 €</div></div>
         <div class="ast"><div class="astl">Commandes Traitées</div><div class="astv" id="a-ord">0</div></div>
-
-        <!-- Notifs -->
         <div class="atit">🔔 Notifications Achats</div>
         <button class="btn bs" style="margin-top:0;margin-bottom:4px" onclick="openNotifs()">
             Voir les notifications <span id="notifCount" style="background:var(--red);color:#fff;border-radius:20px;padding:2px 8px;font-size:12px;margin-left:6px">0</span>
         </button>
-
-        <!-- Injection par @ -->
         <div class="atit">💉 Créditer un Client</div>
-        <input class="ainp" type="text" id="uname" placeholder="@ du client (ex: @pseudo)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-        <input class="ainp" type="number" id="uamt" placeholder="Montant à créditer (ex: 3.00)" step="0.01" min="0.01">
-
-        <!-- Preview dynamique -->
+        <input class="ainp" type="text" id="uname" placeholder="@ du client (ex: @pseudo)" autocomplete="off">
+        <input class="ainp" type="number" id="uamt" placeholder="Montant (ex: 3.00)" step="0.01">
         <div class="tprev" id="tprev">
             <div class="tpav" id="tpav">?</div>
             <div class="tpinfo"><h4 id="tpname">—</h4><p id="tpsub">Compte trouvé</p></div>
             <div class="tpbal" id="tpbal">0.00 €</div>
         </div>
-
         <div class="arow">
             <button class="abtn" onclick="doCredit()">✅ Créditer</button>
             <button class="abtn abtn-r" onclick="doDebit()">➖ Débiter</button>
         </div>
-
         <div class="atit" style="margin-top:14px">🔧 Actions</div>
         <button class="btn bs" style="margin-top:0" onclick="doReset()">🗑️ Remettre solde à 0</button>
         <button class="btn bs" onclick="clearHist()">📋 Vider l'historique</button>
@@ -370,7 +348,6 @@
     </div>
 </div>
 
-<!-- PANEL NOTIFS -->
 <div id="notifPanel">
     <div class="nc">
         <div class="ahd">
@@ -382,7 +359,6 @@
     </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
@@ -396,49 +372,32 @@ if(tg){
     try{tg.setHeaderColor('#020617');}catch(e){}
     try{tg.setBackgroundColor('#020617');}catch(e){}
 }
-const tgU   = tg?.initDataUnsafe?.user;
-const myName= tgU ? (tgU.username ? '@'+tgU.username : tgU.first_name) : 'Invité';
-const myInit= (tgU?.first_name||'O')[0].toUpperCase();
-const myId  = String(tgU?.id || 'local');
+const tgU = tg?.initDataUnsafe?.user;
+const myName = tgU ? (tgU.username ? '@'+tgU.username : tgU.first_name) : 'Invité';
+const myInit = (tgU?.first_name||'O')[0].toUpperCase();
+const myId = String(tgU?.id || 'local');
 
 document.getElementById('hav').textContent = myInit;
 document.getElementById('hun').textContent = myName;
 
-/* ============================================================
-   STOCKAGE — clé unique par user
-============================================================ */
 const KB = 'os_bal_'+myId;
 const KH = 'os_his_'+myId;
-const KCA= 'os_ca';
-const KOR= 'os_or';
-const KNT= 'os_notif';       // notifications admin
-const KUS= 'os_users';       // annuaire users
+const KCA = 'os_ca';
+const KOR = 'os_or';
+const KNT = 'os_notif';
+const KUS = 'os_users';
 
-/* Annuaire : enregistre l'utilisateur actuel */
+/* Enregistrement annuaire */
 (function reg(){
     const u = JSON.parse(localStorage.getItem(KUS)||'{}');
     u[myName.replace('@','').toLowerCase()] = {
-        id: myId, name: myName,
-        init: myInit, bal: parseFloat(localStorage.getItem(KB)||'0')
+        id: myId, name: myName, init: myInit, bal: parseFloat(localStorage.getItem(KB)||'0')
     };
     localStorage.setItem(KUS, JSON.stringify(u));
 })();
 
 function getUsers(){ return JSON.parse(localStorage.getItem(KUS)||'{}'); }
 function saveUsers(u){ localStorage.setItem(KUS, JSON.stringify(u)); }
-
-function getBal(uid){
-    return parseFloat(localStorage.getItem('os_bal_'+uid)||'0');
-}
-function setBal(uid, v){
-    v = Math.max(0, Math.round(v*100)/100);
-    localStorage.setItem('os_bal_'+uid, v.toFixed(2));
-    if(uid===myId){ st.bal=v; refreshBal(); }
-    /* Met à jour l'annuaire aussi */
-    const u=getUsers();
-    Object.keys(u).forEach(k=>{ if(u[k].id===uid) u[k].bal=v; });
-    saveUsers(u);
-}
 
 let st = {
     bal : parseFloat(localStorage.getItem(KB)||'0'),
@@ -452,7 +411,6 @@ function save(){
     localStorage.setItem(KH, JSON.stringify(st.hist));
     localStorage.setItem(KCA, st.ca.toFixed(2));
     localStorage.setItem(KOR, st.ord);
-    /* Synchro annuaire */
     const u=getUsers();
     Object.keys(u).forEach(k=>{ if(u[k].id===myId) u[k].bal=st.bal; });
     saveUsers(u);
@@ -467,380 +425,252 @@ refreshBal();
    CATALOGUE
 ============================================================ */
 const kfc=[
-    {id:'k1',ico:'🍗',cat:'KFC · POINTS',name:'300 à 499 Points', desc:'Pack entrée de gamme, idéal pour démarrer.',             prix:1.50 },
-    {id:'k2',ico:'🍗',cat:'KFC · POINTS',name:'600 à 799 Points', desc:'Pack populaire avec un excellent ratio qualité/prix.',    prix:3.00 },
-    {id:'k3',ico:'🍗',cat:'KFC · POINTS',name:'800 à 999 Points', desc:'Accédez à davantage de récompenses exclusives.',          prix:4.50 },
-    {id:'k4',ico:'🍗',cat:'KFC · POINTS',name:'1000 à 1299 Points',desc:'Pack intermédiaire pour les amateurs réguliers.',        prix:6.00 },
-    {id:'k5',ico:'🍗',cat:'KFC · POINTS',name:'1300 à 1599 Points',desc:'Offre avantageuse pour maximiser vos récompenses.',      prix:8.00 },
-    {id:'k6',ico:'🍗',cat:'KFC · POINTS',name:'1600 à 1799 Points',desc:'Très populaire parmi nos clients fidèles.',              prix:8.50 },
-    {id:'k7',ico:'🍗',cat:'KFC · POINTS',name:'1800 à 1999 Points',desc:'Approchez le palier premium avec ce pack généreux.',     prix:10.00},
-    {id:'k8',ico:'🍗',cat:'KFC · POINTS',name:'2000 à 2399 Points',desc:'Grande offre pour les vrais passionnés de KFC.',         prix:11.50},
-    {id:'k9',ico:'🍗',cat:'KFC · POINTS',name:'2450 à 2500 Points',desc:'Pack maximum — le summum de notre catalogue. 🏆',        prix:13.00},
+    {id:'k1',ico:'🍗',cat:'KFC · POINTS',name:'300 à 499 Points', desc:'Pack entrée de gamme, idéal pour démarrer.', prix:1.50 },
+    {id:'k2',ico:'🍗',cat:'KFC · POINTS',name:'600 à 799 Points', desc:'Pack populaire avec un excellent ratio qualité/prix.', prix:3.00 },
+    {id:'k3',ico:'🍗',cat:'KFC · POINTS',name:'800 à 999 Points', desc:'Accédez à davantage de récompenses exclusives.', prix:4.50 },
+    {id:'k4',ico:'🍗',cat:'KFC · POINTS',name:'1000 à 1299 Points',desc:'Pack intermédiaire pour les amateurs réguliers.', prix:6.00 },
+    {id:'k5',ico:'🍗',cat:'KFC · POINTS',name:'1300 à 1599 Points',desc:'Offre avantageuse pour maximiser vos récompenses.', prix:8.00 },
+    {id:'k6',ico:'🍗',cat:'KFC · POINTS',name:'1600 à 1799 Points',desc:'Très populaire parmi nos clients fidèles.', prix:8.50 },
+    {id:'k7',ico:'🍗',cat:'KFC · POINTS',name:'1800 à 1999 Points',desc:'Approchez le palier premium avec ce pack généreux.', prix:10.00},
+    {id:'k8',ico:'🍗',cat:'KFC · POINTS',name:'2000 à 2399 Points',desc:'Grande offre pour les vrais passionnés de KFC.', prix:11.50},
+    {id:'k9',ico:'🍗',cat:'KFC · POINTS',name:'2450 à 2500 Points',desc:'Pack maximum — le summum de notre catalogue. 🏆', prix:13.00},
 ];
 const prem=[
-    {id:'p1',ico:'💪',cat:'BASIC-FIT', name:'Ultimate 1 Mois',  desc:'Accès toutes salles en Europe. Abonnement complet.',        prix:10.00},
-    {id:'p2',ico:'💎',cat:'DISCORD',   name:'Nitro Premium',    desc:'Abonnement Nitro complet avec 2 Boosts de serveur inclus.', prix:5.50 },
-    {id:'p3',ico:'🎬',cat:'STREAMING', name:'Cinéma Gratuit',   desc:'Films & Séries HD/VF/VO. Accès immédiat gratuit !',
-        prix:0, isFree:true, isRedir:true, url:'https://nakastream.tv/'},
+    {id:'p1',ico:'💪',cat:'BASIC-FIT', name:'Ultimate 1 Mois', desc:'Accès toutes salles en Europe. Abonnement complet.', prix:10.00},
+    {id:'p2',ico:'💎',cat:'DISCORD',  name:'Nitro Premium',  desc:'Abonnement Nitro complet avec 2 Boosts de serveur inclus.', prix:5.50 },
+    {id:'p3',ico:'🎬',cat:'STREAMING',name:'Netflix Premium UHD', desc:'Écran privé 4K Ultra HD pendant 1 mois complet.', prix:4.00 }
 ];
-const all=[...kfc,...prem];
 
-function card(s){
-    const chip=s.isFree
-        ?`<div class="pc"><div class="pd pb"></div>GRATUIT</div>`
-        :`<div class="pc"><div class="pd pg"></div>${s.prix.toFixed(2)} €</div>`;
-    const act=s.isRedir?'🎬 Accéder gratuitement →':'🛒 Commander →';
-    return`<div class="sc" onclick="onSvc('${s.id}')">
-        <div class="sct"><div class="si">${s.ico}</div>${chip}</div>
-        <div class="sca">${s.cat}</div>
-        <div class="scn">${s.name}</div>
-        <div class="scd">${s.desc}</div>
-        <div class="scb">${act}</div>
-    </div>`;
+let selectedProduct = null;
+
+/* Rendu des catalogues */
+function buildList(data, targetId){
+    const container = document.getElementById(targetId);
+    container.innerHTML = '';
+    data.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'sc';
+        div.onclick = () => openSvc(p);
+        div.innerHTML = `
+            <div class="sct">
+                <div class="si">${p.ico}</div>
+                <div class="pc"><div class="pd pg"></div>${p.prix.toFixed(2)}€</div>
+            </div>
+            <div class="sca">${p.cat}</div>
+            <div class="scn">${p.name}</div>
+            <div class="scd">${p.desc}</div>
+            <div class="scb">🛒 Commander à ${p.prix.toFixed(2)}€</div>
+        `;
+        container.appendChild(div);
+    });
 }
-document.getElementById('kfcL').innerHTML =kfc.map(card).join('');
-document.getElementById('premL').innerHTML=prem.map(card).join('');
+buildList(kfc, 'kfcL');
+buildList(prem, 'premL');
 
 /* ============================================================
-   NAVIGATION
+   LOGIQUE NAVIGATION / POPUPS
 ============================================================ */
-function goP(id,btn){
+function goP(pId, btn){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
-    document.getElementById('p-'+id).classList.add('active');
+    document.getElementById('p-'+pId).classList.add('active');
     btn.classList.add('on');
-    if(id==='history') renderHist();
+    if(pId === 'history') renderHistory();
 }
 
-/* ============================================================
-   SERVICE CLICK
-============================================================ */
-let cur=null;
-function onSvc(id){
-    const s=all.find(x=>x.id===id);
-    if(!s) return;
-    if(s.isRedir){ if(tg)tg.openLink(s.url); else window.open(s.url,'_blank'); return; }
-    cur=s;
-    const ok=st.bal>=s.prix;
-    document.getElementById('mi').textContent=s.ico;
-    document.getElementById('mc').textContent=s.cat;
-    document.getElementById('mn').textContent=s.name;
-    document.getElementById('mp').textContent=s.prix.toFixed(2)+' €';
-    document.getElementById('md').textContent=s.desc;
-    const bv=document.getElementById('mb');
-    bv.textContent=st.bal.toFixed(2)+' €';
-    bv.className='bv '+(ok?'bok':'bnok');
-    const bb=document.getElementById('mbb');
-    if(ok){ bb.textContent='✅ Acheter maintenant'; bb.onclick=doBuy; bb.className='btn bp'; }
-    else   { bb.textContent='💳 Solde insuffisant — Recharger'; bb.onclick=()=>{closeSvc();openRech();}; bb.className='btn bs'; }
+function showToast(m){
+    const t = document.getElementById('toast');
+    t.textContent = m; t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+function openSvc(p){
+    selectedProduct = p;
+    document.getElementById('mi').textContent = p.ico;
+    document.getElementById('mc').textContent = p.cat;
+    document.getElementById('mn').textContent = p.name;
+    document.getElementById('mp').textContent = p.prix.toFixed(2)+'€';
+    document.getElementById('md').textContent = p.desc;
+    
+    const bDisp = document.getElementById('mb');
+    bDisp.textContent = st.bal.toFixed(2)+'€';
+    bDisp.className = 'bv ' + (st.bal >= p.prix ? 'bok' : 'bnok');
+    
     document.getElementById('svcOv').classList.add('open');
 }
-function closeSvc(e){
-    if(!e||e.target===document.getElementById('svcOv')){
-        document.getElementById('svcOv').classList.remove('open'); cur=null;
-    }
-}
+function closeSvc(e){ if(!e || e.target.classList.contains('ov') || e.target.tagName === 'BUTTON') document.getElementById('svcOv').classList.remove('open'); }
+
+function openRech(){ document.getElementById('rechOv').classList.add('open'); }
+function closeRech(e){ if(!e || e.target.classList.contains('ov') || e.target.tagName === 'BUTTON') document.getElementById('rechOv').classList.remove('open'); }
+
+function callSup(){ if(tg) { tg.openTelegramLink('https://t.me/zeromeufuhq'); } else { window.open('https://t.me/zeromeufuhq','_blank'); } }
 
 /* ============================================================
-   ACHAT
+   LOGIQUE ACHAT / HISTORIQUE
 ============================================================ */
 function doBuy(){
-    if(!cur) return;
-    const s=cur;
-    if(st.bal<s.prix){ showToast('❌ Solde insuffisant'); return; }
-    st.bal=Math.round((st.bal-s.prix)*100)/100;
-    const o={
-        id:Date.now(), ico:s.ico, name:s.name, prix:s.prix,
-        user:myName, userId:myId,
-        date:new Date().toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
-    };
-    st.hist.unshift(o);
-    st.ca=Math.round((st.ca+s.prix)*100)/100;
-    st.ord=(st.ord||0)+1;
-    save();
-    refreshBal();
-    renderHist();
-
-    /* Enregistre la notif pour l'admin */
-    pushNotif({
-        ico:s.ico,
-        title:`Achat · ${s.name}`,
-        desc:`${myName} a acheté ce service`,
-        price:`${s.prix.toFixed(2)} €`,
-        time:o.date
-    });
-
-    closeSvc();
-    if(tg){
-        tg.showAlert(`✅ Achat confirmé !\n\n${s.ico} ${s.name}\n💸 −${s.prix.toFixed(2)} € débité\n💰 Solde : ${st.bal.toFixed(2)} €\n\nLivraison en cours — merci ! 🔮`);
-    } else {
-        showToast('✅ Achat confirmé !');
-    }
-}
-
-/* ============================================================
-   RECHARGE
-============================================================ */
-function openRech(){ document.getElementById('rechOv').classList.add('open'); }
-function closeRech(e){
-    if(!e||e.target===document.getElementById('rechOv'))
-        document.getElementById('rechOv').classList.remove('open');
-}
-
-/* ============================================================
-   HISTORIQUE
-============================================================ */
-function renderHist(){
-    const c=document.getElementById('histL');
-    if(!st.hist.length){
-        c.innerHTML=`<div class="he"><div class="hei">📋</div><h3>Aucun achat</h3><p>Vos commandes apparaîtront ici.</p></div>`;
+    if(!selectedProduct) return;
+    if(st.bal < selectedProduct.prix){
+        showToast("❌ Solde insuffisant pour cet achat !");
         return;
     }
-    c.innerHTML=st.hist.map(o=>`
-        <div class="hi">
-            <div class="hic">${o.ico}</div>
-            <div class="hin">
-                <div class="hinn">${o.name}</div>
-                <div class="hid">${o.date}</div>
-            </div>
-            <div class="hip ${o.prix===0?'free':''}">${o.prix===0?'GRATUIT':'−'+o.prix.toFixed(2)+' €'}</div>
-        </div>`).join('');
+    st.bal -= selectedProduct.prix;
+    st.ca += selectedProduct.prix;
+    st.ord += 1;
+    
+    const order = {
+        name: selectedProduct.name, ico: selectedProduct.ico, prix: selectedProduct.prix, date: new Date().toLocaleDateString('fr-FR')
+    };
+    st.hist.unshift(order);
+    save();
+    refreshBal();
+    
+    /* Envoyer une notification pour l'admin */
+    let notifs = JSON.parse(localStorage.getItem(KNT)||'[]');
+    notifs.unshift({ user: myName, item: selectedProduct.name, prix: selectedProduct.prix, time: new Date().toLocaleTimeString('fr-FR') });
+    localStorage.setItem(KNT, JSON.stringify(notifs));
+    updateAdminBadge();
+
+    closeSvc();
+    showToast("🎉 Achat réussi ! Commande envoyée.");
+}
+
+function renderHistory(){
+    const list = document.getElementById('histL');
+    if(st.hist.length === 0){
+        list.innerHTML = `<div class="he"><div class="hei">📦</div><h3>Aucun achat</h3><p>Vos commandes apparaîtront ici.</p></div>`;
+        return;
+    }
+    list.innerHTML = '';
+    st.hist.forEach(h => {
+        const div = document.createElement('div');
+        div.className = 'hi';
+        div.innerHTML = `
+            <div class="hic">${h.ico}</div>
+            <div class="hin"><div class="hinn">${h.name}</div><div class="hid">Le ${h.date} · Statut: Livré</div></div>
+            <div class="hip">${h.prix > 0 ? '-'+h.prix.toFixed(2)+'€' : 'Gratuit'}</div>
+        `;
+        list.appendChild(div);
+    });
 }
 
 /* ============================================================
-   SUPPORT
+   PANEL ADMIN CACHÉ (Clic répété sur le logo)
 ============================================================ */
-function callSup(){
-    if(tg)tg.openLink('https://t.me/zeromeufuhq');
-    else window.open('https://t.me/zeromeufuhq','_blank');
-}
+let logoClicks = 0;
+let logoTimer = null;
+const ADMIN_USERNAME = "@zeromeufuhq"; 
 
-/* ============================================================
-   TOAST
-============================================================ */
-let toastT;
-function showToast(msg){
-    const el=document.getElementById('toast');
-    el.textContent=msg; el.classList.add('show');
-    clearTimeout(toastT);
-    toastT=setTimeout(()=>el.classList.remove('show'),2400);
-}
-
-/* ============================================================
-   NOTIFICATIONS ADMIN
-   Stockées dans localStorage — visible seulement dans admin
-============================================================ */
-function getNotifs(){ return JSON.parse(localStorage.getItem(KNT)||'[]'); }
-function saveNotifs(n){ localStorage.setItem(KNT,JSON.stringify(n)); }
-
-function pushNotif(data){
-    const n=getNotifs();
-    n.unshift({...data, read:false, ts:Date.now()});
-    saveNotifs(n);
-    /* Rafraîchit le badge si admin ouvert */
-    refreshNotifBadge();
-}
-
-function refreshNotifBadge(){
-    const n=getNotifs();
-    const unread=n.filter(x=>!x.read).length;
-    const dot=document.getElementById('notifDot');
-    const cnt=document.getElementById('notifCount');
-    /* Le dot n'est visible que si l'admin est déjà authentifié */
-    if(admAuth){
-        dot.style.display=unread>0?'block':'none';
-        cnt.textContent=unread;
+function handleLogoClick(){
+    if(myName !== ADMIN_USERNAME) return; // Seul toi peut ouvrir
+    logoClicks++;
+    clearTimeout(logoTimer);
+    if(logoClicks >= 5){
+        logoClicks = 0;
+        openAdm();
     }
+    logoTimer = setTimeout(()=>logoClicks=0, 2000);
 }
 
-function renderNotifs(){
-    const n=getNotifs();
-    const el=document.getElementById('notifList');
-    if(!n.length){ el.innerHTML='<div class="nempty">Aucune notification pour le moment</div>'; return; }
-    el.innerHTML=n.map(x=>`
-        <div class="nitem">
-            <div class="nitem-ico">${x.ico}</div>
-            <div class="nitem-info">
-                <h4>${x.title}</h4>
-                <p>${x.desc} · <strong style="color:var(--green)">${x.price}</strong></p>
-                <div class="nitem-time">⏱️ ${x.time}</div>
-            </div>
-        </div>`).join('');
-    /* Marque tout comme lu */
-    n.forEach(x=>x.read=true);
-    saveNotifs(n);
-    refreshNotifBadge();
-}
-
-function openNotifs(){
-    renderNotifs();
-    document.getElementById('notifPanel').classList.add('open');
-}
-function closeNotifs(){ document.getElementById('notifPanel').classList.remove('open'); }
-function clearNotifs(){ saveNotifs([]); renderNotifs(); refreshNotifBadge(); }
-
-/* ============================================================
-   ACCÈS ADMIN
-   Mécanisme : séquence secrète de clics sur le logo
-   (5 clics rapides) puis saisie du code dans un champ
-   discret — le code 777 n'apparaît JAMAIS dans l'UI.
-   La valeur comparée est hashée côté client.
-============================================================ */
-let admAuth = false;
-let tapSeq  = 0;
-let tapTmr;
-
-/* Hash simple (djb2) — le vrai code n'est pas lisible dans le JS affiché */
-function h(s){ let v=5381; for(let i=0;i<s.length;i++) v=((v<<5)+v)^s.charCodeAt(i); return v>>>0; }
-const SECRET_H = h('777'); /* seul le hash est stocké — impossible de retrouver 777 par lecture */
-
-document.getElementById('logo').addEventListener('click',()=>{
-    tapSeq++;
-    clearTimeout(tapTmr);
-    tapTmr=setTimeout(()=>{ tapSeq=0; },700);
-    /* Déclenchement sur 5 taps rapides — aucun indice visuel */
-    if(tapSeq>=5){
-        tapSeq=0;
-        promptAdmin();
-    }
-});
-
-function promptAdmin(){
-    /* Prompt natif Telegram ou navigateur — sans label révélateur */
-    if(tg && tg.showPopup){
-        /* Telegram ne supporte pas l'input dans showPopup,
-           on utilise donc une overlay custom minimaliste */
-        showCodeEntry();
-    } else {
-        const v=prompt('');
-        if(v!==null && h(v.trim())===SECRET_H) unlockAdmin();
-    }
-}
-
-/* Mini overlay saisie code — design neutre, pas de mention "777" ou "admin" */
-function showCodeEntry(){
-    const div=document.createElement('div');
-    div.id='codeEntry';
-    div.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(16px);z-index:9998;display:flex;align-items:center;justify-content:center;padding:20px;animation:fo .2s ease';
-    div.innerHTML=`
-        <div style="background:linear-gradient(160deg,#0d1f3c,#0a1628);border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:28px 22px;width:100%;max-width:320px;text-align:center">
-            <div style="font-size:36px;margin-bottom:12px">🔐</div>
-            <input id="codeInp" type="password" inputmode="numeric"
-                style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(59,130,246,.2);border-radius:14px;padding:14px;color:#fff;font-size:22px;font-weight:800;text-align:center;outline:none;letter-spacing:6px;-webkit-appearance:none"
-                maxlength="10" autocomplete="off">
-            <div style="display:flex;gap:8px;margin-top:14px">
-                <button onclick="checkCode()" style="flex:1;background:linear-gradient(135deg,#1d4ed8,#3b82f6);border:none;border-radius:12px;padding:13px;color:#fff;font-size:15px;font-weight:700;cursor:pointer">OK</button>
-                <button onclick="document.getElementById('codeEntry').remove()" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:13px;color:var(--t2);font-size:15px;font-weight:700;cursor:pointer">✕</button>
-            </div>
-        </div>`;
-    document.body.appendChild(div);
-    setTimeout(()=>document.getElementById('codeInp')?.focus(),200);
-    /* Enter pour valider */
-    div.querySelector('#codeInp').addEventListener('keydown',e=>{ if(e.key==='Enter') checkCode(); });
-}
-
-function checkCode(){
-    const inp=document.getElementById('codeInp');
-    if(!inp) return;
-    if(h(inp.value.trim())===SECRET_H){
-        document.getElementById('codeEntry')?.remove();
-        unlockAdmin();
-    } else {
-        inp.value='';
-        inp.style.borderColor='rgba(239,68,68,.5)';
-        setTimeout(()=>{ inp.style.borderColor='rgba(59,130,246,.2)'; },800);
-    }
-}
-
-function unlockAdmin(){
-    admAuth=true;
-    refreshAdmStats();
-    refreshNotifBadge();
-    document.getElementById('notifDot').style.display='block';
+function openAdm(){
+    document.getElementById('a-ca').textContent = st.ca.toFixed(2)+' €';
+    document.getElementById('a-ord').textContent = st.ord;
     document.getElementById('adm').classList.add('open');
+    updateAdminBadge();
 }
+function closeAdm(){ document.getElementById('adm').classList.remove('open'); }
 
-function closeAdm(){
-    document.getElementById('adm').classList.remove('open');
-}
-
-function refreshAdmStats(){
-    document.getElementById('a-ca').textContent =st.ca.toFixed(2)+' €';
-    document.getElementById('a-ord').textContent=st.ord||0;
-}
-
-/* ============================================================
-   RECHERCHE CLIENT PAR @USERNAME (annuaire local)
-============================================================ */
-let targetUid=null;
-
-document.getElementById('uname').addEventListener('input', function(){
-    const raw=this.value.trim().replace(/^@/,'').toLowerCase();
-    const users=getUsers();
-    const found=users[raw];
-    const prev=document.getElementById('tprev');
-    if(found){
-        targetUid=found.id;
-        document.getElementById('tpav').textContent  =found.init||'?';
-        document.getElementById('tpname').textContent=found.name;
-        document.getElementById('tpsub').textContent ='Compte trouvé ✅';
-        document.getElementById('tpbal').textContent =getBal(found.id).toFixed(2)+' €';
+/* Preview du client lors de la saisie admin */
+document.getElementById('uname').addEventListener('input', function(e){
+    const target = e.target.value.replace('@','').toLowerCase().strip();
+    const users = getUsers();
+    const prev = document.getElementById('tprev');
+    if(users[target]){
+        document.getElementById('tpname').textContent = users[target].name;
+        document.getElementById('tpav').textContent = users[target].init;
+        document.getElementById('tpbal').textContent = parseFloat(localStorage.getItem('os_bal_'+users[target].id)||'0').toFixed(2)+' €';
         prev.classList.add('show');
     } else {
-        targetUid=null;
         prev.classList.remove('show');
     }
 });
 
-/* Créditer */
 function doCredit(){
-    if(!targetUid){ showToast('❌ Client introuvable'); return; }
-    const amt=parseFloat(document.getElementById('uamt').value);
-    if(isNaN(amt)||amt<=0){ showToast('❌ Montant invalide'); return; }
-    const newB=getBal(targetUid)+amt;
-    setBal(targetUid,newB);
-
-    /* Notif de crédit envoyée à la boutique du client */
-    pushNotif({
-        ico:'💰',
-        title:'Crédit Manuel',
-        desc:`+${amt.toFixed(2)} € crédité sur ${document.getElementById('uname').value.trim()}`,
-        price:'+'+amt.toFixed(2)+' €',
-        time:new Date().toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
-    });
-
-    refreshAdmStats();
-    document.getElementById('tpbal').textContent=getBal(targetUid).toFixed(2)+' €';
-    document.getElementById('uamt').value='';
-    showToast(`✅ +${amt.toFixed(2)} € crédités sur ${document.getElementById('uname').value.trim()}`);
+    const target = document.getElementById('uname').value.replace('@','').toLowerCase().trim();
+    const amt = parseFloat(document.getElementById('uamt').value);
+    if(!target || isNaN(amt) || amt <= 0) return showToast("Données invalides");
+    
+    const users = getUsers();
+    if(!users[target]) return showToast("Client introuvable");
+    
+    let currentBal = parseFloat(localStorage.getItem('os_bal_'+users[target].id)||'0');
+    setBal(users[target].id, currentBal + amt);
+    
+    document.getElementById('tpbal').textContent = parseFloat(localStorage.getItem('os_bal_'+users[target].id)||'0').toFixed(2)+' €';
+    showToast(`✅ Crédité de ${amt.toFixed(2)}€`);
 }
 
-/* Débiter */
 function doDebit(){
-    if(!targetUid){ showToast('❌ Client introuvable'); return; }
-    const amt=parseFloat(document.getElementById('uamt').value);
-    if(isNaN(amt)||amt<=0){ showToast('❌ Montant invalide'); return; }
-    const newB=Math.max(0, getBal(targetUid)-amt);
-    setBal(targetUid,newB);
-    refreshAdmStats();
-    document.getElementById('tpbal').textContent=getBal(targetUid).toFixed(2)+' €';
-    document.getElementById('uamt').value='';
-    showToast(`➖ ${amt.toFixed(2)} € débités`);
+    const target = document.getElementById('uname').value.replace('@','').toLowerCase().trim();
+    const amt = parseFloat(document.getElementById('uamt').value);
+    if(!target || isNaN(amt) || amt <= 0) return showToast("Données invalides");
+    
+    const users = getUsers();
+    if(!users[target]) return showToast("Client introuvable");
+    
+    let currentBal = parseFloat(localStorage.getItem('os_bal_'+users[target].id)||'0');
+    setBal(users[target].id, currentBal - amt);
+    
+    document.getElementById('tpbal').textContent = parseFloat(localStorage.getItem('os_bal_'+users[target].id)||'0').toFixed(2)+' €';
+    showToast(`➖ Débité de ${amt.toFixed(2)}€`);
 }
 
-/* Reset solde cible */
 function doReset(){
-    if(!targetUid){ showToast('❌ Sélectionne un client d\'abord'); return; }
-    setBal(targetUid,0);
-    document.getElementById('tpbal').textContent='0.00 €';
-    showToast('🔄 Solde remis à zéro');
+    const target = document.getElementById('uname').value.replace('@','').toLowerCase().trim();
+    if(!target) return;
+    const users = getUsers();
+    if(!users[target]) return;
+    setBal(users[target].id, 0);
+    document.getElementById('tpbal').textContent = '0.00 €';
+    showToast("Solde remis à 0");
 }
 
-/* Vider historique local */
-function clearHist(){
-    st.hist=[]; save(); renderHist();
-    showToast('📋 Historique vidé');
+function clearHist(){ st.hist = []; save(); showToast("Historique vidé"); }
+
+/* Gestion des notifications admin */
+function updateAdminBadge(){
+    if(myName !== ADMIN_USERNAME) return;
+    const notifs = JSON.parse(localStorage.getItem(KNT)||'[]');
+    const count = notifs.length;
+    document.getElementById('notifCount').textContent = count;
+    const dot = document.getElementById('notifDot');
+    if(count > 0) dot.classList.add('show'); else dot.classList.remove('show');
 }
+
+function openNotifs(){
+    const list = document.getElementById('notifList');
+    const notifs = JSON.parse(localStorage.getItem(KNT)||'[]');
+    if(notifs.length === 0){
+        list.innerHTML = '<div class="nempty">Aucune notification</div>';
+    } else {
+        list.innerHTML = '';
+        notifs.forEach(n => {
+            const div = document.createElement('div');
+            div.className = 'nitem';
+            div.innerHTML = `
+                <div class="nitem-ico">🛒</div>
+                <div class="nitem-info"><h4>${n.user}</h4><p>A acheté: <b>${n.item}</b> (${n.prix.toFixed(2)}€)</p><div class="nitem-time">${n.time}</div></div>
+            `;
+            list.appendChild(div);
+        });
+    }
+    document.getElementById('notifPanel').classList.add('open');
+}
+function closeNotifs(){ document.getElementById('notifPanel').classList.remove('open'); }
+function clearNotifs(){ localStorage.setItem(KNT, '[]'); updateAdminBadge(); closeNotifs(); showToast("Notifications effacées"); }
+
+// Init au lancement
+updateAdminBadge();
 </script>
 </body>
 </html>
