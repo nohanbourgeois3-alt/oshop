@@ -3,87 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>O'shop V2</title>
+    <title>O'shop Premium V2</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg: #020617; --bg2: #0a1628; --bg3: #0d1f3c;
-            --blue: #2563eb; --blue2: #3b82f6; --blue3: #60a5fa;
-            --glow: rgba(37,99,235,0.35); --t1: #f1f5f9; --t2: #64748b;
-            --border: rgba(255,255,255,0.045); --green: #22c55e; --red: #ef4444;
-            --sat: env(safe-area-inset-top,0px); --sab: env(safe-area-inset-bottom,0px);
+            --bg: #030712;
+            --bg2: #0b1528;
+            --bg3: #0f223f;
+            --blue: #2563eb;
+            --blue2: #3b82f6;
+            --blue3: #60a5fa;
+            --purple: #7c3aed;
+            --purple2: #a78bfa;
+            --glow: rgba(37,99,235,0.2);
+            --t1: #f9fafb;
+            --t2: #9ca3af;
+            --t3: #374151;
+            --border: rgba(255,255,255,0.06);
+            --border-active: rgba(59,130,246,0.3);
+            --green: #10b981;
+            --red: #ef4444;
+            --amber: #f59e0b;
+            --sat: env(safe-area-inset-top,0px);
+            --sab: env(safe-area-inset-bottom,0px);
         }
+
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-        body{height:100dvh;background:var(--bg);color:var(--t1);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden;}
+        body{height:100dvh;background:var(--bg);color:var(--t1);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;overflow:hidden;}
         
-        .g1{position:fixed;top:-180px;left:50%;transform:translateX(-50%);width:500px;height:400px;background:radial-gradient(ellipse,rgba(37,99,235,.13) 0%,transparent 70%);pointer-events:none;z-index:0;}
+        /* Arrière-plans lumineux */
+        .g1{position:fixed;top:-150px;left:50%;transform:translateX(-50%);width:600px;height:450px;background:radial-gradient(ellipse,rgba(37,99,235,0.15) 0%,transparent 70%);pointer-events:none;z-index:0;}
+        .g2{position:fixed;bottom:-50px;left:-50px;width:300px;height:300px;background:radial-gradient(circle,rgba(124,58,237,0.08) 0%,transparent 70%);pointer-events:none;z-index:0;}
+        
         #app{position:relative;z-index:1;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
         
-        .hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;padding-top:calc(14px + var(--sat));background:rgba(2,6,23,.93);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);z-index:50;}
-        .logo{font-size:17px;font-weight:800;background:linear-gradient(135deg,#60a5fa,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-        .bal-box{background:rgba(255,255,255,0.04);padding:6px 12px;border-radius:12px;border:1px solid var(--border);font-weight:700;font-size:14px;}
+        /* HEADER PREMIUM */
+        .hdr{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;padding-top:calc(16px + var(--sat));background:rgba(3,7,18,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:50;}
+        .logo-container{display:flex;flex-direction:column;}
+        .logo{font-size:19px;font-weight:900;letter-spacing:0.5px;background:linear-gradient(135deg,#60a5fa,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .sub-logo{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+        .bal-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(147,51,234,0.1));padding:8px 14px;border-radius:14px;border:1px solid var(--border-active);font-weight:800;font-size:14px;box-shadow:0 0 15px rgba(37,99,235,0.1);}
         
-        .main{flex:1;overflow-y:auto;padding:16px 16px calc(24px + var(--sab));display:none;}
+        /* VUES */
+        .main{flex:1;overflow-y:auto;padding:20px 18px calc(30px + var(--sab));display:none;}
         .main.active{display:block;}
         
-        .welcome{margin-bottom:20px;}
-        .welcome h1{font-size:22px;font-weight:700;margin-bottom:4px;}
-        .welcome p{font-size:13px;color:var(--t2);}
+        .welcome{margin-bottom:24px;}
+        .welcome h1{font-size:24px;font-weight:800;letter-spacing:-0.5px;margin-bottom:6px;}
+        .welcome p{font-size:13px;color:var(--t2);line-height:1.4;}
         
-        .cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px;}
-        .cat-card{background:linear-gradient(145deg,var(--bg2),var(--bg3));border:1px solid var(--border);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;}
-        .cat-icon{font-size:24px;margin-bottom:4px;}
-        .cat-title{font-size:14px;font-weight:600;}
-        .cat-count{font-size:11px;color:var(--t2);}
-        
-        .p-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:12px;display:flex;align-items:center;justify-content:between;gap:12px;margin-bottom:10px;}
+        /* GRILLE DES CATÉGORIES ET CARTES */
+        .cat-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:24px;}
+        .cat-card{background:linear-gradient(145deg,var(--bg2),var(--bg3));border:1px solid var(--border);border-radius:20px;padding:18px;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden;transition:border-color 0.2s;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);}
+        .cat-card:active{border-color:var(--blue2);}
+        .cat-icon{font-size:32px;background:rgba(255,255,255,0.03);width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);}
+        .cat-info{flex:1;}
+        .cat-title{font-size:16px;font-weight:700;color:var(--t1);margin-bottom:3px;}
+        .cat-count{font-size:12px;color:var(--blue3);font-weight:500;}
+        .cat-arrow{color:var(--t2);font-size:18px;}
+
+        /* LISTE PRODUITS DANS LE SHEET */
+        .p-card{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:16px;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
         .p-info{flex:1;}
-        .p-name{font-size:14px;font-weight:600;margin-bottom:2px;}
-        .p-price{font-size:13px;color:var(--blue3);font-weight:700;}
-        .btn-buy{background:var(--blue);color:#fff;border:none;padding:6px 12px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;}
+        .p-name{font-size:14px;font-weight:700;color:var(--t1);margin-bottom:4px;}
+        .p-price{font-size:15px;color:#fff;font-weight:800;}
+        .btn-buy{background:var(--blue);color:#fff;border:none;padding:8px 16px;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;transition:transform 0.1s;}
+        .btn-buy:active{transform:scale(0.96);}
         
-        .nav{height:calc(60px + var(--sab));background:rgba(10,22,40,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding-top:8px;padding-bottom:var(--sab);z-index:50;}
-        .nav-item{display:flex;flex-direction:column;align-items:center;color:var(--t2);font-size:11px;text-decoration:none;gap:4px;background:none;border:none;cursor:pointer;width:60px;}
+        /* PANELS ET BLOCS D'INFO */
+        .info-card{background:linear-gradient(135deg,rgba(255,255,255,0.01),rgba(255,255,255,0.03));border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:16px;}
+        .info-title{font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+        
+        /* FORMULAIRES */
+        .inp{width:100%;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:12px;padding:12px;color:#fff;font-size:14px;margin-bottom:12px;outline:none;transition:border-color 0.2s;}
+        .inp:focus{border-color:var(--blue2);}
+        .btn-act{width:100%;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;border:none;border-radius:14px;padding:14px;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 4px 12px rgba(37,99,235,0.2);}
+        
+        /* BARRE DE NAVIGATION MODERNE */
+        .nav{height:calc(66px + var(--sab));background:rgba(11,21,40,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding-top:10px;padding-bottom:var(--sab);z-index:50;}
+        .nav-item{display:flex;flex-direction:column;align-items:center;color:var(--t2);font-size:10px;text-decoration:none;gap:5px;background:none;border:none;cursor:pointer;width:65px;font-weight:600;}
         .nav-item.active{color:var(--blue3);}
-        .nav-icon{font-size:20px;}
+        .nav-icon{font-size:22px;transition:transform 0.2s;}
+        .nav-item.active .nav-icon{transform:translateY(-2px);}
         
-        .sheet{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);border-radius:24px 24px 0 0;padding:20px;padding-bottom:calc(20px + var(--sab));transform:translateY(100%);transition:transform 0.3s ease;z-index:100;max-height:85dvh;overflow-y:auto;}
+        /* BOTTOM SHEETS GLASSMORPHISM */
+        .sheet{position:fixed;bottom:0;left:0;right:0;background:rgba(11,21,40,0.96);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid rgba(255,255,255,0.08);border-radius:28px 28px 0 0;padding:24px;padding-bottom:calc(24px + var(--sab));transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);z-index:100;max-height:85dvh;overflow-y:auto;}
         .sheet.active{transform:translateY(0);}
-        .sheet-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
-        .close-btn{background:rgba(255,255,255,0.05);border:none;color:var(--t1);width:28px;height:28px;border-radius:50%;font-size:14px;}
+        .sheet-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+        .close-btn{background:rgba(255,255,255,0.06);border:none;color:var(--t1);width:32px;height:32px;border-radius:50%;font-size:14px;display:flex;align-items:center;justify-content:center;}
         
-        .admin-box{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:12px;}
-        .inp{width:100%;background:rgba(0,0,0,0.2);border:1px solid var(--border);border-radius:10px;padding:10px;color:#fff;font-size:14px;margin-bottom:10px;outline:none;}
-        .btn-act{width:100%;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:12px;font-weight:600;font-size:14px;}
-        .mico {width:68px;height:68px;background:rgba(37,99,235,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px;}
-        
-        .hist-item{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
-        .hist-info{display:flex;flex-direction:column;gap:2px;}
-        .hist-name{font-size:14px;font-weight:600;}
-        .hist-date{font-size:11px;color:var(--t2);}
-        .hist-code{font-family:monospace;background:rgba(0,0,0,0.2);padding:4px 8px;border-radius:6px;font-size:12px;color:var(--blue3);margin-top:4px;word-break:break-all;}
+        /* HISTORIQUE ET CODES */
+        .hist-item{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
+        .hist-code{font-family:monospace;background:rgba(0,0,0,0.4);padding:8px 12px;border-radius:8px;font-size:13px;color:var(--blue3);margin-top:8px;word-break:break-all;display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(255,255,255,0.03);}
+        .mico {width:72px;height:72px;background:rgba(37,99,235,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px;border:1px solid rgba(37,99,235,0.2);}
     </style>
 </head>
 <body>
     <div class="g1"></div>
+    <div class="g2"></div>
+    
     <div id="app">
         <div class="hdr">
-            <div class="logo">O'SHOP V2</div>
+            <div class="logo-container">
+                <div class="logo">O'SHOP PREMIUM</div>
+                <div class="sub-logo">Abonnements & Loisirs</div>
+            </div>
             <div class="bal-box" id="userBalance">0.00 €</div>
         </div>
 
         <div id="view-shop" class="main active">
             <div class="welcome">
-                <h1 id="welcomeUser">Salut 👋</h1>
-                <p>Trouve tes abonnements et cartes préférés au meilleur prix.</p>
+                <h1 id="welcomeUser">Enchanté 👋</h1>
+                <p>Accède instantanément aux meilleurs services du marché.</p>
             </div>
             <div class="cat-grid" id="catGrid"></div>
+        </div>
+
+        <div id="view-reseller" class="main">
+            <div class="welcome">
+                <h1>Espace Revendeur 💼</h1>
+                <p>Achète en gros volumes et profite de réductions exceptionnelles.</p>
+            </div>
+            <div class="info-card">
+                <div class="info-title"><span>📦</span> Conditions de Gros</div>
+                <p style="font-size:13px;color:var(--t2);line-height:1.5;">
+                    Tu as un shop ou tu vends à tes potes ? Prends tes stocks par packs de 10, 20 ou 50 unités et économise jusqu'à 40% sur le prix unitaire.
+                </p>
+            </div>
+            <div class="info-card" style="background:rgba(124,58,237,0.05);border-color:rgba(124,58,237,0.15);">
+                <div class="info-title" style="color:var(--purple2);"><span>⚡</span> Commander en Masse</div>
+                <p style="font-size:13px;color:var(--t1);margin-bottom:12px;">Pour obtenir la grille des tarifs de gros et commander les stocks en fichier `.txt`, contacte le service dédié :</p>
+                <button class="btn-act" onclick="window.open('https://t.me/zeromeufuhq')" style="background:var(--purple);">Ouvrir le Support Revendeurs</button>
+            </div>
+        </div>
+
+        <div id="view-account" class="main">
+            <div class="welcome">
+                <h1>Mon Compte & Solde 🪙</h1>
+                <p>Suivez votre compte et rechargez vos fonds.</p>
+            </div>
+            <div class="info-card" style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <div style="font-size:12px;color:var(--t2);">Identifiant Telegram</div>
+                    <div id="profileUid" style="font-size:15px;font-weight:700;margin-top:2px;">-</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:12px;color:var(--t2);">Statut Client</div>
+                    <div style="font-size:13px;font-weight:700;color:var(--blue3);margin-top:2px;">Membre Vérifié ✔️</div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-title"><span>💳</span> Comment ajouter de l'argent ?</div>
+                <p style="font-size:13px;color:var(--t2);margin-bottom:14px;line-height:1.5;">
+                    Pour créditer ton solde **O'shop**, envoie ton paiement par le moyen de ton choix (Crypto, PayPal, Paysafecard, Lyf) directement au gérant.
+                </p>
+                <div style="background:rgba(0,0,0,0.2);padding:12px;border-radius:10px;font-size:12px;color:var(--t1);margin-bottom:14px;border:1px solid var(--border);">
+                    📌 <strong>Note essentielle :</strong> Transmets bien ton identifiant unique <span id="profileUidSpan" style="color:var(--blue3);font-family:monospace;font-weight:700;"></span> lors de ton message pour être crédité dans la minute.
+                </div>
+                <button class="btn-act" onclick="window.open('https://t.me/zeromeufuhq')">Contacter @zeromeufuhq pour Recharger</button>
+            </div>
+
+            <div class="info-card" style="border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.02)">
+                <div class="info-title" style="color:var(--green)"><span>🎧</span> Support Clientèle</div>
+                <p style="font-size:13px;color:var(--t2);line-height:1.4;margin-bottom:10px;"> Un problème avec un code ou une question sur une offre ? Le service client est dispo 7j/7.</p>
+                <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+                    ⏱️ Temps de réponse moyen : <span style="color:var(--amber)">~15 minutes max</span>
+                </div>
+                <button class="btn-act" onclick="window.open('https://t.me/zeromeufuhq')" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);box-shadow:none;">Ouvrir un ticket d'aide</button>
+            </div>
         </div>
 
         <div id="view-hist" class="main">
             <div class="welcome">
                 <h1>Mes Commandes 📦</h1>
-                <p>Retrouve tes codes d'accès et livraisons ici.</p>
+                <p>Retrouve tes codes d'accès sécurisés et tes livraisons.</p>
             </div>
             <div id="histList"></div>
         </div>
@@ -91,18 +185,18 @@
         <div id="view-admin" class="main">
             <div class="welcome">
                 <h1>Panel Admin 🛡️</h1>
-                <p>Gère les clients et ajoute des fonds instantanément.</p>
+                <p>Outil de gestion du solde global des utilisateurs enregistrés.</p>
             </div>
-            <div class="admin-box">
-                <label style="font-size:12px;color:var(--t2);margin-bottom:6px;display:block;">Rechercher un client (Pseudo ou "moi") :</label>
+            <div class="info-card">
+                <label style="font-size:12px;color:var(--t2);margin-bottom:8px;display:block;font-weight:600;">Rechercher un client (Pseudo ou "moi") :</label>
                 <input type="text" class="inp" id="searchUser" placeholder="Ex: zeromeufuhq ou moi...">
-                <div id="adminUserFound" style="display:none;margin-top:6px;background:rgba(37,99,235,0.1);padding:10px;border-radius:8px;border:1px solid rgba(37,99,235,0.2)">
-                    <div id="foundUserName" style="font-weight:600;font-size:13px;"></div>
-                    <div id="foundUserBal" style="font-size:12px;color:var(--t2);margin-bottom:10px;"></div>
-                    <div style="display:flex;gap:8px;">
+                <div id="adminUserFound" style="display:none;margin-top:8px;background:rgba(37,99,235,0.08);padding:14px;border-radius:14px;border:1px solid var(--border-active)">
+                    <div id="foundUserName" style="font-weight:700;font-size:14px;margin-bottom:2px;"></div>
+                    <div id="foundUserBal" style="font-size:13px;color:var(--blue3);font-weight:600;margin-bottom:12px;"></div>
+                    <div style="display:flex;gap:10px;">
                         <input type="number" class="inp" id="amountMod" placeholder="Montant (€)" style="margin:0;flex:1;">
-                        <button class="btn-buy" onclick="modifyBalance(true)" style="background:var(--green)">+</button>
-                        <button class="btn-buy" onclick="modifyBalance(false)" style="background:var(--red)">-</button>
+                        <button class="btn-buy" onclick="modifyBalance(true)" style="background:var(--green);font-size:16px;padding:0 20px;">+</button>
+                        <button class="btn-buy" onclick="modifyBalance(false)" style="background:var(--red);font-size:16px;padding:0 20px;">-</button>
                     </div>
                 </div>
             </div>
@@ -111,6 +205,12 @@
         <div class="nav">
             <button class="nav-item active" onclick="switchView('shop', this)">
                 <span class="nav-icon">🛒</span><span>Boutique</span>
+            </button>
+            <button class="nav-item" onclick="switchView('reseller', this)">
+                <span class="nav-icon">💼</span><span>Revendeur</span>
+            </button>
+            <button class="nav-item" onclick="switchView('account', this)">
+                <span class="nav-icon">👤</span><span>Compte</span>
             </button>
             <button class="nav-item" onclick="switchView('hist', this)">
                 <span class="nav-icon">📦</span><span>Commandes</span>
@@ -123,7 +223,7 @@
 
     <div class="sheet" id="catSheet">
         <div class="sheet-hdr">
-            <h2 id="sheetTitle" style="font-size:18px;font-weight:700;">Catégorie</h2>
+            <h2 id="sheetTitle" style="font-size:19px;font-weight:800;">Catégorie</h2>
             <button class="close-btn" onclick="closeSheet('catSheet')">✕</button>
         </div>
         <div id="sheetProducts"></div>
@@ -131,19 +231,19 @@
 
     <div class="sheet" id="buySheet">
         <div class="sheet-hdr">
-            <h2>Félicitations ! 🎉</h2>
+            <h2>Achat Réussi ! 🎉</h2>
             <button class="close-btn" onclick="closeSheet('buySheet')">✕</button>
         </div>
-        <div class="mico">🎁</div>
+        <div class="mico" style="background:rgba(16,185,129,0.1);color:var(--green);border-color:rgba(16,185,129,0.2);">✔️</div>
         <div style="text-align:center;margin-bottom:20px;">
-            <p style="font-size:15px;font-weight:600;margin-bottom:4px;" id="buyProdName"></p>
-            <p style="font-size:12px;color:var(--t2);">Ton code est disponible ci-dessous et enregistré dans tes Commandes.</p>
+            <p style="font-size:16px;font-weight:700;margin-bottom:6px;" id="buyProdName"></p>
+            <p style="font-size:12px;color:var(--t2);">Ton produit est prêt à l'emploi. Tu peux copier le code ci-dessous.</p>
         </div>
-        <div class="admin-box" style="text-align:center;background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.2);">
-            <div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;margin-bottom:4px;letter-spacing:1px;">Code Livré</div>
-            <div id="deliveredCode" style="font-family:monospace;font-size:18px;font-weight:700;color:#fff;letter-spacing:0.5px;word-break:break-all;"></div>
+        <div class="info-card" style="text-align:center;background:rgba(37,99,235,0.05);border-color:var(--border-active);">
+            <div style="font-size:10px;color:var(--blue3);font-weight:700;text-transform:uppercase;margin-bottom:6px;letter-spacing:1px;">Ton Code Unique</div>
+            <div id="deliveredCode" style="font-family:monospace;font-size:18px;font-weight:800;color:#fff;word-break:break-all;"></div>
         </div>
-        <button class="btn-act" onclick="closeSheet('buySheet')">Super, merci !</button>
+        <button class="btn-act" onclick="closeSheet('buySheet')">Fermer la fenêtre</button>
     </div>
 
     <script>
@@ -151,23 +251,20 @@
         tg.expand();
         tg.ready();
 
-        const ADMIN_ID = 6876121406; // Ton ID unique
+        const ADMIN_ID = 6876121406; // Ton ID unique d'administrateur
         
-        // Données d'utilisateur Telegram sécurisées par défaut
-        let myId = tg.initDataUnsafe?.user?.id || 999999;
-        let myUser = tg.initDataUnsafe?.user?.username || "Invite";
+        let myId = tg.initDataUnsafe?.user?.id || 777123;
+        let myUser = tg.initDataUnsafe?.user?.username || "InviteOS";
         let myFirst = tg.initDataUnsafe?.user?.first_name || "Client";
 
-        // Clés LocalStorage propres à chaque utilisateur
         const KB = 'os_bal_' + myId;
         const KH = 'os_his_' + myId;
-        const KA = 'os_users'; // Annuaire partagé de l'admin
+        const KA = 'os_users';
 
-        // Chargement du solde et historique initial
         let balance = parseFloat(localStorage.getItem(KB)) || 0.00;
         let history = JSON.parse(localStorage.getItem(KH)) || [];
 
-        // Base de données du catalogue (Uber Eats inclus + abonnements)
+        // BASE DE DONNÉES DU CATALOGUE MISE À JOUR ET OPTIMISÉE
         const Catalog = {
             "ubereats": {
                 title: "Uber Eats 🍕",
@@ -180,8 +277,16 @@
             "netflix": {
                 title: "Netflix 🍿",
                 products: [
-                    { id: "nf_pre", name: "Netflix Premium (1 Mois) - 4K UHD", price: 4.50, stock: ["NETFLIX-PREM-Z98A1", "NETFLIX-PREM-K22P8"] },
-                    { id: "nf_std", name: "Netflix Standard (1 Mois) - HD", price: 3.00, stock: ["NETFLIX-STAN-M44L1"] }
+                    { id: "nf_pre", name: "Netflix Premium (1 Mois) - 4K UHD", price: 10.00, stock: ["NETFLIX-4K-Z98A1", "NETFLIX-4K-K22P8", "NETFLIX-4K-WN192", "NETFLIX-4K-PL771"] },
+                    { id: "nf_std", name: "Netflix Standard (1 Mois) - HD", price: 7.00, stock: ["NETFLIX-HD-M44L1", "NETFLIX-HD-BB902", "NETFLIX-HD-OO441"] }
+                ]
+            },
+            "kfc": {
+                title: "Points KFC 🍗",
+                products: [
+                    { id: "kfc_5k", name: "Compte KFC avec 5.000 Points", price: 4.00, stock: ["KFC-5K-USER91AA:PASS44", "KFC-5K-USER02LL:PASS11", "KFC-5K-USER66PP:PASS89", "KFC-5K-USER12MM:PASS77"] },
+                    { id: "kfc_10k", name: "Compte KFC avec 10.000 Points", price: 7.50, stock: ["KFC-10K-USER55XX:PASS09", "KFC-10K-USER77YY:PASS51", "KFC-10K-USER34ZZ:PASS33"] },
+                    { id: "kfc_20k", name: "Compte KFC avec 20.000 Points", price: 13.00, stock: ["KFC-20K-USER88QQ:PASS12", "KFC-20K-USER11BB:PASS99"] }
                 ]
             },
             "spotify": {
@@ -190,66 +295,43 @@
                     { id: "sp_3m", name: "Spotify Premium (3 Mois)", price: 6.00, stock: ["SPOTIFY-3M-U901X", "SPOTIFY-3M-Q771P"] },
                     { id: "sp_1y", name: "Spotify Premium (1 An)", price: 18.00, stock: ["SPOTIFY-1Y-JJ882", "SPOTIFY-1Y-LL110"] }
                 ]
-            },
-            "playstation": {
-                title: "PlayStation 🎮",
-                products: [
-                    { id: "ps_10", name: "Code PSN 10€ (France)", price: 8.00, stock: ["PSN-FR-10E-BB81", "PSN-FR-10E-CC92"] },
-                    { id: "ps_20", name: "Code PSN 20€ (France)", price: 16.00, stock: ["PSN-FR-20E-AA12", "PSN-FR-20E-NN34"] },
-                    { id: "ps_50", name: "Code PSN 50€ (France)", price: 39.00, stock: ["PSN-FR-50E-KK09"] }
-                ]
-            },
-            "xbox": {
-                title: "Xbox & PC 🟩",
-                products: [
-                    { id: "xb_ult", name: "Xbox Game Pass Ultimate (1 Mois)", price: 5.00, stock: ["XBOX-GPU-1M-4421", "XBOX-GPU-1M-0091"] },
-                    { id: "xb_20", name: "Carte Xbox Live 20€", price: 15.50, stock: ["XBOX-GIFT-20-8812"] }
-                ]
-            },
-            "crunchyroll": {
-                title: "Crunchyroll 👑",
-                products: [
-                    { id: "cr_fan", name: "Abonnement Mega Fan (1 Mois)", price: 2.50, stock: ["CRUNCHY-MEGA-1M-XYZ", "CRUNCHY-MEGA-1M-ABC"] }
-                ]
             }
         };
 
-        // Initialisation de l'application
         window.addEventListener('DOMContentLoaded', () => {
             document.getElementById('welcomeUser').innerText = `Salut ${myFirst} 👋`;
+            document.getElementById('profileUid').innerText = myId;
+            document.getElementById('profileUidSpan').innerText = myId;
+            
             updateUI();
             buildCatalog();
             registerUserInDirectory();
 
-            // Rendre le bouton d'administration visible si c'est toi
             if (myId === ADMIN_ID) {
                 document.getElementById('navAdminBtn').style.display = 'flex';
             }
 
-            // Écouteur de recherche admin pour chercher un client ou soi-même
+            // Gestion de la recherche admin corrigée
             document.getElementById('searchUser').addEventListener('input', (e) => {
                 const target = e.target.value.replace('@', '').toLowerCase().trim();
                 const users = JSON.parse(localStorage.getItem(KA)) || {};
                 
                 let foundUid = null;
                 
-                // Si l'admin tape "moi" ou son propre pseudo, il cible son compte
                 if (target === "moi" || target === myUser.toLowerCase()) {
                     foundUid = myId;
                 } else {
-                    // Sinon on cherche dans l'annuaire global
                     foundUid = Object.keys(users).find(uid => users[uid].username.toLowerCase() === target);
                 }
 
                 const block = document.getElementById('adminUserFound');
                 if (foundUid) {
                     block.setAttribute('data-target-uid', foundUid);
-                    // Récupère le solde à jour (soit en local direct si c'est l'admin lui-même, soit dans la base partagée)
                     let currentBal = (parseInt(foundUid) === myId) ? balance : (users[foundUid].balance || 0);
                     let displayUser = (parseInt(foundUid) === myId) ? `${myFirst} (Moi - Admin)` : `@${users[foundUid].username}`;
                     
                     document.getElementById('foundUserName').innerText = displayUser;
-                    document.getElementById('foundUserBal').innerText = `Solde actuel : ${parseFloat(currentBal).toFixed(2)} €`;
+                    document.getElementById('foundUserBal').innerText = `Solde : ${parseFloat(currentBal).toFixed(2)} €`;
                     block.style.display = 'block';
                 } else {
                     block.removeAttribute('data-target-uid');
@@ -263,7 +345,6 @@
             renderHistory();
         }
 
-        // Enregistre l'utilisateur actuel dans la liste des clients connus de l'admin
         function registerUserInDirectory() {
             let users = JSON.parse(localStorage.getItem(KA)) || {};
             users[myId] = {
@@ -288,8 +369,11 @@
                 card.onclick = () => openCategory(key);
                 card.innerHTML = `
                     <div class="cat-icon">${cat.title.split(' ')[1] || '🎁'}</div>
-                    <div class="cat-title">${cat.title.split(' ')[0]}</div>
-                    <div class="cat-count">${totalStock} articles dispo</div>
+                    <div class="cat-info">
+                        <div class="cat-title">${cat.title.split(' ')[0]}</div>
+                        <div class="cat-count">${totalStock} articles en stock</div>
+                    </div>
+                    <div class="cat-arrow">›</div>
                 `;
                 grid.appendChild(card);
             });
@@ -319,11 +403,11 @@
                     <div class="p-info">
                         <div class="p-name">${p.name}</div>
                         <div class="p-price">${p.price.toFixed(2)} €</div>
-                        <div style="font-size:11px;color:${p.stock.length > 0 ? 'var(--green)' : 'var(--red)'};margin-top:2px;">
-                            ${p.stock.length > 0 ? `${p.stock.length} en stock` : 'Rupture de stock'}
+                        <div style="font-size:11px;color:${p.stock.length > 0 ? 'var(--green)' : 'var(--red)'};margin-top:4px;font-weight:600;">
+                            ${p.stock.length > 0 ? `● ${p.stock.length} disponibles` : '✖ Rupture'}
                         </div>
                     </div>
-                    <button class="btn-buy" ${p.stock.length === 0 ? 'disabled style="background:var(--t3)"' : ''} onclick="buyProduct('${catKey}', '${p.id}')">Acheter</button>
+                    <button class="btn-buy" ${p.stock.length === 0 ? 'disabled style="background:var(--t3)"' : ''} onclick="buyProduct('${catKey}', '${p.id}')">Prendre</button>
                 `;
                 container.appendChild(card);
             });
@@ -338,22 +422,19 @@
             const product = Catalog[catKey].products.find(p => p.id === prodId);
             
             if (balance < product.price) {
-                alert(`⚠️ Solde insuffisant ! Il te faut ${product.price.toFixed(2)}€ (Solde actuel : ${balance.toFixed(2)}€). Contacte @zeromeufuhq pour recharger.`);
+                alert(`⚠️ Solde insuffisant ! Ton solde est de ${balance.toFixed(2)}€. Il te manque ${(product.price - balance).toFixed(2)}€ pour cet article. Va dans l'onglet "Compte" pour recharger.`);
                 return;
             }
             if (product.stock.length === 0) {
-                alert("⚠️ Ce produit vient de tomber en rupture de stock.");
+                alert("⚠️ Rupture de stock instantanée.");
                 return;
             }
 
-            // Déduction des sous et extraction du code de stock
             balance -= product.price;
             const codeLivre = product.stock.shift();
 
-            // Sauvegarde immédiate locale
             localStorage.setItem(KB, balance.toFixed(2));
 
-            // Ajout direct de l'achat à l'historique
             const newOrder = {
                 name: product.name,
                 price: product.price,
@@ -363,15 +444,11 @@
             history.unshift(newOrder);
             localStorage.setItem(KH, JSON.stringify(history));
 
-            // Actualise l'annuaire pour l'admin
             registerUserInDirectory();
-
-            // Mise à jour de l'affichage
             updateUI();
             buildCatalog();
             closeSheet('catSheet');
 
-            // Affichage de l'écran de livraison
             document.getElementById('buyProdName').innerText = product.name;
             document.getElementById('deliveredCode').innerText = codeLivre;
             document.getElementById('buySheet').classList.add('active');
@@ -381,27 +458,29 @@
             const container = document.getElementById('histList');
             container.innerHTML = '';
             if (history.length === 0) {
-                container.innerHTML = `<div style="text-align:center;color:var(--t2);font-size:14px;margin-top:40px;">Aucune commande pour le moment.</div>`;
+                container.innerHTML = `<div style="text-align:center;color:var(--t2);font-size:13px;margin-top:40px;">Aucun achat enregistré.</div>`;
                 return;
             }
             history.forEach(h => {
                 const item = document.createElement('div');
                 item.className = 'hist-item';
                 item.innerHTML = `
-                    <div class="hist-info" style="width:100%;">
-                        <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span class="hist-name">${h.name}</span>
-                            <span style="font-size:13px;font-weight:700;color:var(--blue3);">${parseFloat(h.price).toFixed(2)} €</span>
+                    <div style="display:flex;justify-content:space-between;align-items:start;">
+                        <div>
+                            <div style="font-size:14px;font-weight:700;">${h.name}</div>
+                            <div style="font-size:11px;color:var(--t2);margin-top:2px;">${h.date}</div>
                         </div>
-                        <div class="hist-date">${h.date}</div>
-                        <div class="hist-code" onclick="navigator.clipboard.writeText('${h.code}');alert('Code copié !');">${h.code} 📋</div>
+                        <span style="font-size:13px;font-weight:800;color:var(--blue3);">${parseFloat(h.price).toFixed(2)} €</span>
+                    </div>
+                    <div class="hist-code" onclick="navigator.clipboard.writeText('${h.code}');alert('Code copié dans le presse-papiers !');">
+                        <span>${h.code}</span>
+                        <span style="font-size:11px;color:var(--t2);">📋 Copier</span>
                     </div>
                 `;
                 container.appendChild(item);
             });
         }
 
-        // FONCTION DE CREDIT / DEBIT DU PANEL ADMIN
         function modifyBalance(isAdd) {
             const block = document.getElementById('adminUserFound');
             const targetUid = block.getAttribute('data-target-uid');
@@ -409,13 +488,12 @@
             const amount = parseFloat(amountInp.value);
 
             if (!targetUid || isNaN(amount) || amount <= 0) {
-                alert("Entre un montant valide supérieur à 0.");
+                alert("Entre un montant valide.");
                 return;
             }
 
             let users = JSON.parse(localStorage.getItem(KA)) || {};
             
-            // Si l'admin se modifie lui-même (via "moi" ou son id)
             if (parseInt(targetUid) === myId) {
                 if (isAdd) balance += amount;
                 else balance = Math.max(0, balance - amount);
@@ -425,9 +503,8 @@
                 localStorage.setItem(KA, JSON.stringify(users));
                 updateUI();
                 
-                document.getElementById('foundUserBal').innerText = `Solde actuel : ${balance.toFixed(2)} €`;
+                document.getElementById('foundUserBal').innerText = `Solde : ${balance.toFixed(2)} €`;
             } else {
-                // Si l'admin modifie le compte d'un AUTRE client trouvé
                 let targetBal = users[targetUid].balance || 0;
                 if (isAdd) targetBal += amount;
                 else targetBal = Math.max(0, targetBal - amount);
@@ -435,11 +512,11 @@
                 users[targetUid].balance = targetBal;
                 localStorage.setItem(KA, JSON.stringify(users));
                 
-                document.getElementById('foundUserBal').innerText = `Solde actuel : ${targetBal.toFixed(2)} €`;
+                document.getElementById('foundUserBal').innerText = `Solde : ${targetBal.toFixed(2)} €`;
             }
 
             amountInp.value = '';
-            alert("✨ Solde mis à jour avec succès !");
+            alert("✨ Action admin exécutée avec succès !");
         }
     </script>
 </body>
