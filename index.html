@@ -14,6 +14,8 @@
             --accent-gold: #ffcc00;
             --text-main: #ffffff;
             --text-muted: #8fa0c0;
+            --success: #10b981;
+            --danger: #ef4444;
         }
 
         body {
@@ -23,11 +25,35 @@
             margin: 0; padding: 0;
             overflow-x: hidden;
             user-select: none;
+            position: relative;
+        }
+
+        /* Le fond manga en faible opacité qui couvre toute l'application */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* ICI : Remplace le lien par le vrai lien direct de ton image quand tu l'auras hébergée */
+            background-image: url('https://i.imgur.com/vWbpxN3.png'); 
+            background-size: cover;
+            background-position: center top;
+            /* Une opacité très légère (0.08) pour que ça reste discret en arrière-plan */
+            opacity: 0.08; 
+            z-index: -1; /* Reste derrière tout le contenu */
+            pointer-events: none;
+        }
+
+        /* Ajustement de la bannière du haut pour qu'elle s'intègre parfaitement */
+        .banner {
+            position: relative; width: 100%; height: 120px;
+            background: linear-gradient(rgba(10,15,29,0.1), var(--bg-dark));
+            display: flex; align-items: flex-end; padding: 20px; box-sizing: border-box;
+        }
         }
 
         .banner {
-            position: relative; width: 100%; height: 160px;
-            background: linear-gradient(rgba(10,15,29,0.2), var(--bg-dark)), 
+            position: relative; width: 100%; height: 140px;
+            background: linear-gradient(rgba(10,15,29,0.3), var(--bg-dark)), 
                         url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80');
             background-size: cover; background-position: center;
             display: flex; align-items: flex-end; padding: 20px; box-sizing: border-box;
@@ -38,28 +64,36 @@
         .tab-content { display: none; animation: fadeInTab 0.3s ease-out forwards; }
         .tab-content.active { display: block; }
 
-        .product-card, .wallet-card {
+        .product-card, .wallet-card, .status-card {
             background-color: var(--bg-card); border-radius: 16px; padding: 20px;
             border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 8px 24px rgba(0,0,0,0.2);
             margin-bottom: 15px;
         }
 
-        .badge-stock { background: #10b981; color: white; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; display: inline-block; margin-bottom: 12px; }
+        .badge-stock { background: var(--success); color: white; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; display: inline-block; margin-bottom: 12px; }
         .product-title { font-size: 1.3rem; font-weight: bold; margin: 0 0 10px 0; }
         .price-tag { font-size: 1.6rem; color: var(--accent-gold); font-weight: 800; margin: 10px 0; }
+
+        .input-style {
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15);
+            padding: 12px; border-radius: 10px; color: white; font-size: 1rem;
+            box-sizing: border-box; margin-top: 8px; margin-bottom: 15px; outline: none;
+        }
+        .input-style:focus { border-color: var(--accent-blue); }
 
         .btn-action {
             width: 100%; background: linear-gradient(90deg, #ffcc00, #ffaa00); color: #000;
             border: none; padding: 14px; font-size: 1rem; font-weight: bold; border-radius: 12px;
             cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px;
+            transition: opacity 0.2s;
         }
+        .btn-action:disabled { opacity: 0.4; cursor: not-allowed; }
 
-        /* Formulaire de dépôt de capture d'écran */
         .upload-zone {
             border: 2px dashed rgba(255, 255, 255, 0.15);
-            border-radius: 12px; padding: 25px; text-align: center;
-            background: rgba(0,0,0,0.2); cursor: pointer; margin-top: 15px;
-            transition: border-color 0.2s;
+            border-radius: 12px; padding: 20px; text-align: center;
+            background: rgba(0,0,0,0.2); cursor: pointer; margin-top: 10px;
+            display: block; transition: border-color 0.2s;
         }
         .upload-zone:hover { border-color: var(--accent-blue); }
         .upload-zone input[type="file"] { display: none; }
@@ -95,56 +129,71 @@
         
         <!-- 🛒 ONGLET : BOUTIQUE -->
         <div id="boutique" class="tab-content active">
+            <!-- Zone d'affichage du statut d'achat (sans quitter l'app) -->
+            <div id="achat-status-box" style="display: none;"></div>
+
             <div class="product-card">
                 <div class="badge-stock">⚽ Disponible</div>
                 <div class="product-title">Compte UE 2×12/20</div>
-                <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0 0 10px 0;">Livraison instantanée après paiement réussi.</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0 0 10px 0;">Livraison automatique après confirmation du solde.</p>
                 <div class="price-tag">3.50 €</div>
-                <button class="btn-action" onclick="acheterCompte()"><i class="fas fa-shopping-cart"></i> Acheter avec mon Solde</button>
+                <button class="btn-action" id="btn-acheter" onclick="acheterCompte()"><i class="fas fa-shopping-cart"></i> Acheter avec mon Solde</button>
             </div>
         </div>
 
-        <!-- 💳 ONGLET : RECHARGER (PAYPAL DIRECT) -->
+        <!-- 💳 ONGLET : RECHARGER -->
         <div id="recharger" class="tab-content">
             <div class="wallet-card">
-                <h3 style="margin-top: 0; color: var(--accent-gold);"><i class="fab fa-paypal"></i> Dépôt PayPal</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
-                    1. Envoyez le montant de votre choix à : <br><b style="color:white; font-size:0.95rem;">nohanbourgeois9@gmail.com</b><br>
-                    2. Choisissez impérativement l'option <b>"Entre proches / Ami & Famille"</b>.<br>
-                    3. Ajoutez ce code unique en note de transfert :
-                </p>
-                <div class="code-box" id="generated-code">CHARGEMENT...</div>
+                <h3 style="margin-top: 0; color: var(--accent-gold);"><i class="fab fa-paypal"></i> Recharger le Solde</h3>
                 
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 15px;">4. Importez la capture d'écran entière de votre reçu ci-dessous :</p>
-                
-                <label class="upload-zone">
-                    <input type="file" accept="image/*" onchange="gestionFichier(event)">
-                    <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--accent-blue); margin-bottom: 8px;"></i>
-                    <span id="upload-text" style="display:block; font-size:0.85rem;">Ajouter le screenshot du virement</span>
-                </label>
-                
-                <button class="btn-action" style="margin-top: 20px; background: linear-gradient(90deg, #1e70ff, #0052cc); color: white;" onclick="envoyerPreuve()" id="btn-soumettre" disabled>
-                    <i class="fas fa-check-circle"></i> Soumettre la preuve aux arbitres
-                </button>
+                <!-- Étape 1 : Demander le montant -->
+                <div id="recharge-etape1">
+                    <label style="font-size: 0.9rem; color: var(--text-muted);">Combien de solde veux-tu ajouter (€) ?</label>
+                    <input type="number" id="montant-recharge" class="input-style" placeholder="Ex: 10" min="1">
+                    <button class="btn-action" style="background: var(--accent-blue); color: white;" onclick="passerEtape2()">Suivant <i class="fas fa-arrow-right"></i></button>
+                </div>
+
+                <!-- Étape 2 : Instructions + Upload (Masqué au début) -->
+                <div id="recharge-etape2" style="display: none;">
+                    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
+                        1. Envoie exactement <b style="color: var(--accent-gold);" id="montant-affiche">0.00 €</b> à : <br><b style="color:white;">nohanbourgeois9@gmail.com</b><br>
+                        2. Option obligatoire : <b>"Entre proches / Famille"</b>.<br>
+                        3. Copie/Colle ce code unique en note PayPal :
+                    </p>
+                    <div class="code-box" id="generated-code">...</div>
+                    
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 15px;">4. Ajoute le screenshot entier de ta preuve de paiement :</p>
+                    
+                    <label class="upload-zone">
+                        <input type="file" accept="image/*" onchange="gestionFichier(event)">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 1.8rem; color: var(--accent-blue); margin-bottom: 5px;"></i>
+                        <span id="upload-text" style="display:block; font-size:0.85rem;">Sélectionner la preuve</span>
+                    </label>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button class="btn-action" style="background: #334155; color: white; width: 40%;" onclick="retourEtape1()"><i class="fas fa-undo"></i> Retour</button>
+                        <button class="btn-action" style="background: linear-gradient(90deg, #1e70ff, #0052cc); color: white; width: 60%;" onclick="envoyerPreuve()" id="btn-soumettre" disabled><i class="fas fa-paper-plane"></i> Soumettre</button>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- 📩 ONGLET : SUPPORT -->
         <div id="support" class="tab-content">
             <div class="product-card">
-                <h3>Besoin d'aide sur le terrain ?</h3>
+                <h3>Une question ou un problème ?</h3>
                 <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.4; margin-bottom: 20px;">
-                    Une question sur un produit ou un problème avec une validation ? Contactez notre support.
+                    Contacte directement le gérant du terrain pour toute assistance.
                 </p>
                 <button class="btn-action" style="background: var(--accent-blue); color: white;" onclick="window.open('https://t.me/lamoulajr')">
-                    <i class="fas fa-comment-dots"></i> Contacter le Support
+                    <i class="fas fa-comment-dots"></i> Ouvrir le Support Telegram
                 </button>
             </div>
         </div>
 
     </div>
 
-    <!-- 🚥 DOCK DE NAVIGATION -->
+    <!-- 🚥 NAV BAR -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab(event, 'boutique')"><i class="fas fa-store"></i>Boutique</div>
         <div class="nav-item" onclick="switchTab(event, 'recharger')"><i class="fas fa-wallet"></i>Recharger</div>
@@ -159,6 +208,7 @@
         document.getElementById('generated-code').innerText = codeUnique;
 
         let imageBase64 = null;
+        let montantChoisi = 0;
 
         function switchTab(event, tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -168,11 +218,28 @@
             if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
         }
 
+        function passerEtape2() {
+            const inputMontant = document.getElementById('montant-recharge').value;
+            if(!inputMontant || inputMontant <= 0) {
+                alert("Indique un montant valide !");
+                return;
+            }
+            montantChoisi = parseFloat(inputMontant).toFixed(2);
+            document.getElementById('montant-affiche').innerText = montantChoisi + " €";
+            document.getElementById('recharge-etape1').style.display = 'none';
+            document.getElementById('recharge-etape2').style.display = 'block';
+        }
+
+        function retourEtape1() {
+            document.getElementById('recharge-etape2').style.display = 'none';
+            document.getElementById('recharge-etape1').style.display = 'block';
+        }
+
         function gestionFichier(event) {
             const fichier = event.target.files[0];
             if (!fichier) return;
 
-            document.getElementById('upload-text').innerText = "📸 " + fichier.name + " sélectionné";
+            document.getElementById('upload-text').innerText = "📸 Image prête";
             
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -185,28 +252,44 @@
         function envoyerPreuve() {
             if(!imageBase64) return;
             
-            tg.showPopup({
-                title: 'Transmission',
-                message: 'Voulez-vous envoyer ce reçu aux administrateurs pour validation ?',
-                buttons: [{type: 'ok', text: 'Oui, envoyer'}, {type: 'cancel', text: 'Annuler'}]
-            }, (buttonId) => {
-                if(buttonId === 'ok') {
-                    // On transmet proprement les données structurées au bot
-                    const payload = {
-                        action: "depot_paypal",
-                        code: codeUnique,
-                        image: imageBase64
-                    };
-                    tg.sendData(JSON.stringify(payload));
-                    tg.close();
-                }
-            });
+            const payload = {
+                action: "depot_paypal",
+                code: codeUnique,
+                montant: montantChoisi,
+                image: imageBase64
+            };
+            tg.sendData(JSON.stringify(payload));
+            
+            // Notification visuelle propre au lieu de crash
+            document.getElementById('recharge-etape2').innerHTML = `
+                <div style="text-align:center; padding:20px; color:var(--success);">
+                    <i class="fas fa-check-circle" style="font-size:3rem; margin-bottom:10px;"></i>
+                    <h4>Demande de ${montantChoisi}€ transmise !</h4>
+                    <p style="font-size:0.85rem; color:var(--text-muted);">Vérification en cours par l'admin. Tu peux fermer l'application.</p>
+                </div>
+            `;
         }
 
         function acheterCompte() {
+            const btn = document.getElementById('btn-acheter');
+            btn.disabled = true;
+            btn.innerText = "Traitement...";
+
             const payload = { action: "achat_produit", item: "Compte UE 2x12/20" };
+            
+            // On envoie l'action au bot
             tg.sendData(JSON.stringify(payload));
-            tg.close();
+
+            // On affiche directement un écran d'attente stylé sans fermer l'app
+            const statusBox = document.getElementById('achat-status-box');
+            statusBox.style.display = "block";
+            statusBox.innerHTML = `
+                <div class="status-card" style="border-color: var(--accent-blue); text-align:center;">
+                    <i class="fas fa-spinner fa-spin" style="font-size:2rem; color:var(--accent-blue); margin-bottom:10px;"></i>
+                    <p style="margin:0; font-weight:bold;">Achat en cours de traitement...</p>
+                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:5px;">Vérifie tes messages privés sur Telegram d'ici quelques secondes.</p>
+                </div>
+            `;
         }
     </script>
 </body>
