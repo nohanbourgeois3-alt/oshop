@@ -3,99 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LaMoulaEats - Mini App</title>
+    <title>LaMoulaEats</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
-            background-color: #0d0e12;
+            background-color: #0b0c10;
             color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             margin: 0;
-            padding: 15px;
+            padding: 20px;
             text-align: center;
         }
         .header {
-            padding: 20px 0;
-            border-bottom: 1px solid #1f222e;
-            margin-bottom: 25px;
+            padding: 25px 0;
+            border-bottom: 1px solid #1f2330;
+            margin-bottom: 30px;
         }
+        /* Clic secret sur le titre */
         .header h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 26px;
             color: #00ff66;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            user-select: none;
         }
         .header p {
-            margin: 5px 0 0 0;
+            margin: 6px 0 0 0;
             font-size: 13px;
-            color: #8e92a4;
+            color: #7a8099;
         }
         .catalog {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            max-width: 400px;
+            max-width: 360px;
             margin: 0 auto;
         }
         .product-card {
-            background: #161822;
-            border: 1px solid #242736;
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: transform 0.2s;
-        }
-        .product-card:active {
-            transform: scale(0.98);
+            background: #141622;
+            border: 1px solid #222538;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
         }
         .product-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #ffffff;
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
         .product-price {
-            font-size: 20px;
+            font-size: 24px;
             color: #00ff66;
             font-weight: 800;
+            margin-bottom: 20px;
         }
         .buy-btn {
             background-color: #00ff66;
             color: #000000;
             border: none;
-            padding: 12px 30px;
+            padding: 14px;
             font-weight: bold;
             font-size: 14px;
-            border-radius: 8px;
+            border-radius: 9px;
             cursor: pointer;
             width: 100%;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        /* Zone secrète cachée par défaut */
+        #secret-panel {
+            display: none;
+            margin-top: 25px;
+            padding: 15px;
+            background: #221414;
+            border: 1px dashed #ff3333;
+            border-radius: 10px;
+            color: #ff9999;
+            font-size: 13px;
         }
         .footer {
-            margin-top: 40px;
+            margin-top: 50px;
             font-size: 11px;
-            color: #4c506b;
+            color: #3f4357;
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>LaMoulaEats</h1>
-        <p>Catalogue Officiel Privé</p>
+        <!-- Cliquer ici déclenche le mot de passe secret -->
+        <h1 onclick="ouvrirMenuSecret()">LaMoulaEats</h1>
+        <p>Boutique Privée Automatisée</p>
     </div>
 
     <div class="catalog">
-        <!-- Produit unique demandé -->
         <div class="product-card">
             <div class="product-title">Compte UE 2x12/20</div>
             <div class="product-price">2,50 €</div>
-            <button class="buy-btn" onclick="commander('Compte UE 2x12/20')">Acheter via le Bot</button>
+            <button class="buy-btn" onclick="envoyerCommande('Compte UE 2x12/20')">Acheter l'accès</button>
         </div>
+    </div>
+
+    <!-- Section Admin secrète déverrouillable -->
+    <div id="secret-panel">
+        🛡️ <b>PANNEAU ADMIN CONSOLE ACCÈS</b><br>
+        Statut : Connecté en tant que Fondateur. Tout est synchronisé avec commandes.json.
     </div>
 
     <div class="footer">
@@ -103,14 +114,24 @@
     </div>
 
     <script>
-        // Initialise la WebApp de Telegram
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Ouvre la fenêtre au maximum dès le départ
+        tg.expand();
 
-        function commander(nomProduit) {
-            // Envoie l'action au bot et ferme l'application
-            tg.sendData("Achat via catalogue Mini-App : " + nomProduit);
+        function envoyerCommande(nomProduit) {
+            // Transmet l'action de manière brute au bot Telegram
+            tg.sendData("Achat : " + nomProduit);
             tg.close();
+        }
+
+        // Système de sécurité par mot de passe
+        function ouvrirMenuSecret() {
+            let mdp = prompt("Entrez le code d'accès administrateur :");
+            if (mdp === "Lamoula2009") {
+                alert("🔓 Accès restreint accordé.");
+                document.getElementById("secret-panel").style.display = "block";
+            } else if (mdp !== null) {
+                alert("❌ Code incorrect.");
+            }
         }
     </script>
 </body>
