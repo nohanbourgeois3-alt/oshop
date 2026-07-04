@@ -3,135 +3,300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LaMoulaEats</title>
+    <title>OliveEats - Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --bg-dark: #0a0f1d;
+            --bg-card: #131c31;
+            --accent-blue: #1e70ff;
+            --accent-gold: #ffcc00;
+            --text-main: #ffffff;
+            --text-muted: #8fa0c0;
+        }
+
         body {
-            background-color: #0b0c10;
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             margin: 0;
-            padding: 20px;
-            text-align: center;
-        }
-        .header {
-            padding: 25px 0;
-            border-bottom: 1px solid #1f2330;
-            margin-bottom: 30px;
-        }
-        /* Clic secret sur le titre */
-        .header h1 {
-            margin: 0;
-            font-size: 26px;
-            color: #00ff66;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
+            padding: 0;
+            overflow-x: hidden;
             user-select: none;
         }
-        .header p {
-            margin: 6px 0 0 0;
-            font-size: 13px;
-            color: #7a8099;
+
+        /* 🎬 Écran de Chargement Sportif Animé (Style image_11.png) */
+        #loading-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #102244 0%, #050a14 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease;
         }
-        .catalog {
-            max-width: 360px;
-            margin: 0 auto;
-        }
-        .product-card {
-            background: #141622;
-            border: 1px solid #222538;
-            border-radius: 14px;
-            padding: 24px;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
-        }
-        .product-title {
-            font-size: 19px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .product-price {
-            font-size: 24px;
-            color: #00ff66;
-            font-weight: 800;
+
+        .loader-ball {
+            font-size: 3.5rem;
+            color: var(--accent-gold);
+            animation: bounceBall 0.8s infinite alternate ease-in-out;
             margin-bottom: 20px;
         }
-        .buy-btn {
-            background-color: #00ff66;
-            color: #000000;
-            border: none;
-            padding: 14px;
-            font-weight: bold;
-            font-size: 14px;
-            border-radius: 9px;
-            cursor: pointer;
-            width: 100%;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        /* Zone secrète cachée par défaut */
-        #secret-panel {
-            display: none;
-            margin-top: 25px;
-            padding: 15px;
-            background: #221414;
-            border: 1px dashed #ff3333;
+
+        .progress-bar-container {
+            width: 70%;
+            height: 6 || 8px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            color: #ff9999;
-            font-size: 13px;
+            overflow: hidden;
         }
-        .footer {
-            margin-top: 50px;
-            font-size: 11px;
-            color: #3f4357;
+
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-gold));
+            animation: fillProgress 2.2s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
+
+        /* 🏞️ Bannière Olive & Tom Premium (Style image_5.png / image_11.png) */
+        .banner {
+            position: relative;
+            width: 100%;
+            height: 210px;
+            background: linear-gradient(rgba(10,15,29,0.1), var(--bg-dark)), 
+                        url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80'); /* Remplacer par ton lien direct image_2.png contenant Olivier */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .banner-overlay {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        /* 📋 Onglets & Contenu Principal */
+        .container {
+            padding: 15px;
+            padding-bottom: 90px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeInTab 0.4s ease-out forwards;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* 📦 Fiche Produit (Inspiré par image_5.png) */
+        .product-card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .badge-stock {
+            background: #10b981;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .product-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+        }
+
+        .price-tag {
+            font-size: 1.8rem;
+            color: var(--accent-gold);
+            font-weight: 800;
+            margin: 15px 0;
+        }
+
+        .btn-action {
+            width: 100%;
+            background: linear-gradient(90deg, #ffcc00, #ffaa00);
+            color: #000;
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-action:active {
+            transform: scale(0.98);
+        }
+
+        /* 🚥 Barre de Navigation Inférieure (Style image_5.png) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            background-color: #0d1527;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-item i {
+            font-size: 1.3rem;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active {
+            color: var(--accent-gold);
+        }
+
+        /* 📜 Animations */
+        @keyframes bounceBall {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @keyframes fillProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes fadeInTab {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <!-- Cliquer ici déclenche le mot de passe secret -->
-        <h1 onclick="ouvrirMenuSecret()">LaMoulaEats</h1>
-        <p>Boutique Privée Automatisée</p>
-    </div>
-
-    <div class="catalog">
-        <div class="product-card">
-            <div class="product-title">Compte UE 2x12/20</div>
-            <div class="product-price">2,50 €</div>
-            <button class="buy-btn" onclick="envoyerCommande('Compte UE 2x12/20')">Acheter l'accès</button>
+    <!-- 🎬 Loader Initiale -->
+    <div id="loading-screen">
+        <div class="loader-ball"><i class="fas fa-football-ball"></i></div>
+        <h3 style="margin-bottom: 8px; font-weight: 500;">Connexion tactique à OliveEats...</h3>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill"></div>
         </div>
     </div>
 
-    <!-- Section Admin secrète déverrouillable -->
-    <div id="secret-panel">
-        🛡️ <b>PANNEAU ADMIN CONSOLE ACCÈS</b><br>
-        Statut : Connecté en tant que Fondateur. Tout est synchronisé avec commandes.json.
+    <!-- 🏞️ En-tête / Hero Section -->
+    <div class="banner">
+        <div class="banner-overlay">⚽ Équipe Active</div>
+        <div>
+            <h2 style="margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">OliveEats</h2>
+            <p style="margin: 4px 0 0 0; font-size: 0.9rem; color: var(--text-muted);">En route vers la victoire Uber Eats</p>
+        </div>
     </div>
 
-    <div class="footer">
-        &copy; 2026 LaMoulaEats. Tous droits réservés.
+    <!-- 📲 Contenu Principal de l'Application -->
+    <div class="container">
+        
+        <!-- Onglet 1 : Boutique -->
+        <div id="boutique" class="tab-content active">
+            <div class="product-card">
+                <div class="badge-stock"><i class="fas fa-boxes"></i> 42 en stock</div>
+                <div class="product-title">Compte UE 2×12/20</div>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Compte premium prêt à l'emploi. Livraison automatique après vérification.</p>
+                <div class="price-tag">3.50 €</div>
+                <button class="btn-action" onclick="declencherAchat()">⚽ Déclencher le Tir (Acheter)</button>
+            </div>
+        </div>
+
+        <!-- Onglet 2 : Commandes / Achats (Style image_4.png) -->
+        <div id="achats" class="tab-content">
+            <h3 style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Vos Matchs Passés</h3>
+            <p style="color: var(--text-muted); text-align: center; margin-top: 40px;">
+                <i class="fas fa-history" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                Aucun historique trouvé pour le moment.
+            </p>
+        </div>
+
+        <!-- Onglet 3 : Support -->
+        <div id="support" class="tab-content">
+            <h3>Assistance Terrain</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5;">Un problème avec votre virement ou votre compte ? Contactez notre capitaine directement sur Telegram.</p>
+            <button class="btn-action" style="background: var(--accent-blue); color: white;" onclick="window.open('https://t.me/lamoulajr')">📩 Contacter l'arbitre</button>
+        </div>
+
+    </div>
+
+    <!-- 🚥 Navigation Dock -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab(event, 'boutique')">
+            <i class="fas fa-store"></i>Boutique
+        </div>
+        <div class="nav-item" onclick="switchTab(event, 'achats')">
+            <i class="fas fa-ticket-alt"></i>Achats
+        </div>
+        <div class="nav-item" onclick="switchTab(event, 'support')">
+            <i class="fas fa-headset"></i>Support
+        </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        function envoyerCommande(nomProduit) {
-            // Transmet l'action de manière brute au bot Telegram
-            tg.sendData("Achat : " + nomProduit);
-            tg.close();
+        // Fin de l'animation de chargement après la fin du remplissage de la barre
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loading-screen');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 600);
+            }, 2200);
+        });
+
+        // Gestion du changement d'onglets réactif
+        function switchTab(event, tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            // Légère vibration haptique pour effet premium
+            if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
         }
 
-        // Système de sécurité par mot de passe
-        function ouvrirMenuSecret() {
-            let mdp = prompt("Entrez le code d'accès administrateur :");
-            if (mdp === "Lamoula2009") {
-                alert("🔓 Accès restreint accordé.");
-                document.getElementById("secret-panel").style.display = "block";
-            } else if (mdp !== null) {
-                alert("❌ Code incorrect.");
-            }
+        // Action d'achat renvoyée au bot Telegram
+        function declencherAchat() {
+            tg.sendData("Achat : Compte UE 2x12/20");
+            tg.close();
         }
     </script>
 </body>
