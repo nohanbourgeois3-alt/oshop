@@ -8,204 +8,237 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0a0f1d;
-            --bg-card: #131c31;
+            --bg-dark: #0b1426;
+            --bg-card: #14223c;
             --accent-blue: #1e70ff;
-            --accent-gold: #ffcc00;
+            --accent-gold: #f5c453;
             --text-main: #ffffff;
-            --text-muted: #8fa0c0;
+            --text-muted: #7e8fa8;
             --success: #10b981;
-            --danger: #ef4444;
         }
 
         body {
             font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-dark);
+            background: radial-gradient(circle at top, #152747 0%, var(--bg-dark) 70%);
             color: var(--text-main);
             margin: 0; padding: 0;
             overflow-x: hidden;
             user-select: none;
-            position: relative;
         }
 
-        /* Le fond manga en faible opacité qui couvre toute l'application */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            /* ICI : Remplace le lien par le vrai lien direct de ton image quand tu l'auras hébergée */
-            background-image: url('https://www.actuabd.com/local/cache-vignettes/L700xH994/1000010093-9c5b5.webp?1733504623'); 
-            background-size: cover;
-            background-position: center top;
-            /* Une opacité très légère (0.08) pour que ça reste discret en arrière-plan */
-            opacity: 0.08; 
-            z-index: -1; /* Reste derrière tout le contenu */
-            pointer-events: none;
+        /* En-tête profil inspiré de image_7.png */
+        .user-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; box-sizing: border-box;
         }
-
-        /* Ajustement de la bannière du haut pour qu'elle s'intègre parfaitement */
-        .banner {
-            position: relative; width: 100%; height: 120px;
-            background: linear-gradient(rgba(10,15,29,0.1), var(--bg-dark));
-            display: flex; align-items: flex-end; padding: 20px; box-sizing: border-box;
+        .user-profile { display: flex; align-items: center; gap: 10px; }
+        .user-avatar {
+            width: 36px; height: 36px; background: linear-gradient(45deg, var(--accent-blue), #5094fa);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 1rem; color: white;
         }
-        }
-
-        .banner {
-            position: relative; width: 100%; height: 140px;
-            background: linear-gradient(rgba(10,15,29,0.3), var(--bg-dark)), 
-                        url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80');
-            background-size: cover; background-position: center;
-            display: flex; align-items: flex-end; padding: 20px; box-sizing: border-box;
-        }
-
-        .container { padding: 15px; padding-bottom: 90px; }
+        .user-info span { display: block; }
+        .user-info .welcome { font-size: 0.75rem; color: var(--text-muted); }
+        .user-info .username { font-size: 0.95rem; font-weight: bold; }
         
-        .tab-content { display: none; animation: fadeInTab 0.3s ease-out forwards; }
-        .tab-content.active { display: block; }
-
-        .product-card, .wallet-card, .status-card {
-            background-color: var(--bg-card); border-radius: 16px; padding: 20px;
-            border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-            margin-bottom: 15px;
+        .header-badges { display: flex; gap: 8px; }
+        .badge-pts {
+            background: rgba(245, 196, 83, 0.15); border: 1px solid rgba(245, 196, 83, 0.3);
+            color: var(--accent-gold); padding: 6px 12px; border-radius: 20px;
+            font-size: 0.8rem; font-weight: bold; display: flex; align-items: center; gap: 5px;
         }
 
-        .badge-stock { background: var(--success); color: white; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; display: inline-block; margin-bottom: 12px; }
-        .product-title { font-size: 1.3rem; font-weight: bold; margin: 0 0 10px 0; }
-        .price-tag { font-size: 1.6rem; color: var(--accent-gold); font-weight: 800; margin: 10px 0; }
+        .container { padding: 0 15px 90px 15px; }
 
+        /* Grande bannière d'actualités illustrée (comme sur image_7.png) */
+        .promo-banner {
+            width: 100%; height: 140px; border-radius: 20px; margin-bottom: 20px;
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.6)), url('https://i.imgur.com/vWbpxN3.png');
+            background-size: cover; background-position: center 25%;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            padding: 15px; box-sizing: border-box;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .promo-tag { background: var(--success); color: white; padding: 3px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; align-self: flex-start; margin-bottom: 5px; }
+        .promo-title { font-size: 1.15rem; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+        .section-title { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin: 20px 0 10px 5px; }
+
+        /* Structure du produit type carte illustrée moderne */
+        .store-card {
+            background: var(--bg-card); border-radius: 24px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+        .store-card-img {
+            width: 100%; height: 160px;
+            background: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80');
+            background-size: cover; background-position: center; position: relative;
+        }
+        .stock-indicator {
+            position: absolute; top: 12px; right: 12px; background: rgba(16, 185, 129, 0.2);
+            backdrop-filter: blur(8px); border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #52e0a4; padding: 4px 10px; border-radius: 10px; font-size: 0.75rem; font-weight: bold;
+        }
+        .store-card-body { padding: 20px; }
+        .store-card-title { font-size: 1.25rem; font-weight: bold; margin: 0 0 5px 0; }
+        .store-card-desc { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 15px 0; line-height: 1.4; }
+        
+        .store-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
+        .store-price { font-size: 1.5rem; font-weight: 800; color: var(--text-main); }
+        .btn-buy {
+            background: var(--accent-gold); color: #1e1b04; border: none;
+            padding: 10px 22px; font-size: 0.9rem; font-weight: bold; border-radius: 30px;
+            cursor: pointer; display: flex; align-items: center; gap: 6px;
+        }
+
+        /* Formulaires de recharge */
         .input-style {
-            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15);
-            padding: 12px; border-radius: 10px; color: white; font-size: 1rem;
-            box-sizing: border-box; margin-top: 8px; margin-bottom: 15px; outline: none;
+            width: 100%; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1);
+            padding: 14px; border-radius: 12px; color: white; font-size: 1rem;
+            box-sizing: border-box; margin: 10px 0 15px 0; outline: none;
         }
         .input-style:focus { border-color: var(--accent-blue); }
 
-        .btn-action {
-            width: 100%; background: linear-gradient(90deg, #ffcc00, #ffaa00); color: #000;
-            border: none; padding: 14px; font-size: 1rem; font-weight: bold; border-radius: 12px;
-            cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px;
-            transition: opacity 0.2s;
-        }
-        .btn-action:disabled { opacity: 0.4; cursor: not-allowed; }
-
         .upload-zone {
-            border: 2px dashed rgba(255, 255, 255, 0.15);
-            border-radius: 12px; padding: 20px; text-align: center;
-            background: rgba(0,0,0,0.2); cursor: pointer; margin-top: 10px;
-            display: block; transition: border-color 0.2s;
+            border: 2px dashed rgba(255, 255, 255, 0.12); border-radius: 16px;
+            padding: 25px; text-align: center; background: rgba(0,0,0,0.15);
+            cursor: pointer; display: block; margin-top: 10px;
         }
-        .upload-zone:hover { border-color: var(--accent-blue); }
         .upload-zone input[type="file"] { display: none; }
 
-        .code-box {
-            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
-            padding: 10px; border-radius: 8px; font-family: monospace;
-            font-size: 1.1rem; color: var(--accent-gold); text-align: center; margin: 10px 0;
+        .btn-block {
+            width: 100%; padding: 14px; border: none; border-radius: 14px;
+            font-size: 1rem; font-weight: bold; cursor: pointer; display: flex;
+            justify-content: center; align-items: center; gap: 8px;
         }
+
+        .tab-content { display: none; animation: fadeInTab 0.25s ease-out forwards; }
+        .tab-content.active { display: block; }
 
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
-            background-color: #0d1527; display: flex; justify-content: space-around;
-            padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.08); z-index: 1000;
+            background: rgba(11, 20, 38, 0.9); backdrop-filter: blur(10px);
+            display: flex; justify-content: space-around; padding: 12px 0;
+            border-top: 1px solid rgba(255,255,255,0.06); z-index: 1000;
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 0.75rem; cursor: pointer; }
-        .nav-item i { font-size: 1.2rem; margin-bottom: 4px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 0.7rem; cursor: pointer; }
+        .nav-item i { font-size: 1.25rem; margin-bottom: 4px; }
         .nav-item.active { color: var(--accent-gold); }
 
-        @keyframes fadeInTab { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInTab { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div class="banner">
-        <div>
-            <h2 style="margin: 0;">OliveEats</h2>
-            <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-muted);">Boutique Premium Uber Eats</p>
+    <!-- Barre utilisateur dynamique -->
+    <div class="user-header">
+        <div class="user-profile">
+            <div class="user-avatar" id="avatar-letter">U</div>
+            <div class="user-info">
+                <span class="welcome">Salut,</span>
+                <span class="username" id="display-username">Chargement...</span>
+            </div>
+        </div>
+        <div class="header-badges">
+            <div class="badge-pts"><i class="fas fa-star"></i> <span id="user-points-badge">0 pts</span></div>
         </div>
     </div>
 
     <div class="container">
         
-        <!-- 🛒 ONGLET : BOUTIQUE -->
+        <!-- 🛒 BOUTIQUE -->
         <div id="boutique" class="tab-content active">
-            <!-- Zone d'affichage du statut d'achat (sans quitter l'app) -->
-            <div id="achat-status-box" style="display: none;"></div>
-
-            <div class="product-card">
-                <div class="badge-stock">⚽ Disponible</div>
-                <div class="product-title">Compte UE 2×12/20</div>
-                <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0 0 10px 0;">Livraison automatique après confirmation du solde.</p>
-                <div class="price-tag">3.50 €</div>
-                <button class="btn-action" id="btn-acheter" onclick="acheterCompte()"><i class="fas fa-shopping-cart"></i> Acheter avec mon Solde</button>
+            <div class="promo-banner">
+                <div class="promo-tag">RESTOCK</div>
+                <div class="promo-title">Nouveaux comptes en stock</div>
             </div>
-        </div>
 
-        <!-- 💳 ONGLET : RECHARGER -->
-        <div id="recharger" class="tab-content">
-            <div class="wallet-card">
-                <h3 style="margin-top: 0; color: var(--accent-gold);"><i class="fab fa-paypal"></i> Recharger le Solde</h3>
-                
-                <!-- Étape 1 : Demander le montant -->
-                <div id="recharge-etape1">
-                    <label style="font-size: 0.9rem; color: var(--text-muted);">Combien de solde veux-tu ajouter (€) ?</label>
-                    <input type="number" id="montant-recharge" class="input-style" placeholder="Ex: 10" min="1">
-                    <button class="btn-action" style="background: var(--accent-blue); color: white;" onclick="passerEtape2()">Suivant <i class="fas fa-arrow-right"></i></button>
+            <div class="section-title">La Boutique</div>
+            
+            <div class="store-card">
+                <div class="store-card-img">
+                    <div class="stock-indicator"><i class="fas fa-box"></i> En stock</div>
                 </div>
-
-                <!-- Étape 2 : Instructions + Upload (Masqué au début) -->
-                <div id="recharge-etape2" style="display: none;">
-                    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
-                        1. Envoie exactement <b style="color: var(--accent-gold);" id="montant-affiche">0.00 €</b> à : <br><b style="color:white;">nohanbourgeois9@gmail.com</b><br>
-                        2. Option obligatoire : <b>"Entre proches / Famille"</b>.<br>
-                        3. Copie/Colle ce code unique en note PayPal :
-                    </p>
-                    <div class="code-box" id="generated-code">...</div>
+                <div class="store-card-body">
+                    <div class="store-card-title">Compte UE 2×12/20</div>
+                    <div class="store-card-desc">Compte premium · livraison offerte + réductions immédiates.</div>
                     
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 15px;">4. Ajoute le screenshot entier de ta preuve de paiement :</p>
-                    
-                    <label class="upload-zone">
-                        <input type="file" accept="image/*" onchange="gestionFichier(event)">
-                        <i class="fas fa-cloud-upload-alt" style="font-size: 1.8rem; color: var(--accent-blue); margin-bottom: 5px;"></i>
-                        <span id="upload-text" style="display:block; font-size:0.85rem;">Sélectionner la preuve</span>
-                    </label>
-                    
-                    <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <button class="btn-action" style="background: #334155; color: white; width: 40%;" onclick="retourEtape1()"><i class="fas fa-undo"></i> Retour</button>
-                        <button class="btn-action" style="background: linear-gradient(90deg, #1e70ff, #0052cc); color: white; width: 60%;" onclick="envoyerPreuve()" id="btn-soumettre" disabled><i class="fas fa-paper-plane"></i> Soumettre</button>
+                    <div class="store-footer">
+                        <div class="store-price">3.50 €</div>
+                        <button class="btn-buy" onclick="acheterCompte()"><i class="fas fa-shopping-basket"></i> Acheter</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 📩 ONGLET : SUPPORT -->
+        <!-- 💳 RECHARGER -->
+        <div id="recharger" class="tab-content">
+            <div class="store-card" style="padding: 20px;">
+                <h3 style="margin-top:0; color:var(--accent-gold);"><i class="fab fa-paypal"></i> Recharger le Solde</h3>
+                
+                <div id="recharge-etape1">
+                    <label style="font-size:0.85rem; color:var(--text-muted);">Combien de solde veux-tu ajouter (€) ?</label>
+                    <input type="number" id="montant-recharge" class="input-style" placeholder="Ex: 10" min="1">
+                    <button class="btn-block" style="background:var(--accent-blue); color:white;" onclick="passerEtape2()">Suivant <i class="fas fa-arrow-right"></i></button>
+                </div>
+
+                <div id="recharge-etape2" style="display: none;">
+                    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+                        1. Envoie exactement <b style="color:var(--accent-gold);" id="montant-affiche">0.00 €</b> sur PayPal à :<br>
+                        <span style="color:white; font-weight:bold;">nohanbourgeois9@gmail.com</span><br>
+                        2. Option obligatoire : <b>"Entre proches / Famille"</b>.
+                    </p>
+                    
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">3. Dépose la capture d'écran entière de ton reçu PayPal :</p>
+                    <label class="upload-zone">
+                        <input type="file" accept="image/*" onchange="gestionFichier(event)">
+                        <i class="fas fa-images" style="font-size: 2rem; color: var(--accent-blue); margin-bottom: 8px;"></i>
+                        <span id="upload-text" style="display:block; font-size:0.85rem; color:var(--text-muted);">Choisir une image depuis l'appareil</span>
+                    </label>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button class="btn-block" style="background: #253550; color: white; width: 40%;" onclick="retourEtape1()">Retour</button>
+                        <button class="btn-block" style="background: var(--accent-blue); color: white; width: 60%;" onclick="envoyerPreuveDirecte()" id="btn-soumettre" disabled>Soumettre</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 📩 SUPPORT -->
         <div id="support" class="tab-content">
-            <div class="product-card">
-                <h3>Une question ou un problème ?</h3>
-                <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.4; margin-bottom: 20px;">
-                    Contacte directement le gérant du terrain pour toute assistance.
+            <div class="store-card" style="padding: 20px; text-align: center;">
+                <i class="fas fa-headset" style="font-size: 3rem; color: var(--accent-blue); margin-bottom: 15px;"></i>
+                <h3 style="margin: 0 0 10px 0;">Besoin d'un coup de main ?</h3>
+                <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4; margin-bottom: 20px;">
+                    Une question sur tes commandes ? Notre équipe technique répond directement sur Telegram.
                 </p>
-                <button class="btn-action" style="background: var(--accent-blue); color: white;" onclick="window.open('https://t.me/lamoulajr')">
-                    <i class="fas fa-comment-dots"></i> Ouvrir le Support Telegram
-                </button>
+                <button class="btn-block" style="background: var(--accent-blue); color: white;" onclick="window.open('https://t.me/lamoulajr')">Ouvrir l'assistance</button>
             </div>
         </div>
 
     </div>
 
-    <!-- 🚥 NAV BAR -->
+    <!-- 🚥 BARRE DE NAVIGATION FIXE (Inspirée de image_7.png) -->
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab(event, 'boutique')"><i class="fas fa-store"></i>Boutique</div>
+        <div class="nav-item active" onclick="switchTab(event, 'boutique')"><i class="fas fa-th-large"></i>Boutique</div>
         <div class="nav-item" onclick="switchTab(event, 'recharger')"><i class="fas fa-wallet"></i>Recharger</div>
-        <div class="nav-item" onclick="switchTab(event, 'support')"><i class="fas fa-headset"></i>Support</div>
+        <div class="nav-item" onclick="switchTab(event, 'support')"><i class="fas fa-user-shield"></i>Support</div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        let codeUnique = "T-" + Math.random().toString(36).substring(2, 7).toUpperCase();
-        document.getElementById('generated-code').innerText = codeUnique;
+        // Récupération des vraies infos de l'utilisateur Telegram
+        const userTelegram = tg.initDataUnsafe?.user;
+        if (userTelegram) {
+            const username = userTelegram.username || userTelegram.first_name || "Client";
+            document.getElementById('display-username').innerText = username;
+            document.getElementById('avatar-letter').innerText = username.charAt(0).toUpperCase();
+        } else {
+            document.getElementById('display-username').innerText = "lamoulajr";
+        }
 
         let imageBase64 = null;
         let montantChoisi = 0;
@@ -219,12 +252,9 @@
         }
 
         function passerEtape2() {
-            const inputMontant = document.getElementById('montant-recharge').value;
-            if(!inputMontant || inputMontant <= 0) {
-                alert("Indique un montant valide !");
-                return;
-            }
-            montantChoisi = parseFloat(inputMontant).toFixed(2);
+            const val = document.getElementById('montant-recharge').value;
+            if(!val || val <= 0) return;
+            montantChoisi = parseFloat(val).toFixed(2);
             document.getElementById('montant-affiche').innerText = montantChoisi + " €";
             document.getElementById('recharge-etape1').style.display = 'none';
             document.getElementById('recharge-etape2').style.display = 'block';
@@ -236,60 +266,72 @@
         }
 
         function gestionFichier(event) {
-            const fichier = event.target.files[0];
-            if (!fichier) return;
-
-            document.getElementById('upload-text').innerText = "📸 Image prête";
+            const file = event.target.files[0];
+            if (!file) return;
+            document.getElementById('upload-text').innerText = "📸 Document chargé";
             
             const reader = new FileReader();
             reader.onload = function(e) {
                 imageBase64 = e.target.result;
                 document.getElementById('btn-soumettre').disabled = false;
             };
-            reader.readAsDataURL(fichier);
+            reader.readAsDataURL(file);
         }
 
-        function envoyerPreuve() {
+        // SOLUTION DE SÉCURITÉ : Envoi direct par webhook HTTP (Fini les blocages)
+        function envoyerPreuveDirecte() {
             if(!imageBase64) return;
             
+            const btn = document.getElementById('btn-soumettre');
+            btn.disabled = true;
+            btn.innerText = "Envoi...";
+
             const payload = {
                 action: "depot_paypal",
-                code: codeUnique,
+                user_id: userTelegram?.id || 8697933666,
+                username: userTelegram?.username || "lamoulajr",
                 montant: montantChoisi,
                 image: imageBase64
             };
-            tg.sendData(JSON.stringify(payload));
-            
-            // Notification visuelle propre au lieu de crash
-            document.getElementById('recharge-etape2').innerHTML = `
-                <div style="text-align:center; padding:20px; color:var(--success);">
-                    <i class="fas fa-check-circle" style="font-size:3rem; margin-bottom:10px;"></i>
-                    <h4>Demande de ${montantChoisi}€ transmise !</h4>
-                    <p style="font-size:0.85rem; color:var(--text-muted);">Vérification en cours par l'admin. Tu peux fermer l'application.</p>
-                </div>
-            `;
+
+            // Utilisation d'un serveur intermédiaire ou transmission directe via l'API locale du bot
+            fetch('http://127.0.0.1:5000/webhook', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                document.getElementById('recharge-etape2').innerHTML = `
+                    <div style="text-align:center; padding:15px; color:var(--success);">
+                        <i class="fas fa-check-circle" style="font-size:2.5rem; margin-bottom:8px;"></i>
+                        <h4>Reçu envoyé !</h4>
+                        <p style="font-size:0.8rem; color:var(--text-muted); margin:0;">L'administrateur valide ton solde sur ton compte d'ici quelques instants.</p>
+                    </div>
+                `;
+            })
+            .catch(() => {
+                // Fallback de secours si pas de serveur HTTP : utilisation de sendData standard
+                tg.sendData(JSON.stringify(payload));
+            });
         }
 
         function acheterCompte() {
-            const btn = document.getElementById('btn-acheter');
-            btn.disabled = true;
-            btn.innerText = "Traitement...";
-
-            const payload = { action: "achat_produit", item: "Compte UE 2x12/20" };
+            const payload = { 
+                action: "achat_produit", 
+                user_id: userTelegram?.id || 8697933666,
+                item: "Compte UE 2x12/20" 
+            };
             
-            // On envoie l'action au bot
-            tg.sendData(JSON.stringify(payload));
-
-            // On affiche directement un écran d'attente stylé sans fermer l'app
-            const statusBox = document.getElementById('achat-status-box');
-            statusBox.style.display = "block";
-            statusBox.innerHTML = `
-                <div class="status-card" style="border-color: var(--accent-blue); text-align:center;">
-                    <i class="fas fa-spinner fa-spin" style="font-size:2rem; color:var(--accent-blue); margin-bottom:10px;"></i>
-                    <p style="margin:0; font-weight:bold;">Achat en cours de traitement...</p>
-                    <p style="font-size:0.8rem; color:var(--text-muted); margin-top:5px;">Vérifie tes messages privés sur Telegram d'ici quelques secondes.</p>
-                </div>
-            `;
+            fetch('http://127.0.0.1:5000/webhook', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .catch(() => {
+                tg.sendData(JSON.stringify(payload));
+            });
+            
+            tg.showAlert("Demande d'achat transmise ! Regarde tes messages privés.");
         }
     </script>
 </body>
