@@ -113,25 +113,23 @@
             justify-content: center; align-items: center; gap: 8px;
         }
 
-        .tab-content { display: none; animation: fadeInTab 0.25s ease-out forwards; }
+        .tab-content { display: none; }
         .tab-content.active { display: block; }
 
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
-            background: rgba(11, 20, 38, 0.9); backdrop-filter: blur(10px);
+            background: rgba(11, 20, 38, 0.95); backdrop-filter: blur(10px);
             display: flex; justify-content: space-around; padding: 12px 0;
             border-top: 1px solid rgba(255,255,255,0.06); z-index: 1000;
         }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 0.7rem; cursor: pointer; }
         .nav-item i { font-size: 1.25rem; margin-bottom: 4px; }
         .nav-item.active { color: var(--accent-gold); }
-
-        @keyframes fadeInTab { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <!-- Barre utilisateur dynamique -->
+    <!-- Barre utilisateur -->
     <div class="user-header">
         <div class="user-profile">
             <div class="user-avatar" id="avatar-letter">U</div>
@@ -162,7 +160,7 @@
                 </div>
                 <div class="store-card-body">
                     <div class="store-card-title">Compte UE 2×12/20</div>
-                    <div class="store-card-desc">Compte premium · livraison offerte + réductions immédiates.</div>
+                    <div class="store-card-desc">Compte premium · livraison automatique après confirmation du solde.</div>
                     
                     <div class="store-footer">
                         <div class="store-price">3.50 €</div>
@@ -190,7 +188,7 @@
                         2. Option obligatoire : <b>"Entre proches / Famille"</b>.
                     </p>
                     
-                    <p style="font-size: 0.85rem; color: var(--text-muted);">3. Dépose la capture d'écran entière de ton reçu PayPal :</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">3. Dépose la capture d'écran de ton reçu PayPal :</p>
                     <label class="upload-zone">
                         <input type="file" accept="image/*" onchange="gestionFichier(event)">
                         <i class="fas fa-images" style="font-size: 2rem; color: var(--accent-blue); margin-bottom: 8px;"></i>
@@ -199,7 +197,7 @@
                     
                     <div style="display: flex; gap: 10px; margin-top: 20px;">
                         <button class="btn-block" style="background: #253550; color: white; width: 40%;" onclick="retourEtape1()">Retour</button>
-                        <button class="btn-block" style="background: var(--accent-blue); color: white; width: 60%;" onclick="envoyerPreuveDirecte()" id="btn-soumettre" disabled>Soumettre</button>
+                        <button class="btn-block" style="background: var(--accent-blue); color: white; width: 60%;" onclick="envoyerPreuve()" id="btn-soumettre" disabled>Soumettre</button>
                     </div>
                 </div>
             </div>
@@ -213,13 +211,13 @@
                 <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4; margin-bottom: 20px;">
                     Une question sur tes commandes ? Notre équipe technique répond directement sur Telegram.
                 </p>
-                <button class="btn-block" style="background: var(--accent-blue); color: white;" onclick="window.open('https://t.me/lamoulajr')">Ouvrir l'assistance</button>
+                <button class="btn-block" style="background: var(--accent-blue); color: white;" onclick="tg.openTelegramLink('https://t.me/lamoulajr')">Ouvrir l'assistance</button>
             </div>
         </div>
 
     </div>
 
-    <!-- 🚥 BARRE DE NAVIGATION FIXE (Inspirée de image_7.png) -->
+    <!-- 🚥 BARRE DE NAVIGATION FIXE -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab(event, 'boutique')"><i class="fas fa-th-large"></i>Boutique</div>
         <div class="nav-item" onclick="switchTab(event, 'recharger')"><i class="fas fa-wallet"></i>Recharger</div>
@@ -230,15 +228,10 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Récupération des vraies infos de l'utilisateur Telegram
         const userTelegram = tg.initDataUnsafe?.user;
-        if (userTelegram) {
-            const username = userTelegram.username || userTelegram.first_name || "Client";
-            document.getElementById('display-username').innerText = username;
-            document.getElementById('avatar-letter').innerText = username.charAt(0).toUpperCase();
-        } else {
-            document.getElementById('display-username').innerText = "lamoulajr";
-        }
+        const username = userTelegram?.username || userTelegram?.first_name || "lamoulajr";
+        document.getElementById('display-username').innerText = username;
+        document.getElementById('avatar-letter').innerText = username.charAt(0).toUpperCase();
 
         let imageBase64 = null;
         let montantChoisi = 0;
@@ -248,7 +241,6 @@
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
-            if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
         }
 
         function passerEtape2() {
@@ -268,7 +260,7 @@
         function gestionFichier(event) {
             const file = event.target.files[0];
             if (!file) return;
-            document.getElementById('upload-text').innerText = "📸 Document chargé";
+            document.getElementById('upload-text').innerText = "📸 Image chargée";
             
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -278,60 +270,27 @@
             reader.readAsDataURL(file);
         }
 
-        // SOLUTION DE SÉCURITÉ : Envoi direct par webhook HTTP (Fini les blocages)
-        function envoyerPreuveDirecte() {
+        function envoyerPreuve() {
             if(!imageBase64) return;
+            document.getElementById('btn-soumettre').innerText = "Envoi...";
             
-            const btn = document.getElementById('btn-soumettre');
-            btn.disabled = true;
-            btn.innerText = "Envoi...";
-
             const payload = {
                 action: "depot_paypal",
-                user_id: userTelegram?.id || 8697933666,
-                username: userTelegram?.username || "lamoulajr",
                 montant: montantChoisi,
                 image: imageBase64
             };
-
-            // Utilisation d'un serveur intermédiaire ou transmission directe via l'API locale du bot
-            fetch('http://127.0.0.1:5000/webhook', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(() => {
-                document.getElementById('recharge-etape2').innerHTML = `
-                    <div style="text-align:center; padding:15px; color:var(--success);">
-                        <i class="fas fa-check-circle" style="font-size:2.5rem; margin-bottom:8px;"></i>
-                        <h4>Reçu envoyé !</h4>
-                        <p style="font-size:0.8rem; color:var(--text-muted); margin:0;">L'administrateur valide ton solde sur ton compte d'ici quelques instants.</p>
-                    </div>
-                `;
-            })
-            .catch(() => {
-                // Fallback de secours si pas de serveur HTTP : utilisation de sendData standard
-                tg.sendData(JSON.stringify(payload));
-            });
+            
+            tg.sendData(JSON.stringify(payload));
+            tg.close();
         }
 
         function acheterCompte() {
             const payload = { 
                 action: "achat_produit", 
-                user_id: userTelegram?.id || 8697933666,
                 item: "Compte UE 2x12/20" 
             };
-            
-            fetch('http://127.0.0.1:5000/webhook', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .catch(() => {
-                tg.sendData(JSON.stringify(payload));
-            });
-            
-            tg.showAlert("Demande d'achat transmise ! Regarde tes messages privés.");
+            tg.sendData(JSON.stringify(payload));
+            tg.close();
         }
     </script>
 </body>
