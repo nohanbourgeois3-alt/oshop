@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>O'shop V2</title>
+    <title>Sicario'Eats</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -35,7 +35,7 @@
         html{height:100%;overscroll-behavior:none;}
         body{height:100%;background:var(--bg);color:var(--t1);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;overscroll-behavior:none;}
 
-        /* GLOW */
+        /* GLOW BACKGROUND */
         .g1{position:fixed;top:-180px;left:50%;transform:translateX(-50%);width:500px;height:400px;background:radial-gradient(ellipse,rgba(37,99,235,.13) 0%,transparent 70%);pointer-events:none;z-index:0;animation:gp 4s ease-in-out infinite;}
         .g2{position:fixed;bottom:80px;right:-80px;width:280px;height:280px;background:radial-gradient(circle,rgba(99,102,241,.07) 0%,transparent 70%);pointer-events:none;z-index:0;}
         @keyframes gp{0%,100%{opacity:.8;transform:translateX(-50%) scale(1);}50%{opacity:1;transform:translateX(-50%) scale(1.05);}}
@@ -49,12 +49,12 @@
         .av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#818cf8);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;}
         .un{font-size:12px;font-weight:600;color:var(--t2);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
-        /* PAGES */
+        /* PAGES NAVIGATION */
         .page{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-bottom:calc(var(--nav) + var(--sab) + 20px);display:none;opacity:0;scrollbar-width:none;}
         .page.active{display:block;animation:pi .32s cubic-bezier(.34,1.4,.64,1) forwards;}
         @keyframes pi{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-        /* NAV */
+        /* BOTTOM NAV BAR */
         .nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav) + var(--sab));background:rgba(8,18,38,.97);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid var(--border);display:flex;align-items:flex-start;padding-top:8px;z-index:50;}
         .nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:7px 4px;border:none;background:none;outline:none;position:relative;}
         .ni{font-size:23px;line-height:1;transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
@@ -64,7 +64,7 @@
         .nb.on .nl{color:var(--blue3);}
         .nb.on .np{opacity:1;}
 
-        /* COMPOSANTS */
+        /* DESIGN COMPOSANTS */
         .sh{display:flex;align-items:center;gap:8px;padding:18px 18px 10px;}
         .sd{width:5px;height:5px;border-radius:50%;background:var(--blue2);box-shadow:0 0 8px var(--glow);flex-shrink:0;}
         .sl{font-size:10.5px;font-weight:700;letter-spacing:1.8px;color:var(--t2);text-transform:uppercase;}
@@ -87,7 +87,7 @@
         .wrb{display:inline-flex;align-items:center;gap:6px;background:rgba(59,130,246,.18);border:1px solid rgba(59,130,246,.35);border-radius:20px;padding:8px 16px;font-size:13px;font-weight:700;color:var(--blue3);cursor:pointer;outline:none;transition:transform .14s cubic-bezier(.34,1.56,.64,1);}
         .wrb:active{transform:scale(.94);}
 
-        /* CARTES SERVICES */
+        /* CARDS SERVICES */
         .sc{margin:0 16px 11px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-xl);padding:19px;cursor:pointer;position:relative;overflow:hidden;transition:transform .18s cubic-bezier(.34,1.3,.64,1),border-color .2s,box-shadow .2s;}
         .sc:active{transform:scale(.975);border-color:rgba(59,130,246,.25);box-shadow:0 0 24px rgba(37,99,235,.1);}
         .sct{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:13px;}
@@ -101,7 +101,7 @@
         .scd{font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:13px;}
         .scb{font-size:13.5px;font-weight:700;color:var(--blue2);display:flex;align-items:center;gap:5px;}
 
-        /* OVERLAYS */
+        /* OVERLAYS SHEETS */
         .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:200;align-items:flex-end;}
         .ov.open{display:flex;animation:fo .22s ease;}
         @keyframes fo{from{opacity:0;}to{opacity:1;}}
@@ -109,7 +109,7 @@
         .sheet::-webkit-scrollbar{display:none;}
         @keyframes su{from{transform:translateY(100%);opacity:.6;}to{transform:translateY(0);opacity:1;}}
         .dbar{width:34px;height:4px;background:rgba(255,255,255,.13);border-radius:2px;margin:0 auto 20px;}
-        .mico" {width:68px;height:68px;border-radius:20px;background:linear-gradient(135deg,rgba(37,99,235,.22),rgba(129,140,248,.16));border:1px solid rgba(59,130,246,.25);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px;}
+        .mico {width:68px;height:68px;border-radius:20px;background:linear-gradient(135deg,rgba(37,99,235,.22),rgba(129,140,248,.16));border:1px solid rgba(59,130,246,.25);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px;}
         .mcat{text-align:center;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--blue2);text-transform:uppercase;margin-bottom:5px;}
         .mtit{text-align:center;font-size:23px;font-weight:900;letter-spacing:-.4px;margin-bottom:4px;}
         .mpr{text-align:center;font-size:40px;font-weight:900;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-1.5px;margin:10px 0 20px;}
@@ -120,8 +120,6 @@
         .br{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 14px;margin-bottom:16px;}
         .bl{font-size:13px;color:var(--t2);}
         .bv{font-size:15px;font-weight:800;color:#fff;}
-        .bok{color:var(--green);}
-        .bnok{color:var(--red);}
 
         /* HISTORIQUE */
         .he{text-align:center;padding:60px 28px;}
@@ -135,7 +133,6 @@
         .hinn{font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
         .hid{font-size:11.5px;color:var(--t3);margin-top:2px;}
         .hip{font-size:14px;font-weight:800;color:var(--red);white-space:nowrap;flex-shrink:0;}
-        .hip.free{color:var(--green);}
 
         /* REVENDEUR */
         .rh{margin:14px 16px;background:linear-gradient(135deg,#0c1d3a,#162a55);border:1px solid var(--border-b);border-radius:var(--r-xl);padding:28px 20px;text-align:center;position:relative;overflow:hidden;}
@@ -148,7 +145,7 @@
         .rf h4{font-size:14px;font-weight:700;margin-bottom:2px;}
         .rf p{font-size:12px;color:var(--t2);}
 
-        /* PANEL ADMIN */
+        /* ADMIN PANEL CUSTO */
         #adm{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);z-index:999;align-items:center;justify-content:center;padding:20px;}
         #adm.open{display:flex;animation:fo .2s ease;}
         .ac{background:linear-gradient(160deg,#0d1f3c,#0a1628);border:1px solid rgba(59,130,246,.22);border-radius:var(--r-xl);padding:24px 20px;width:100%;max-width:380px;max-height:90vh;overflow-y:auto;scrollbar-width:none;}
@@ -161,45 +158,24 @@
         .astl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px;}
         .astv{font-size:26px;font-weight:900;color:#fff;}
         .atit{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--t3);text-transform:uppercase;margin:16px 0 10px;}
-
-        /* Input username admin */
         .ainp{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--border-b);border-radius:var(--r-sm);padding:12px 14px;color:#fff;font-size:15px;font-weight:600;outline:none;-webkit-appearance:none;margin-bottom:8px;}
-        .ainp::placeholder{color:var(--t3);}
-        .ainp:focus{border-color:rgba(59,130,246,.5);}
-
-        /* Preview compte cible */
-        .tprev{display:none;background:rgba(255,255,255,.03);border:1px solid var(--border-b);border-radius:var(--r-md);padding:12px 14px;margin-bottom:10px;align-items:center;gap:12px;}
-        .tprev.show{display:flex;animation:ii .2s ease;}
-        .tpav{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#818cf8);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0;}
-        .tpinfo{flex:1;}
-        .tpinfo h4{font-size:14px;font-weight:700;}
-        .tpinfo p{font-size:11px;color:var(--t2);}
-        .tpbal{margin-left:auto;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);border-radius:20px;padding:4px 10px;font-size:13px;font-weight:800;color:var(--green);white-space:nowrap;}
-
         .arow{display:flex;gap:8px;margin-top:8px;}
-        .abtn{background:linear-gradient(135deg,#1d4ed8,#3b82f6);border:none;border-radius:var(--r-sm);padding:12px 16px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;outline:none;transition:transform .14s;white-space:nowrap;}
-        .abtn:active{transform:scale(.95);}
+        .abtn{background:linear-gradient(135deg,#1d4ed8,#3b82f6);border:none;border-radius:var(--r-sm);padding:12px 16px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;outline:none;transition:transform .14s;}
         .abtn-r{background:linear-gradient(135deg,#991b1b,#ef4444);}
 
-        /* NOTIF BADGE */
+        /* NOTIFICATIONS & TOAST */
         .notif-dot{position:absolute;top:4px;right:18px;width:9px;height:9px;border-radius:50%;background:var(--red);border:2px solid var(--bg);display:none;box-shadow:0 0 8px var(--red);}
         .notif-dot.show{display:block;animation:pulse 1.5s infinite;}
         @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.25);}}
-
-        /* TOAST */
         .toast{position:fixed;top:calc(70px + var(--sat));left:50%;transform:translateX(-50%) translateY(-20px);background:rgba(13,31,60,.97);border:1px solid rgba(59,130,246,.3);border-radius:var(--r-md);padding:12px 20px;font-size:14px;font-weight:700;color:#fff;z-index:9999;pointer-events:none;opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;backdrop-filter:blur(20px);}
         .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-        /* PANEL NOTIFS ADMIN */
         #notifPanel{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:998;align-items:center;justify-content:center;padding:20px;}
         #notifPanel.open{display:flex;animation:fo .2s ease;}
         .nc{background:linear-gradient(160deg,#0d1f3c,#0a1628);border:1px solid rgba(239,68,68,.2);border-radius:var(--r-xl);padding:22px 20px;width:100%;max-width:380px;max-height:80vh;overflow-y:auto;scrollbar-width:none;}
-        .nc::-webkit-scrollbar{display:none;}
-        .nitem{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r-md);padding:13px;margin-bottom:9px;display:flex;align-items:flex-start;gap:12px;animation:ii .25s ease;}
-        .nitem-ico{font-size:22px;flex-shrink:0;}
+        .nitem{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r-md);padding:13px;margin-bottom:9px;display:flex;align-items:flex-start;gap:12px;}
         .nitem-info h4{font-size:14px;font-weight:700;margin-bottom:3px;}
         .nitem-info p{font-size:12px;color:var(--t2);line-height:1.5;}
-        .nitem-time{font-size:11px;color:var(--t3);margin-top:4px;}
         .nempty{text-align:center;padding:30px;color:var(--t3);font-size:14px;}
     </style>
 </head>
@@ -208,14 +184,16 @@
 <div class="g2"></div>
 
 <div id="app">
+    <!-- HEADER -->
     <header class="hdr">
-        <div class="logo" id="logo" onclick="handleLogoClick()">🔮 O'shop V2</div>
+        <div class="logo" id="logo" onclick="handleLogoClick()">🥷 Sicario'Eats</div>
         <div class="hdr-user">
             <div class="av" id="hav">?</div>
             <span class="un" id="hun">...</span>
         </div>
     </header>
 
+    <!-- SHOP PAGE -->
     <div class="page active" id="p-shop">
         <div class="wallet">
             <div class="wl">💰 Mon Portefeuille</div>
@@ -229,11 +207,13 @@
         <div id="premL"></div>
     </div>
 
+    <!-- HISTORY PAGE -->
     <div class="page" id="p-history">
         <div class="sh"><div class="sd"></div><span class="sl">Mes Achats</span></div>
         <div id="histL"></div>
     </div>
 
+    <!-- RESELLER PAGE -->
     <div class="page" id="p-resell">
         <div class="rh">
             <div class="bi">👑</div>
@@ -250,10 +230,11 @@
         <div style="padding:16px 16px 0"><button class="btn bp" onclick="callSup()">💬 Rejoindre →</button></div>
     </div>
 
+    <!-- SUPPORT PAGE -->
     <div class="page" id="p-support">
         <div style="padding:44px 20px;text-align:center">
             <div style="font-size:58px;margin-bottom:16px">💬</div>
-            <h2 style="font-size:22px;font-weight:900;margin-bottom:8px">Support O'shop</h2>
+            <h2 style="font-size:22px;font-weight:900;margin-bottom:8px">Support Sicario'Eats</h2>
             <p style="font-size:14px;color:var(--t2);margin-bottom:28px;line-height:1.65">Notre équipe est disponible 7j/7 pour toutes vos questions.</p>
             <button class="btn bp" onclick="callSup()">📲 Contacter @zeromeufuhq →</button>
             <div style="margin-top:18px;padding:16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r-md)">
@@ -263,6 +244,7 @@
         </div>
     </div>
 
+    <!-- NAVIGATION MENU BAR -->
     <nav class="nav">
         <button class="nb on" onclick="goP('shop',this)">
             <span class="ni">🛍️</span><span class="nl">Boutique</span><div class="np"></div>
@@ -280,6 +262,7 @@
     </nav>
 </div>
 
+<!-- ITEM SHEET OVERLAY -->
 <div class="ov" id="svcOv" onclick="closeSvc(event)">
     <div class="sheet">
         <div class="dbar"></div>
@@ -294,6 +277,7 @@
     </div>
 </div>
 
+<!-- RECHARGE WALLET OVERLAY -->
 <div class="ov" id="rechOv" onclick="closeRech(event)">
     <div class="sheet">
         <div class="dbar"></div>
@@ -317,10 +301,11 @@
     </div>
 </div>
 
+<!-- PANNEAU ADMIN (SECRET CLIC LOGO) -->
 <div id="adm">
     <div class="ac">
         <div class="ahd">
-            <div><h2>🛡️ Admin Panel</h2><p>Accès restreint · O'shop V2</p></div>
+            <div><h2>🛡️ Panneau Admin</h2><p>Accès restreint · Sicario'Eats</p></div>
             <button class="acl" onclick="closeAdm()">✕</button>
         </div>
         <div class="ast"><div class="astl">CA · Session</div><div class="astv" id="a-ca">0.00 €</div></div>
@@ -332,11 +317,6 @@
         <div class="atit">💉 Créditer un Client</div>
         <input class="ainp" type="text" id="uname" placeholder="@ du client (ex: @pseudo)" autocomplete="off">
         <input class="ainp" type="number" id="uamt" placeholder="Montant (ex: 3.00)" step="0.01">
-        <div class="tprev" id="tprev">
-            <div class="tpav" id="tpav">?</div>
-            <div class="tpinfo"><h4 id="tpname">—</h4><p id="tpsub">Compte trouvé</p></div>
-            <div class="tpbal" id="tpbal">0.00 €</div>
-        </div>
         <div class="arow">
             <button class="abtn" onclick="doCredit()">✅ Créditer</button>
             <button class="abtn abtn-r" onclick="doDebit()">➖ Débiter</button>
@@ -348,6 +328,7 @@
     </div>
 </div>
 
+<!-- MODAL NOTIFICATIONS ADMIN -->
 <div id="notifPanel">
     <div class="nc">
         <div class="ahd">
@@ -363,7 +344,7 @@
 
 <script>
 /* ============================================================
-   TELEGRAM INIT
+   TELEGRAM SYSTEME INIT
 ============================================================ */
 const tg = window.Telegram?.WebApp;
 if(tg){
@@ -374,20 +355,20 @@ if(tg){
 }
 const tgU = tg?.initDataUnsafe?.user;
 const myName = tgU ? (tgU.username ? '@'+tgU.username : tgU.first_name) : 'Invité';
-const myInit = (tgU?.first_name||'O')[0].toUpperCase();
+const myInit = (tgU?.first_name||'S')[0].toUpperCase();
 const myId = String(tgU?.id || 'local');
 
 document.getElementById('hav').textContent = myInit;
 document.getElementById('hun').textContent = myName;
 
-const KB = 'os_bal_'+myId;
-const KH = 'os_his_'+myId;
-const KCA = 'os_ca';
-const KOR = 'os_or';
-const KNT = 'os_notif';
-const KUS = 'os_users';
+const KB = 'sc_bal_'+myId;
+const KH = 'sc_his_'+myId;
+const KCA = 'sc_ca';
+const KOR = 'sc_or';
+const KNT = 'sc_notif';
+const KUS = 'sc_users';
 
-/* Enregistrement annuaire */
+/* Enregistrement local client */
 (function reg(){
     const u = JSON.parse(localStorage.getItem(KUS)||'{}');
     u[myName.replace('@','').toLowerCase()] = {
@@ -422,7 +403,7 @@ function refreshBal(){
 refreshBal();
 
 /* ============================================================
-   CATALOGUE
+   CATALOGUE PRODUITS & SELECTION
 ============================================================ */
 const kfc=[
     {id:'k1',ico:'🍗',cat:'KFC · POINTS',name:'300 à 499 Points', desc:'Pack entrée de gamme, idéal pour démarrer.', prix:1.50 },
@@ -443,7 +424,6 @@ const prem=[
 
 let selectedProduct = null;
 
-/* Rendu des catalogues */
 function buildList(data, targetId){
     const container = document.getElementById(targetId);
     container.innerHTML = '';
@@ -468,209 +448,198 @@ buildList(kfc, 'kfcL');
 buildList(prem, 'premL');
 
 /* ============================================================
-   LOGIQUE NAVIGATION / POPUPS
+   LOGIQUE NAVIGATION / INTERFACE
 ============================================================ */
 function goP(pId, btn){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
     document.getElementById('p-'+pId).classList.add('active');
     btn.classList.add('on');
-    if(pId === 'history') renderHistory();
+    if(pId==='history') renderHistory();
 }
 
-function showToast(m){
+function showToast(txt){
     const t = document.getElementById('toast');
-    t.textContent = m; t.classList.add('show');
+    t.textContent = txt; t.classList.add('show');
     setTimeout(()=>t.classList.remove('show'), 2500);
 }
 
+function callSup(){
+    if(tg) {
+        tg.openTelegramLink('https://t.me/zeromeufuhq');
+    } else {
+        window.open('https://t.me/zeromeufuhq', '_blank');
+    }
+}
+
+/* MODALS ACTIONS */
 function openSvc(p){
     selectedProduct = p;
     document.getElementById('mi').textContent = p.ico;
     document.getElementById('mc').textContent = p.cat;
     document.getElementById('mn').textContent = p.name;
-    document.getElementById('mp').textContent = p.prix.toFixed(2)+'€';
+    document.getElementById('mp').textContent = p.prix.toFixed(2)+' €';
     document.getElementById('md').textContent = p.desc;
     
-    const bDisp = document.getElementById('mb');
-    bDisp.textContent = st.bal.toFixed(2)+'€';
-    bDisp.className = 'bv ' + (st.bal >= p.prix ? 'bok' : 'bnok');
+    const mb = document.getElementById('mb');
+    mb.textContent = st.bal.toFixed(2)+' €';
+    if(st.bal >= p.prix){ mb.className="bv bok"; } else { mb.className="bv bnok"; }
     
     document.getElementById('svcOv').classList.add('open');
 }
-function closeSvc(e){ if(!e || e.target.classList.contains('ov') || e.target.tagName === 'BUTTON') document.getElementById('svcOv').classList.remove('open'); }
+function closeSvc(e){ if(!e || e.target.classList.contains('ov')) document.getElementById('svcOv').classList.remove('open'); }
 
 function openRech(){ document.getElementById('rechOv').classList.add('open'); }
-function closeRech(e){ if(!e || e.target.classList.contains('ov') || e.target.tagName === 'BUTTON') document.getElementById('rechOv').classList.remove('open'); }
+function closeRech(e){ if(!e || e.target.classList.contains('ov')) document.getElementById('rechOv').classList.remove('open'); }
 
-function callSup(){ if(tg) { tg.openTelegramLink('https://t.me/zeromeufuhq'); } else { window.open('https://t.me/zeromeufuhq','_blank'); } }
-
-/* ============================================================
-   LOGIQUE ACHAT / HISTORIQUE
-============================================================ */
+/* TRANSACTION D'ACHAT */
 function doBuy(){
     if(!selectedProduct) return;
     if(st.bal < selectedProduct.prix){
-        showToast("❌ Solde insuffisant pour cet achat !");
+        showToast("⚠️ Solde insuffisant ! Recharge ton compte.");
         return;
     }
     st.bal -= selectedProduct.prix;
     st.ca += selectedProduct.prix;
     st.ord += 1;
     
-    const order = {
-        name: selectedProduct.name, ico: selectedProduct.ico, prix: selectedProduct.prix, date: new Date().toLocaleDateString('fr-FR')
+    const n = {
+        name: selectedProduct.name,
+        cat: selectedProduct.cat,
+        ico: selectedProduct.ico,
+        prix: selectedProduct.prix,
+        date: new Date().toLocaleDateString('fr-FR', {hour:'2-digit', minute:'2-digit'})
     };
-    st.hist.unshift(order);
+    st.hist.unshift(n);
     save();
     refreshBal();
     
-    /* Envoyer une notification pour l'admin */
+    /* Notification d'achat simulée admin */
     let notifs = JSON.parse(localStorage.getItem(KNT)||'[]');
-    notifs.unshift({ user: myName, item: selectedProduct.name, prix: selectedProduct.prix, time: new Date().toLocaleTimeString('fr-FR') });
+    notifs.unshift({ user: myName, ...n });
     localStorage.setItem(KNT, JSON.stringify(notifs));
-    updateAdminBadge();
-
+    
     closeSvc();
-    showToast("🎉 Achat réussi ! Commande envoyée.");
+    showToast("🎉 Achat réussi ! Traitement en cours...");
+    
+    if(tg) {
+        tg.sendData(JSON.stringify({action: "achat", produit: selectedProduct.name, prix: selectedProduct.prix}));
+    }
 }
 
 function renderHistory(){
-    const list = document.getElementById('histL');
+    const container = document.getElementById('histL');
     if(st.hist.length === 0){
-        list.innerHTML = `<div class="he"><div class="hei">📦</div><h3>Aucun achat</h3><p>Vos commandes apparaîtront ici.</p></div>`;
+        container.innerHTML = `<div class="he"><div class="hei">📦</div><h3>Aucun achat</h3><p>Vos commandes apparaîtront ici.</p></div>`;
         return;
     }
-    list.innerHTML = '';
+    container.innerHTML = '';
     st.hist.forEach(h => {
         const div = document.createElement('div');
         div.className = 'hi';
         div.innerHTML = `
             <div class="hic">${h.ico}</div>
-            <div class="hin"><div class="hinn">${h.name}</div><div class="hid">Le ${h.date} · Statut: Livré</div></div>
-            <div class="hip">${h.prix > 0 ? '-'+h.prix.toFixed(2)+'€' : 'Gratuit'}</div>
+            <div class="hin">
+                <div class="hinn">${h.name}</div>
+                <div class="hid">${h.date} · En cours</div>
+            </div>
+            <div class="hip">-${h.prix.toFixed(2)}€</div>
         `;
-        list.appendChild(div);
+        container.appendChild(div);
     });
 }
 
 /* ============================================================
-   PANEL ADMIN CACHÉ (Clic répété sur le logo)
+   PANNEAU ADMIN CACHÉ (Clics répétés sur le logo)
 ============================================================ */
-let logoClicks = 0;
-let logoTimer = null;
-const ADMIN_USERNAME = "@zeromeufuhq"; 
-
+let lClicks = 0, lTimer;
 function handleLogoClick(){
-    if(myName !== ADMIN_USERNAME) return; // Seul toi peut ouvrir
-    logoClicks++;
-    clearTimeout(logoTimer);
-    if(logoClicks >= 5){
-        logoClicks = 0;
+    lClicks++;
+    clearTimeout(lTimer);
+    if(lClicks >= 5){
+        lClicks = 0;
         openAdm();
     }
-    logoTimer = setTimeout(()=>logoClicks=0, 2000);
+    lTimer = setTimeout(()=>lClicks=0, 2000);
 }
 
 function openAdm(){
     document.getElementById('a-ca').textContent = st.ca.toFixed(2)+' €';
     document.getElementById('a-ord').textContent = st.ord;
+    
+    let notifs = JSON.parse(localStorage.getItem(KNT)||'[]');
+    document.getElementById('notifCount').textContent = notifs.length;
+    
     document.getElementById('adm').classList.add('open');
-    updateAdminBadge();
 }
 function closeAdm(){ document.getElementById('adm').classList.remove('open'); }
 
-/* Preview du client lors de la saisie admin */
-document.getElementById('uname').addEventListener('input', function(e){
-    const target = e.target.value.replace('@','').toLowerCase().strip();
-    const users = getUsers();
-    const prev = document.getElementById('tprev');
-    if(users[target]){
-        document.getElementById('tpname').textContent = users[target].name;
-        document.getElementById('tpav').textContent = users[target].init;
-        document.getElementById('tpbal').textContent = parseFloat(localStorage.getItem('os_bal_'+users[target].id)||'0').toFixed(2)+' €';
-        prev.classList.add('show');
-    } else {
-        prev.classList.remove('show');
-    }
-});
-
 function doCredit(){
-    const target = document.getElementById('uname').value.replace('@','').toLowerCase().trim();
     const amt = parseFloat(document.getElementById('uamt').value);
-    if(!target || isNaN(amt) || amt <= 0) return showToast("Données invalides");
-    
-    const users = getUsers();
-    if(!users[target]) return showToast("Client introuvable");
-    
-    let currentBal = parseFloat(localStorage.getItem('os_bal_'+users[target].id)||'0');
-    setBal(users[target].id, currentBal + amt);
-    
-    document.getElementById('tpbal').textContent = parseFloat(localStorage.getItem('os_bal_'+users[target].id)||'0').toFixed(2)+' €';
-    showToast(`✅ Crédité de ${amt.toFixed(2)}€`);
+    if(isNaN(amt) || amt <= 0) return showToast("Montant invalide");
+    st.bal += amt;
+    save();
+    refreshBal();
+    openAdm();
+    showToast(`✅ Compte crédité de +${amt.toFixed(2)}€`);
 }
 
 function doDebit(){
-    const target = document.getElementById('uname').value.replace('@','').toLowerCase().trim();
     const amt = parseFloat(document.getElementById('uamt').value);
-    if(!target || isNaN(amt) || amt <= 0) return showToast("Données invalides");
-    
-    const users = getUsers();
-    if(!users[target]) return showToast("Client introuvable");
-    
-    let currentBal = parseFloat(localStorage.getItem('os_bal_'+users[target].id)||'0');
-    setBal(users[target].id, currentBal - amt);
-    
-    document.getElementById('tpbal').textContent = parseFloat(localStorage.getItem('os_bal_'+users[target].id)||'0').toFixed(2)+' €';
-    showToast(`➖ Débité de ${amt.toFixed(2)}€`);
+    if(isNaN(amt) || amt <= 0) return showToast("Montant invalide");
+    st.bal = Math.max(0, st.bal - amt);
+    save();
+    refreshBal();
+    openAdm();
+    showToast(`➖ Compte débité de -${amt.toFixed(2)}€`);
 }
 
 function doReset(){
-    const target = document.getElementById('uname').value.replace('@','').toLowerCase().trim();
-    if(!target) return;
-    const users = getUsers();
-    if(!users[target]) return;
-    setBal(users[target].id, 0);
-    document.getElementById('tpbal').textContent = '0.00 €';
-    showToast("Solde remis à 0");
+    st.bal = 0;
+    save();
+    refreshBal();
+    openAdm();
+    showToast("🗑️ Solde remis à 0.00€");
 }
 
-function clearHist(){ st.hist = []; save(); showToast("Historique vidé"); }
-
-/* Gestion des notifications admin */
-function updateAdminBadge(){
-    if(myName !== ADMIN_USERNAME) return;
-    const notifs = JSON.parse(localStorage.getItem(KNT)||'[]');
-    const count = notifs.length;
-    document.getElementById('notifCount').textContent = count;
-    const dot = document.getElementById('notifDot');
-    if(count > 0) dot.classList.add('show'); else dot.classList.remove('show');
+function clearHist(){
+    st.hist = [];
+    save();
+    if(document.getElementById('p-history').classList.contains('active')) renderHistory();
+    showToast("📋 Historique vidé !");
 }
 
+/* GESTION NOTIFS ADMIN */
 function openNotifs(){
-    const list = document.getElementById('notifList');
-    const notifs = JSON.parse(localStorage.getItem(KNT)||'[]');
-    if(notifs.length === 0){
-        list.innerHTML = '<div class="nempty">Aucune notification</div>';
-    } else {
-        list.innerHTML = '';
-        notifs.forEach(n => {
-            const div = document.createElement('div');
-            div.className = 'nitem';
-            div.innerHTML = `
-                <div class="nitem-ico">🛒</div>
-                <div class="nitem-info"><h4>${n.user}</h4><p>A acheté: <b>${n.item}</b> (${n.prix.toFixed(2)}€)</p><div class="nitem-time">${n.time}</div></div>
-            `;
-            list.appendChild(div);
-        });
-    }
     document.getElementById('notifPanel').classList.add('open');
+    const container = document.getElementById('notifList');
+    let notifs = JSON.parse(localStorage.getItem(KNT)||'[]');
+    if(notifs.length === 0){
+        container.innerHTML = `<div class="nempty">Aucune notification</div>`;
+        return;
+    }
+    container.innerHTML = '';
+    notifs.forEach(n => {
+        const div = document.createElement('div');
+        div.className = 'nitem';
+        div.innerHTML = `
+            <div class="nitem-ico">${n.ico}</div>
+            <div class="nitem-info">
+                <h4>Achat de ${n.user}</h4>
+                <p>${n.name} (${n.cat}) — <strong>${n.prix.toFixed(2)}€</strong></p>
+                <div class="nitem-time">${n.date}</div>
+            </div>
+        `;
+        container.appendChild(div);
+    });
 }
 function closeNotifs(){ document.getElementById('notifPanel').classList.remove('open'); }
-function clearNotifs(){ localStorage.setItem(KNT, '[]'); updateAdminBadge(); closeNotifs(); showToast("Notifications effacées"); }
-
-// Init au lancement
-updateAdminBadge();
+function clearNotifs(){
+    localStorage.setItem(KNT, '[]');
+    document.getElementById('notifCount').textContent = '0';
+    openNotifs();
+    showToast("Notifications effacées");
+}
 </script>
 </body>
 </html>
